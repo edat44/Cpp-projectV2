@@ -5,6 +5,8 @@
 #include <SDL_image.h>
 #include <stdio.h>
 
+using camera_t = SDL_Rect;
+
 class wSDL
 {
     public:
