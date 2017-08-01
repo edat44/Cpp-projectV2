@@ -13,6 +13,7 @@
 				<Option compiler="gcc" />
 				<Compiler>
 					<Add option="-g" />
+					<Add directory="include" />
 				</Compiler>
 			</Target>
 			<Target title="Release">
@@ -22,6 +23,7 @@
 				<Option compiler="gcc" />
 				<Compiler>
 					<Add option="-O2" />
+					<Add directory="include" />
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
@@ -30,7 +32,24 @@
 		</Build>
 		<Compiler>
 			<Add option="-Wall" />
+			<Add option="-std=c++11" />
+			<Add directory="C:/MinGW/dev_lib/include/SDL2" />
 		</Compiler>
+		<Linker>
+			<Add option="-lmingw32 -lSDL2main -lSDL2 -lSDL2_image" />
+			<Add directory="C:/MinGW/dev_lib/lib" />
+		</Linker>
+		<Unit filename="include/LTexture.h" />
+		<Unit filename="include/Map.h" />
+		<Unit filename="include/Player.h" />
+		<Unit filename="include/Tile.h" />
+		<Unit filename="include/wSDL.h" />
+		<Unit filename="src/LTexture.cpp" />
+		<Unit filename="src/Map.cpp" />
+		<Unit filename="src/Player.cpp" />
+		<Unit filename="src/Tile.cpp" />
+		<Unit filename="src/main.cpp" />
+		<Unit filename="src/wSDL.cpp" />
 		<Extensions>
 			<code_completion />
 			<envvars />
