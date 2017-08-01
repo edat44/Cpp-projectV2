@@ -14,6 +14,12 @@ Player::Player()
     this->m_vel.y = 0;
 }
 
+void Player::Position(Point pos)
+{
+    this->m_box.x = (int)((pos.x* Tile::S_WIDTH) + (Tile::S_WIDTH / 2) - (Player::S_WIDTH / 2));
+    this->m_box.y = (int)((pos.y* Tile::S_HEIGHT) + (Tile::S_HEIGHT / 2) - (Player::S_HEIGHT / 2));
+}
+
 Player::~Player()
 {
 
@@ -47,17 +53,15 @@ void Player::HandleEvent(SDL_Event &e)
 void Player::Move(std::vector<Tile*> tiles, Point level_size)
 {
     bool wall_touch = this->TouchesWall(tiles);
-    if (!wall_touch)
-    {
         //X MOVEMENT
-        m_box.x += m_vel.x;
-        if (m_box.x < 0 || (m_box.x + Player::S_WIDTH > level_size.x))
-            m_box.x -= m_vel.x; //Move back
+    m_box.x += m_vel.x;
+    if (m_box.x < 0 || (m_box.x + Player::S_WIDTH > level_size.x) || wall_touch)
+        m_box.x -= m_vel.x; //Move back
 
-        //Y MOVEMENT
-        if (m_box.y < 0 || (m_box.y + Player::S_HEIGHT > level_size.y))
-            m_box.y -= m_vel.y; //Move back
-    }
+    //Y MOVEMENT
+    m_box.y += m_vel.y;
+    if (m_box.y < 0 || (m_box.y + Player::S_HEIGHT > level_size.y) || wall_touch)
+        m_box.y -= m_vel.y; //Move back
 }
 
 void Player::SetCamera(SDL_Rect &camera, Point level_size)
@@ -97,6 +101,7 @@ bool Player::TouchesWall(std::vector<Tile*> tiles)
 bool Player::S_SetTexture()
 {
     bool success = true;
+    Player::s_texture = new LTexture();
     if (!Player::s_texture->LoadFromFile(Player::S_TEXTURE_PATH))
     {
         printf("Could not load player texture!\n");
@@ -109,4 +114,5 @@ bool Player::S_SetTexture()
 void Player::S_Free()
 {
     Player::s_texture->Free();
+    delete Player::s_texture;
 }

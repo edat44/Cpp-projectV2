@@ -14,11 +14,10 @@ LTexture::~LTexture()
 
 bool LTexture::LoadFromFile(std::string path)
 {
-    this->Free();
 
     SDL_Texture *new_texture = nullptr;
     SDL_Surface *loaded_surface = IMG_Load(path.c_str());
-    if (loaded_surface == nullptr)
+    if (loaded_surface == nullptr || loaded_surface == NULL)
     {
         printf("Unable to load image %s! SDL_image Error: %s\n", path.c_str(), IMG_GetError());
     }
@@ -33,8 +32,8 @@ bool LTexture::LoadFromFile(std::string path)
         }
         else
         {
-            m_width = loaded_surface->w;
-            m_height = loaded_surface->h;
+            this->m_width = loaded_surface->w;
+            this->m_height = loaded_surface->h;
         }
 
         SDL_FreeSurface(loaded_surface);
@@ -75,13 +74,10 @@ bool LTexture::LoadFromRenderedText(std::string texture_text, SDL_Color text_col
 
 void LTexture::Free()
 {
-    if(m_texture != nullptr)
-    {
-        SDL_DestroyTexture(m_texture);
-        m_texture = nullptr;
-        m_width = 0;
-        m_height = 0;
-    }
+    SDL_DestroyTexture(m_texture);
+    m_texture = nullptr;
+    m_width = 0;
+    m_height = 0;
 }
 
 void LTexture::SetColor(uint8_t red, uint8_t green, uint8_t blue)

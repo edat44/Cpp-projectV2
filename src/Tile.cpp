@@ -11,6 +11,8 @@ Tile::Tile(int x, int y, int tile_type)
     this->m_box.y = y;
     this->m_box.w = Tile::S_WIDTH;
     this->m_box.h = Tile::S_HEIGHT;
+
+    this->m_type = tile_type;
 }
 
 void Tile::Render(SDL_Rect &camera)
@@ -35,6 +37,7 @@ SDL_Rect Tile::GetBox()
 bool Tile::S_SetTexture()
 {
     bool success = true;
+    Tile::s_tile_texture = new LTexture();
     if (!Tile::s_tile_texture->LoadFromFile(S_TEXTURE_PATH))
     {
         printf("Failed to load tile texture\n");
@@ -53,5 +56,6 @@ bool Tile::S_SetTexture()
 
 void Tile::S_Free()
 {
+    delete Tile::s_tile_texture;
     Tile::s_tile_texture->Free();
 }

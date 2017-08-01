@@ -16,7 +16,9 @@ class Player
         static const int S_WIDTH = 20;
         static const int S_HEIGHT = 20;
 
-        static const int S_MAX_VEL = 5;
+        static const int S_MAX_VEL = 10;
+
+        void Position(Point pos);
 
         void HandleEvent(SDL_Event &e);
 

@@ -46,16 +46,16 @@ bool wSDL::Init()
     return true;
 }
 
-bool wSDL::LoadMedia(Map* m)
+bool wSDL::LoadMedia(Map &m)
 {
-    bool success = Player::S_SetTexture() && Tile::S_SetTexture() && m->SetTiles();
+    bool success = Player::S_SetTexture() && Tile::S_SetTexture() && m.SetTiles();
 
     return success;
 }
 
-void wSDL::Close(Map* m)
+void wSDL::Close(Map &m)
 {
-    m->Free();
+    m.Free();
     Player::S_Free();
     Tile::S_Free();
 
@@ -85,4 +85,15 @@ bool wSDL::CheckCollision(SDL_Rect a, SDL_Rect b)
         return false;
 
     return true;
+}
+
+void wSDL::ClearScreen()
+{
+    SDL_SetRenderDrawColor(wSDL::s_renderer, 0xFF, 0xFF, 0xFF, 0xFF);
+    SDL_RenderClear(wSDL::s_renderer);
+}
+
+void wSDL::UpdateScreen()
+{
+    SDL_RenderPresent(wSDL::s_renderer);
 }

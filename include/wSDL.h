@@ -27,10 +27,13 @@ class wSDL
 
 
         static bool Init();
-        static bool LoadMedia(Map* m);
-        static void Close(Map* m);
+        static bool LoadMedia(Map &m);
+        static void Close(Map &m);
 
         static bool CheckCollision(SDL_Rect a, SDL_Rect b);
+
+        static void ClearScreen();
+        static void UpdateScreen();
 };
 
 #endif // WSDL_H
