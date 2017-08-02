@@ -112,14 +112,7 @@ bool Map::SetTiles()
 
 void Map::Free()
 {
-    for (Tile* tile : this->m_tiles)
-    {
-        if (tile != nullptr)
-        {
-            delete tile;
-            tile = nullptr;
-        }
-    }
+    this->m_tiles.erase(this->m_tiles.begin(), this->m_tiles.end());
 }
 
 Point Map::GetPixelSize()
