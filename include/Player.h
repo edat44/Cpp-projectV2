@@ -45,6 +45,8 @@ class Player
         SDL_Rect m_box;
 
         Point m_vel;
+    
+        Point m_face_direction;
 };
 
 #endif // PLAYER_H
