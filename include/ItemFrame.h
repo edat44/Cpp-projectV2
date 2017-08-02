@@ -16,7 +16,7 @@ class ItemFrame
         LRect* m_rect;
         Point m_pos;
 
-        static const uint8_t GRAY = 0x33;
+        static const uint8_t GRAY = 0x55;
         static const uint8_t ALPHA = 0xAA;
 
 };
