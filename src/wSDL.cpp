@@ -100,5 +100,8 @@ void wSDL::ClearScreen()
 
 void wSDL::UpdateScreen()
 {
+    SDL_SetRenderDrawColor(wSDL::s_renderer, 0xFF, 0xFF, 0xFF, 0xFF);
+    SDL_RenderDrawLine(wSDL::s_renderer, 0, wSDL::SCREEN_HEIGHT / 2, wSDL::SCREEN_WIDTH, wSDL::SCREEN_HEIGHT / 2);
+    SDL_RenderDrawLine(wSDL::s_renderer, wSDL::SCREEN_WIDTH / 2, 0, wSDL::SCREEN_WIDTH / 2, wSDL::SCREEN_HEIGHT);
     SDL_RenderPresent(wSDL::s_renderer);
 }
