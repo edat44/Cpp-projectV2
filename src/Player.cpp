@@ -52,15 +52,14 @@ void Player::HandleEvent(SDL_Event &e)
 
 void Player::Move(std::vector<Tile*> tiles, Point level_size)
 {
-    bool wall_touch = this->TouchesWall(tiles);
-        //X MOVEMENT
+    //X MOVEMENT
     m_box.x += m_vel.x;
-    if (m_box.x < 0 || (m_box.x + Player::S_WIDTH > level_size.x) || wall_touch)
+    if (m_box.x < 0 || (m_box.x + Player::S_WIDTH > level_size.x) || this->TouchesWall(tiles))
         m_box.x -= m_vel.x; //Move back
 
     //Y MOVEMENT
     m_box.y += m_vel.y;
-    if (m_box.y < 0 || (m_box.y + Player::S_HEIGHT > level_size.y) || wall_touch)
+    if (m_box.y < 0 || (m_box.y + Player::S_HEIGHT > level_size.y) || this->TouchesWall(tiles))
         m_box.y -= m_vel.y; //Move back
 }
 
