@@ -84,8 +84,8 @@ void Player::SetCamera(SDL_Rect &camera, Point level_size)
 void Player::Render(SDL_Rect &camera)
 {
     double angle = 0.0;
-    int x = m_box.x - camera.x;
-    int y = m_box.y - camera.y;
+    int x = abs(m_box.x - camera.x + (m_box.w / 2));
+    int y = abs(m_box.y - camera.y + (m_box.h / 2));
     double dx = (double)m_face_direction.x - (double)x;
     double dy = (double)m_face_direction.y - (double)y;
     if (dx == 0.0)
@@ -93,10 +93,16 @@ void Player::Render(SDL_Rect &camera)
     else
         angle = atan(fabs(dy) / fabs(dx)) * 180.0 / PI;
     
-    if (m_face_direction.x < x)
+    if (m_face_direction.x <= x && m_face_direction.y >= y)       //Q4 (topright)
         angle = 180.0 - angle;
+    else if (m_face_direction.x < x && m_face_direction.y < y)  //Q1 (bottomright)
+        angle += 180.0;
+    else if (m_face_direction.x >= x && m_face_direction.y <= y)  //Q2 (bottomleft)
+        angle = -angle;
+    else                                                        //Q3 (topleft)
+        angle = angle;
     
-    Player::s_texture->Render(x, y, nullptr, angle);
+    Player::s_texture->Render(m_box.x - camera.x, m_box.y - camera.y, nullptr, angle);
     
 }
 
