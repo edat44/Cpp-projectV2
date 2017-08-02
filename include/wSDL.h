@@ -5,6 +5,14 @@
 #include <SDL_image.h>
 #include <stdio.h>
 
+class Map;
+
+struct Point
+{
+    int x = 0;
+    int y = 0;
+};
+
 class wSDL
 {
     public:
@@ -18,9 +26,14 @@ class wSDL
         static SDL_Renderer* s_renderer;
 
 
-        static bool init();
-        static bool loadMedia();
-        static bool close();
+        static bool Init();
+        static bool LoadMedia(Map &m);
+        static void Close(Map &m);
+
+        static bool CheckCollision(SDL_Rect a, SDL_Rect b);
+
+        static void ClearScreen();
+        static void UpdateScreen();
 };
 
 #endif // WSDL_H
