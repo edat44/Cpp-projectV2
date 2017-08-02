@@ -12,11 +12,6 @@ Player::Player()
 
     this->m_vel.x = 0;
     this->m_vel.y = 0;
-
-    this->m_thing.SetColor(0x00, 0x00, 0x00);
-    this->m_thing.SetAlpha(0xAA);
-    this->m_thing.SetSize(100, 100);
-    this->m_thing.SetBlendMode(SDL_BLENDMODE_BLEND);
 }
 
 void Player::Position(Point pos)
@@ -84,7 +79,6 @@ void Player::SetCamera(SDL_Rect &camera, Point level_size)
 void Player::Render(SDL_Rect &camera)
 {
     Player::s_texture->Render(m_box.x - camera.x, m_box.y - camera.y);
-    this->m_thing.Render(100, 200);
 }
 
 bool Player::TouchesWall(std::vector<Tile*> tiles)

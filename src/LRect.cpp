@@ -5,8 +5,8 @@ LRect::LRect() : LGraphic()
     this->red = 0x00;
     this->blue = 0x00;
     this->green = 0x00;
-    this->alpha = 0x00;
-    this->blend = SDL_BLENDMODE_NONE;
+    this->alpha = 0xFF;
+    this->blend = SDL_BLENDMODE_BLEND;
 }
 
 LRect::~LRect()
@@ -30,6 +30,12 @@ void LRect::SetColor(uint8_t red, uint8_t green, uint8_t blue)
     this->red = red;
     this->blue = blue;
     this->green = green;
+}
+
+void LRect::SetColor(uint8_t red, uint8_t green, uint8_t blue, uint8_t alpha)
+{
+    this->SetColor(red, green, blue);
+    this->SetAlpha(alpha);
 }
 
 void LRect::SetBlendMode(SDL_BlendMode blending)

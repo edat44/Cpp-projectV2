@@ -11,6 +11,7 @@ class LGraphic
         virtual ~LGraphic();
 
         virtual void SetColor(uint8_t red, uint8_t green, uint8_t blue) = 0;
+        virtual void SetColor(uint8_t red, uint8_t green, uint8_t blue, uint8_t alpha) = 0;
 
         virtual void SetBlendMode(SDL_BlendMode blending) = 0;
 
