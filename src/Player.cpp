@@ -1,6 +1,6 @@
 #include "Player.h"
 
-const std::string Player::S_TEXTURE_PATH = "resources/dot.bmp";
+const std::string Player::S_TEXTURE_PATH = "resources/dot_with_arrow.png";
 LTexture* Player::s_texture = nullptr;
 
 Player::Player()
