@@ -32,3 +32,9 @@
 *.app
 *.depend
 *.depend
+.DS_Store
+*.pbxproj
+*.xcuserstate
+Cpp-projectV2.xcodeproj/project.xcworkspace/contents.xcworkspacedata
+Cpp-projectV2.xcodeproj/xcuserdata/jewonoh.xcuserdatad/xcschemes/Cpp-projectV2.xcscheme
+Cpp-projectV2.xcodeproj/xcuserdata/jewonoh.xcuserdatad/xcschemes/xcschememanagement.plist
