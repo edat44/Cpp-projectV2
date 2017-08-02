@@ -1,4 +1,6 @@
 #include "Player.h"
+#include <cmath>
+#define PI 3.14159265
 
 const std::string Player::S_TEXTURE_PATH = "resources/dot_with_arrow.png";
 LTexture* Player::s_texture = nullptr;
@@ -12,6 +14,9 @@ Player::Player()
 
     this->m_vel.x = 0;
     this->m_vel.y = 0;
+    
+    this->m_face_direction.x = wSDL::SCREEN_WIDTH / 2;
+    this->m_face_direction.y = wSDL::SCREEN_HEIGHT / 2;
 }
 
 void Player::Position(Point pos)
@@ -78,7 +83,21 @@ void Player::SetCamera(SDL_Rect &camera, Point level_size)
 
 void Player::Render(SDL_Rect &camera)
 {
-    Player::s_texture->Render(m_box.x - camera.x, m_box.y - camera.y);
+    double angle = 0.0;
+    int x = m_box.x - camera.x;
+    int y = m_box.y - camera.y;
+    double dx = (double)m_face_direction.x - (double)x;
+    double dy = (double)m_face_direction.y - (double)y;
+    if (dx == 0.0)
+        angle = 90.0;
+    else
+        angle = atan(fabs(dy) / fabs(dx)) * 180.0 / PI;
+    
+    if (m_face_direction.x < x)
+        angle = 180.0 - angle;
+    
+    Player::s_texture->Render(x, y, nullptr, angle);
+    
 }
 
 bool Player::TouchesWall(std::vector<Tile*> tiles)
