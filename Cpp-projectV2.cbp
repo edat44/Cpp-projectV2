@@ -40,11 +40,15 @@
 			<Add option="-lmingw32 -lSDL2main -lSDL2 -lSDL2_image" />
 			<Add directory="C:/MinGW/dev_lib/lib" />
 		</Linker>
+		<Unit filename="include/LGraphic.h" />
+		<Unit filename="include/LRect.h" />
 		<Unit filename="include/LTexture.h" />
 		<Unit filename="include/Map.h" />
 		<Unit filename="include/Player.h" />
 		<Unit filename="include/Tile.h" />
 		<Unit filename="include/wSDL.h" />
+		<Unit filename="src/LGraphic.cpp" />
+		<Unit filename="src/LRect.cpp" />
 		<Unit filename="src/LTexture.cpp" />
 		<Unit filename="src/Map.cpp" />
 		<Unit filename="src/Player.cpp" />
