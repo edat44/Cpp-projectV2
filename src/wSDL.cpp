@@ -5,6 +5,7 @@
 
 SDL_Window *wSDL::s_window;
 SDL_Renderer *wSDL::s_renderer;
+SDL_Surface *wSDL::s_screen_surface;
 
 bool wSDL::Init()
 {
@@ -37,10 +38,14 @@ bool wSDL::Init()
 
     SDL_SetRenderDrawColor(s_renderer, 0xFF, 0xFF, 0xFF, 0xFF);
 
-    if (!(IMG_Init(wSDL::IMG_FLAGS) && wSDL::IMG_FLAGS))
+    if (!(IMG_Init(wSDL::IMG_FLAGS) & wSDL::IMG_FLAGS))
     {
         printf("SDL_image could not initialize! SDL_image Error: %s\n", IMG_GetError());
         return false;
+    }
+    else
+    {
+        wSDL::s_screen_surface = SDL_GetWindowSurface(wSDL::s_window);
     }
 
     return true;

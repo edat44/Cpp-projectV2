@@ -331,36 +331,36 @@
 	"begin_code.h"
 	"close_code.h"
 
-1501630940 source:c:\users\edat4\documents\github\cpp-projectv2\src\player.cpp
+1501653403 source:c:\users\edat4\documents\github\cpp-projectv2\src\player.cpp
 	"Player.h"
 
-1501631172 c:\users\edat4\documents\github\cpp-projectv2\include\player.h
+1501653375 c:\users\edat4\documents\github\cpp-projectv2\include\player.h
 	"wSDL.h"
 	"Tile.h"
 	<vector>
 	<algorithm>
 	<string>
 
-1501626616 c:\users\edat4\documents\github\cpp-projectv2\include\wsdl.h
+1501653860 c:\users\edat4\documents\github\cpp-projectv2\include\wsdl.h
 	<SDL.h>
 	<SDL_image.h>
 	<stdio.h>
 
-1501626664 source:c:\users\edat4\documents\github\cpp-projectv2\src\wsdl.cpp
+1501653980 source:c:\users\edat4\documents\github\cpp-projectv2\src\wsdl.cpp
 	"wSDL.h"
 	"Player.h"
 	"Tile.h"
 	"Map.h"
 
-1501629422 source:c:\users\edat4\documents\github\cpp-projectv2\src\main.cpp
+1501652977 source:c:\users\edat4\documents\github\cpp-projectv2\src\main.cpp
 	"wSDL.h"
 	<stdio.h>
 	"Map.h"
 
-1501630845 source:c:\users\edat4\documents\github\cpp-projectv2\src\map.cpp
+1501653150 source:c:\users\edat4\documents\github\cpp-projectv2\src\map.cpp
 	"Map.h"
 
-1501629712 c:\users\edat4\documents\github\cpp-projectv2\include\map.h
+1501653020 c:\users\edat4\documents\github\cpp-projectv2\include\map.h
 	"Tile.h"
 	<string>
 	<fstream>
@@ -368,7 +368,7 @@
 	"wSDL.h"
 	"Player.h"
 
-1501625927 source:c:\users\edat4\documents\github\cpp-projectv2\src\ltexture.cpp
+1501654342 source:c:\users\edat4\documents\github\cpp-projectv2\src\ltexture.cpp
 	"LTexture.h"
 
 1501542975 c:\users\edat4\documents\github\cpp-projectv2\include\ltexture.h

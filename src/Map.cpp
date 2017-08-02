@@ -13,9 +13,15 @@ Map::~Map()
     this->Free();
 }
 
-void Map::HandleEvent(SDL_Event &e)
+bool Map::HandleEvent(SDL_Event &e)
 {
+    if ((e.type == SDL_KEYDOWN || e.type == SDL_KEYUP) && e.key.repeat == 0)
+    {
+        if (e.key.keysym.sym == SDLK_ESCAPE)
+            return true;
+    }
     this->m_player->HandleEvent(e);
+    return false;
 }
 
 void Map::MovePlayer()

@@ -34,16 +34,19 @@ void Player::HandleEvent(SDL_Event &e)
 
         switch(e.key.keysym.sym)
         {
-        case SDLK_UP:
+        case Player::UP:
             this->m_vel.y -= vel;
             break;
-        case SDLK_DOWN:
+
+        case Player::DOWN:
             this->m_vel.y += vel;
             break;
-        case SDLK_LEFT:
+
+        case Player::LEFT:
             this->m_vel.x -= vel;
             break;
-        case SDLK_RIGHT:
+
+        case Player::RIGHT:
             this->m_vel.x += vel;
             break;
         }

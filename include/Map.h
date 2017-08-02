@@ -14,7 +14,9 @@ class Map
         Map(std::string file_path);
         virtual ~Map();
 
-        void HandleEvent(SDL_Event &e);
+        //Returns true if game should quit
+        bool HandleEvent(SDL_Event &e);
+
         void MovePlayer();
         void SetCamera();
 

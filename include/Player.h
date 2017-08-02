@@ -37,6 +37,11 @@ class Player
         static const std::string S_TEXTURE_PATH;
         static LTexture* s_texture;
 
+        static const SDL_Keycode UP = SDLK_w;
+        static const SDL_Keycode DOWN = SDLK_s;
+        static const SDL_Keycode LEFT = SDLK_a;
+        static const SDL_Keycode RIGHT = SDLK_d;
+
         SDL_Rect m_box;
 
         Point m_vel;

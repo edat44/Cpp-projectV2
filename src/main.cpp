@@ -29,7 +29,8 @@ int main(int argc, char* args[])
                 if (e.type == SDL_QUIT)
                     quit = true;
 
-                board.HandleEvent(e);
+                if (board.HandleEvent(e))
+                    quit = true;
             }
 
             board.MovePlayer();

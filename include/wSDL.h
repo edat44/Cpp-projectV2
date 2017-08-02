@@ -24,6 +24,7 @@ class wSDL
 
         static SDL_Window* s_window;
         static SDL_Renderer* s_renderer;
+        static SDL_Surface* s_screen_surface;
 
 
         static bool Init();
