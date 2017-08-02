@@ -7,11 +7,7 @@
 
 class Map;
 
-struct Point
-{
-    int x = 0;
-    int y = 0;
-};
+using Point = SDL_Point;
 
 class wSDL
 {

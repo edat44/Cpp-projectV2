@@ -3,6 +3,8 @@
 
 #include "wSDL.h"
 #include "Tile.h"
+#include "LTexture.h"
+#include "LRect.h"
 #include <vector>
 #include <algorithm>
 #include <string>
@@ -45,6 +47,8 @@ class Player
         SDL_Rect m_box;
 
         Point m_vel;
+
+        LRect m_thing;
 };
 
 #endif // PLAYER_H

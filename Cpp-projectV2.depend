@@ -331,17 +331,19 @@
 	"begin_code.h"
 	"close_code.h"
 
-1501653403 source:c:\users\edat4\documents\github\cpp-projectv2\src\player.cpp
+1501657886 source:c:\users\edat4\documents\github\cpp-projectv2\src\player.cpp
 	"Player.h"
 
-1501653375 c:\users\edat4\documents\github\cpp-projectv2\include\player.h
+1501657710 c:\users\edat4\documents\github\cpp-projectv2\include\player.h
 	"wSDL.h"
 	"Tile.h"
+	"LTexture.h"
+	"LRect.h"
 	<vector>
 	<algorithm>
 	<string>
 
-1501653860 c:\users\edat4\documents\github\cpp-projectv2\include\wsdl.h
+1501656804 c:\users\edat4\documents\github\cpp-projectv2\include\wsdl.h
 	<SDL.h>
 	<SDL_image.h>
 	<stdio.h>
@@ -368,11 +370,12 @@
 	"wSDL.h"
 	"Player.h"
 
-1501654342 source:c:\users\edat4\documents\github\cpp-projectv2\src\ltexture.cpp
+1501656841 source:c:\users\edat4\documents\github\cpp-projectv2\src\ltexture.cpp
 	"LTexture.h"
 
-1501542975 c:\users\edat4\documents\github\cpp-projectv2\include\ltexture.h
+1501657481 c:\users\edat4\documents\github\cpp-projectv2\include\ltexture.h
 	"wSDL.h"
+	"LGraphic.h"
 	<string>
 
 1501629094 source:c:\users\edat4\documents\github\cpp-projectv2\src\tile.cpp
@@ -383,4 +386,17 @@
 	<string>
 	"wSDL.h"
 	<vector>
+
+1501657498 c:\users\edat4\documents\github\cpp-projectv2\include\lgraphic.h
+	"wSDL.h"
+
+1501656046 source:c:\users\edat4\documents\github\cpp-projectv2\src\lgraphic.cpp
+	"LGraphic.h"
+
+1501658132 source:c:\users\edat4\documents\github\cpp-projectv2\src\lrect.cpp
+	"LRect.h"
+
+1501658035 c:\users\edat4\documents\github\cpp-projectv2\include\lrect.h
+	<LGraphic.h>
+	<wSDL.h>
 

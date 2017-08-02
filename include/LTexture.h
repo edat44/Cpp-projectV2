@@ -2,10 +2,11 @@
 #define LTEXTURE_H
 
 #include "wSDL.h"
+#include "LGraphic.h"
 #include <string>
 
 
-class LTexture
+class LTexture : public LGraphic
 {
     public:
         LTexture();
@@ -17,22 +18,17 @@ class LTexture
         bool LoadFromRenderedText(std::string texture_text, SDL_Color text_color);
         #endif
 
-        void Free();
+        virtual void Free();
 
-        void SetColor(uint8_t red, uint8_t green, uint8_t blue);
+        virtual void SetColor(uint8_t red, uint8_t green, uint8_t blue);
 
-        void SetBlendMode(SDL_BlendMode blending);
+        virtual void SetBlendMode(SDL_BlendMode blending);
 
-        void SetAlpha(uint8_t alpha);
+        virtual void SetAlpha(uint8_t alpha);
 
         virtual void Render(int x, int y, SDL_Rect* clip = nullptr, double angle = 0.0, SDL_Point* center = nullptr, SDL_RendererFlip flip = SDL_FLIP_NONE);
 
-        int GetWidth();
-        int GetHeight();
-
     protected:
-        int m_width;
-        int m_height;
 
     private:
         SDL_Texture* m_texture;
