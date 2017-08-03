@@ -1,7 +1,7 @@
 #ifndef LRECT_H
 #define LRECT_H
 
-#include <LGraphic.h>
+#include "LGraphic.h"
 #include <wSDL.h>
 
 
