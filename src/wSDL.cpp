@@ -87,12 +87,12 @@ void wSDL::Close(Map &m)
     SDL_Quit();
 }
 
-bool wSDL::CheckCollision(SDL_Rect a, SDL_Rect b)
+bool wSDL::CheckCollision(const DRect &a, const DRect &b)
 {
-    int left_a = a.x, left_b = b.x;
-    int right_a = a.x + a.w, right_b = b.x + b.w;
-    int top_a = a.y, top_b = b.y;
-    int bot_a = a.y + a.h, bot_b = b.y + b.h;
+    double left_a = a.x, left_b = b.x;
+    double right_a = a.x + a.w, right_b = b.x + b.w;
+    double top_a = a.y, top_b = b.y;
+    double bot_a = a.y + a.h, bot_b = b.y + b.h;
 
     if (bot_a <= top_b)
         return false;
@@ -104,6 +104,21 @@ bool wSDL::CheckCollision(SDL_Rect a, SDL_Rect b)
         return false;
 
     return true;
+}
+
+bool wSDL::CheckCollision(const DRect &a, const SDL_Rect &b)
+{
+    return wSDL::CheckCollision(a, wSDL::SDL_RectToDRect(b));
+}
+
+bool wSDL::CheckCollision(const SDL_Rect &a, const SDL_Rect &b)
+{
+    return wSDL::CheckCollision(SDL_RectToDRect(a), SDL_RectToDRect(b));
+}
+
+DRect wSDL::SDL_RectToDRect(const SDL_Rect &r)
+{
+    return DRect{(double)r.x, (double)r.y, (double)r.w, (double)r.h};
 }
 
 void wSDL::ClearScreen()

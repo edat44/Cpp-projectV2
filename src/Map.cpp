@@ -25,9 +25,9 @@ bool Map::HandleEvent(SDL_Event &e)
     return false;
 }
 
-void Map::MovePlayer()
+void Map::MovePlayer(double time_step)
 {
-    this->m_player->Move(this->m_tiles, this->GetPixelSize());
+    this->m_player->Move(time_step, this->m_tiles, this->GetPixelSize());
 }
 
 void Map::SetCamera()
@@ -101,9 +101,9 @@ bool Map::SetTiles()
 		}
 		this->m_height = y;
 
-		Point p;
-		p.x = 1;
-		p.y = 1;
+		DPoint p;
+		p.x = 1.f;
+		p.y = 1.f;
 		this->m_player->Position(p);
 		this->AddBorder();
 	}
