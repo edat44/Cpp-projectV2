@@ -42,7 +42,7 @@ class Map
 
         static const int ITEM_FRAME_SIZE = 100;
         static const int ITEM_FRAME_SPACING = 10;
-        static const int NUM_ITEM_FRAMES = 5;
+        static const int NUM_ITEM_FRAMES = 0;
 
         void AddBorder();
         void AddItemFrames();
