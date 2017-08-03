@@ -47,6 +47,7 @@
 		<Unit filename="include/Map.h" />
 		<Unit filename="include/Player.h" />
 		<Unit filename="include/Tile.h" />
+		<Unit filename="include/items/Item.h" />
 		<Unit filename="include/wSDL.h" />
 		<Unit filename="src/ItemFrame.cpp" />
 		<Unit filename="src/LGraphic.cpp" />
@@ -55,6 +56,7 @@
 		<Unit filename="src/Map.cpp" />
 		<Unit filename="src/Player.cpp" />
 		<Unit filename="src/Tile.cpp" />
+		<Unit filename="src/items/Item.cpp" />
 		<Unit filename="src/main.cpp" />
 		<Unit filename="src/wSDL.cpp" />
 		<Extensions>

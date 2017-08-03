@@ -7,6 +7,7 @@
 #include <sstream>
 #include "wSDL.h"
 #include "Player.h"
+#include "ItemFrame.h"
 
 class Map
 {
@@ -37,7 +38,14 @@ class Map
 
         int m_width, m_height;
 
+        std::vector<ItemFrame*> m_frames;
+
+        static const int ITEM_FRAME_SIZE = 100;
+        static const int ITEM_FRAME_SPACING = 10;
+        static const int NUM_ITEM_FRAMES = 5;
+
         void AddBorder();
+        void AddItemFrames();
 };
 
 #endif // MAP_H

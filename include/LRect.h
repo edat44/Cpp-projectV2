@@ -1,24 +1,19 @@
-#ifndef LTEXTURE_H
-#define LTEXTURE_H
+#ifndef LRECT_H
+#define LRECT_H
 
-#include "wSDL.h"
-#include "LGraphic.h"
-#include <string>
+#include <LGraphic.h>
+#include <wSDL.h>
 
 
-class LTexture : public LGraphic
+class LRect : public LGraphic
 {
     public:
-        LTexture();
-        virtual ~LTexture();
-
-        bool LoadFromFile(std::string path);
-
-        #ifdef _SDL_TTF_H
-        bool LoadFromRenderedText(std::string texture_text, SDL_Color text_color);
-        #endif
+        LRect();
+        virtual ~LRect();
 
         virtual void Free();
+
+        void SetSize(int w, int h);
 
         virtual void SetColor(uint8_t red, uint8_t green, uint8_t blue);
         virtual void SetColor(uint8_t red, uint8_t green, uint8_t blue, uint8_t alpha);
@@ -29,10 +24,10 @@ class LTexture : public LGraphic
 
         virtual void Render(int x, int y, SDL_Rect* clip = nullptr, double angle = 0.0, SDL_Point* center = nullptr, SDL_RendererFlip flip = SDL_FLIP_NONE);
 
-    protected:
-
     private:
-        SDL_Texture* m_texture;
+        uint8_t red, blue, green, alpha;
+
+        SDL_BlendMode blend;
 };
 
-#endif // LTEXTURE_H
+#endif // LRECT_H

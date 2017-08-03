@@ -3,6 +3,8 @@
 
 #include "wSDL.h"
 #include "Tile.h"
+#include "LTexture.h"
+#include "LRect.h"
 #include <vector>
 #include <algorithm>
 #include <string>
