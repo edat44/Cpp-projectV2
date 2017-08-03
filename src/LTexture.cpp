@@ -58,7 +58,7 @@ bool LTexture::LoadFromRenderedText(std::string texture_text, SDL_Color text_col
 {
     this->Free();
 
-    SDL_Surface* text_surface = TTF_RenderText_Solid(g_font, textureText.c_str(), text_color);
+    SDL_Surface* text_surface = TTF_RenderText_Solid(wSDL::s_font_skip_leg_day_20, texture_text.c_str(), text_color);
     if (text_surface == nullptr)
     {
         printf("Unable to render text surface! SDL_ttf Error: %s\n", TTF_GetError());

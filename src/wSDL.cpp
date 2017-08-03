@@ -6,6 +6,7 @@
 SDL_Window *wSDL::s_window;
 SDL_Renderer *wSDL::s_renderer;
 SDL_Surface *wSDL::s_screen_surface;
+TTF_Font *wSDL::s_font_skip_leg_day_20;
 
 bool wSDL::Init()
 {
@@ -48,12 +49,25 @@ bool wSDL::Init()
         wSDL::s_screen_surface = SDL_GetWindowSurface(wSDL::s_window);
     }
 
+    if (TTF_Init() < 0)
+    {
+        printf("SDL_ttf could not initialize! SDL_ttf error: %s\n", TTF_GetError());
+        return false;
+    }
+
     return true;
 }
 
 bool wSDL::LoadMedia(Map &m)
 {
     bool success = Player::S_SetTexture() && Tile::S_SetTexture() && m.SetTiles();
+
+    wSDL::s_font_skip_leg_day_20 = TTF_OpenFont("resources/fonts/SkipLegDay.ttf", 20);
+    if (wSDL::s_font_skip_leg_day_20 == nullptr)
+    {
+        printf("Could not load 'Skip Leg Day' font! SDL_ttf Error: %s\n", TTF_GetError());
+        success = false;
+    }
 
     return success;
 }

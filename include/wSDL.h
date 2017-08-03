@@ -4,9 +4,11 @@
 #if defined(_WIN32) || defined(_WIN64)
     #include <SDL.h>
     #include <SDL_image.h>
+    #include <SDL_ttf.h>
 #else
     #include <SDL2/SDL.h>
     #include <SDL2_image/SDL_image.h>
+    #include <SDL2_ttf/SDL_ttf.h>
 #endif
 #include <stdio.h>
 
@@ -26,6 +28,7 @@ class wSDL
         static SDL_Window* s_window;
         static SDL_Renderer* s_renderer;
         static SDL_Surface* s_screen_surface;
+        static TTF_Font* s_font_skip_leg_day_20;
 
 
         static bool Init();
