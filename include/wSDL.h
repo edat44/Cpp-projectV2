@@ -16,6 +16,29 @@ class Map;
 
 using Point = SDL_Point;
 
+struct DPoint
+{
+    double x = 0.f;
+    double y = 0.f;
+    DPoint() {};
+    DPoint(double x, double y) : x(x), y(y) {};
+
+    double dist()
+    {
+        return SDL_sqrt(SDL_pow(x, 2) + SDL_pow(y, 2));
+    }
+};
+
+struct DRect
+{
+    double x = 0;
+    double y = 0;
+    double w = 0;
+    double h = 0;
+    DRect() : x(0), y(0), w(0), h(0) {};
+    DRect(double x, double y, double w, double h) : x(x), y(y), w(w), h(h) {};
+};
+
 class wSDL
 {
     public:
@@ -35,7 +58,11 @@ class wSDL
         static bool LoadMedia(Map &m);
         static void Close(Map &m);
 
-        static bool CheckCollision(SDL_Rect a, SDL_Rect b);
+        static bool CheckCollision(const DRect &a, const DRect &b);
+        static bool CheckCollision(const DRect &a, const SDL_Rect &b);
+        static bool CheckCollision(const SDL_Rect &a, const SDL_Rect &b);
+
+        static DRect SDL_RectToDRect(const SDL_Rect &r);
 
         static void ClearScreen();
         static void UpdateScreen();
