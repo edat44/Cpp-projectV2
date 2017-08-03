@@ -79,7 +79,10 @@ void Player::Move(double time_step, std::vector<Tile*> tiles, Point level_size)
             DPoint dist = wSDL::Distance(this->m_box, wall->GetBox());
             m_box.x += dist.x;
         }
-
+        else if (m_box.x < 0)
+            m_box.x = 0;
+        else
+            m_box.x = level_size.x - Player::S_WIDTH;
     }
 
     //Y MOVEMENT
@@ -94,6 +97,10 @@ void Player::Move(double time_step, std::vector<Tile*> tiles, Point level_size)
             DPoint dist = wSDL::Distance(this->m_box, wall->GetBox());
             m_box.y += dist.y;
         }
+        else if (m_box.y < 0)
+            m_box.y = 0;
+        else
+            m_box.y = level_size.y - Player::S_HEIGHT;
     }
 }
 
