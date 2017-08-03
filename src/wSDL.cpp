@@ -2,6 +2,9 @@
 #include "Player.h"
 #include "Tile.h"
 #include "Map.h"
+#include "Projectile.h"
+#include <cmath>
+#define PI 3.14159265
 
 SDL_Window *wSDL::s_window;
 SDL_Renderer *wSDL::s_renderer;
@@ -60,7 +63,7 @@ bool wSDL::Init()
 
 bool wSDL::LoadMedia(Map &m)
 {
-    bool success = Player::S_SetTexture() && Tile::S_SetTexture() && m.SetTiles();
+    bool success = Player::S_SetTexture() && Tile::S_SetTexture() && Projectile::S_SetTexture() && m.SetTiles();
 
     wSDL::s_font_skip_leg_day_20 = TTF_OpenFont("resources/fonts/SkipLegDay.ttf", 20);
     if (wSDL::s_font_skip_leg_day_20 == nullptr)
@@ -76,6 +79,7 @@ void wSDL::Close(Map &m)
 {
     m.Free();
     Player::S_Free();
+    Projectile::S_Free();
     Tile::S_Free();
 
     SDL_DestroyRenderer(wSDL::s_renderer);
@@ -121,6 +125,12 @@ DRect wSDL::SDL_RectToDRect(const SDL_Rect &r)
     return DRect{(double)r.x, (double)r.y, (double)r.w, (double)r.h};
 }
 
+DPoint wSDL::SDL_PointToDPoint(const SDL_Point &p)
+{
+    return DPoint{(double)p.x, (double)p.y};
+}
+
+
 DPoint wSDL::Distance(const DRect &a, const DRect &b)
 {
     double left_a = a.x, left_b = b.x;
@@ -145,6 +155,32 @@ DPoint wSDL::Distance(const DRect &a, const DRect &b)
 DPoint wSDL::Distance(const DRect &a, const SDL_Rect &b)
 {
     return Distance(a, wSDL::SDL_RectToDRect(b));
+}
+
+double wSDL::GetAngle(const DPoint &a, const DPoint &b)
+{
+    double angle = 0.0;
+    double dx = b.x - a.x;
+    double dy = b.y - a.y;
+    if (dx == 0.0)
+        angle = 90.0;
+    else
+        angle = atan(fabs(dy) / fabs(dx)) * 180.0 / PI;
+    
+    if (b.x <= a.x && b.y >= a.y)         //Q4 (topright)
+        angle = 180.0 - angle;
+    else if (b.x < a.x && b.y < a.y)      //Q1 (bottomright)
+        angle += 180.0;
+    else if (b.x >= a.x && b.y <= a.y)    //Q2 (bottomleft)
+        angle = -angle;
+    else                                  //Q3 (topleft)
+        angle = angle;
+    return angle;
+}
+
+double wSDL::GetAngle(const DPoint &a, const SDL_Point &b)
+{
+    return wSDL::GetAngle(a, wSDL::SDL_PointToDPoint(b));
 }
 
 void wSDL::ClearScreen()

@@ -66,6 +66,12 @@ class wSDL
         static DPoint Distance(const DRect &a, const SDL_Rect &b);
 
         static DRect SDL_RectToDRect(const SDL_Rect &r);
+        static DPoint SDL_PointToDPoint(const SDL_Point &p);
+
+    
+        static double GetAngle(const DPoint &a, const DPoint &b);
+        static double GetAngle(const DPoint &a, const SDL_Point &b);
+
 
         static void ClearScreen();
         static void UpdateScreen();

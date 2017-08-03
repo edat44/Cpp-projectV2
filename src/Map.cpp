@@ -21,7 +21,7 @@ bool Map::HandleEvent(SDL_Event &e)
         if (e.key.keysym.sym == SDLK_ESCAPE)
             return true;
     }
-    this->m_player->HandleEvent(e);
+    this->m_player->HandleEvent(e, this->m_camera);
     return false;
 }
 
