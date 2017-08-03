@@ -31,7 +31,7 @@ class Player
 
         void Render(SDL_Rect &camera);
 
-        bool TouchesWall(std::vector<Tile*> tiles);
+        Tile* TouchesWall(std::vector<Tile*> tiles);
 
         static bool S_SetTexture();
         static void S_Free();

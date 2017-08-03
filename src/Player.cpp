@@ -70,17 +70,30 @@ void Player::Move(double time_step, std::vector<Tile*> tiles, Point level_size)
     //X MOVEMENT
     double dx = (m_vel.x * time_step);
     m_box.x += dx;
-    if (m_box.x < 0 || (m_box.x + Player::S_WIDTH > level_size.x) || this->TouchesWall(tiles))
+    Tile* wall = this->TouchesWall(tiles);
+    if (m_box.x < 0 || (m_box.x + Player::S_WIDTH > level_size.x) || wall != nullptr)
     {
         m_box.x -= dx; //Move back
+        if (wall != nullptr)
+        {
+            DPoint dist = wSDL::Distance(this->m_box, wall->GetBox());
+            m_box.x += dist.x;
+        }
+
     }
 
     //Y MOVEMENT
     double dy = (m_vel.y * time_step);
     m_box.y += dy;
-    if (m_box.y < 0 || (m_box.y + Player::S_HEIGHT > level_size.y) || this->TouchesWall(tiles))
+    wall = this->TouchesWall(tiles);
+    if (m_box.y < 0 || (m_box.y + Player::S_HEIGHT > level_size.y) || wall != nullptr)
     {
         m_box.y -= dy; //Move back
+        if (wall != nullptr)
+        {
+            DPoint dist = wSDL::Distance(this->m_box, wall->GetBox());
+            m_box.y += dist.y;
+        }
     }
 }
 
@@ -119,7 +132,7 @@ void Player::Render(SDL_Rect &camera)
 
 }
 
-bool Player::TouchesWall(std::vector<Tile*> tiles)
+Tile* Player::TouchesWall(std::vector<Tile*> tiles)
 {
     for (Tile* tile : tiles)
     {
@@ -130,12 +143,12 @@ bool Player::TouchesWall(std::vector<Tile*> tiles)
         case Tile::GREEN:
             break;
         default:
-            if (wSDL::CheckCollision(m_box, tile->GetBox()))
-                return true;
+            if (wSDL::CheckCollision(this->m_box, tile->GetBox()))
+                return tile;
         }
     }
 
-    return false;
+    return nullptr;
 }
 
 bool Player::S_SetTexture()

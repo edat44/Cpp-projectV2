@@ -121,6 +121,32 @@ DRect wSDL::SDL_RectToDRect(const SDL_Rect &r)
     return DRect{(double)r.x, (double)r.y, (double)r.w, (double)r.h};
 }
 
+DPoint wSDL::Distance(const DRect &a, const DRect &b)
+{
+    double left_a = a.x, left_b = b.x;
+    double right_a = a.x + a.w, right_b = b.x + b.w;
+    double top_a = a.y, top_b = b.y;
+    double bot_a = a.y + a.h, bot_b = b.y + b.h;
+
+    DPoint d;
+
+    if (bot_a <= top_b)
+        d.y = top_b - bot_a;
+    if (top_a >= bot_b)
+        d.y = bot_b - top_a;
+    if (right_a <= left_b)
+        d.x = left_b - right_a;
+    if (left_a >= right_b)
+        d.x = right_b - left_a;
+
+    return d;
+}
+
+DPoint wSDL::Distance(const DRect &a, const SDL_Rect &b)
+{
+    return Distance(a, wSDL::SDL_RectToDRect(b));
+}
+
 void wSDL::ClearScreen()
 {
     SDL_SetRenderDrawColor(wSDL::s_renderer, 0xFF, 0xFF, 0xFF, 0xFF);

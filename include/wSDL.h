@@ -62,6 +62,9 @@ class wSDL
         static bool CheckCollision(const DRect &a, const SDL_Rect &b);
         static bool CheckCollision(const SDL_Rect &a, const SDL_Rect &b);
 
+        static DPoint Distance(const DRect &a, const DRect &b);
+        static DPoint Distance(const DRect &a, const SDL_Rect &b);
+
         static DRect SDL_RectToDRect(const SDL_Rect &r);
 
         static void ClearScreen();
