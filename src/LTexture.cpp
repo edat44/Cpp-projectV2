@@ -14,7 +14,6 @@ bool LTexture::LoadFromFile(std::string path)
 {
 
     SDL_Texture *new_texture = nullptr;
-    SDL_Surface *optimized_surface = nullptr;
     SDL_Surface *loaded_surface = IMG_Load(path.c_str());
     if (loaded_surface == nullptr || loaded_surface == NULL)
     {
@@ -22,6 +21,7 @@ bool LTexture::LoadFromFile(std::string path)
     }
     else
     {
+        /*
         optimized_surface = SDL_ConvertSurface(loaded_surface, wSDL::s_screen_surface->format, 0);
         if (optimized_surface == nullptr)
         {
@@ -29,21 +29,22 @@ bool LTexture::LoadFromFile(std::string path)
         }
         else
         {
-            SDL_SetColorKey(optimized_surface, SDL_TRUE, SDL_MapRGB(optimized_surface->format, 0, 0xFF, 0xFF));
+        */
+        SDL_SetColorKey(loaded_surface, SDL_TRUE, SDL_MapRGB(loaded_surface->format, 0xFF, 0xFF, 0xFF));
 
-            new_texture = SDL_CreateTextureFromSurface(wSDL::s_renderer, optimized_surface);
-            if (new_texture == nullptr)
-            {
-                printf("Unable to create texture from %s! SDL Error: %s\n", path.c_str(), SDL_GetError());
-            }
-            else
-            {
-                this->m_width = optimized_surface->w;
-                this->m_height = optimized_surface->h;
-            }
-
-            SDL_FreeSurface(optimized_surface);
+        new_texture = SDL_CreateTextureFromSurface(wSDL::s_renderer, loaded_surface);
+        if (new_texture == nullptr)
+        {
+            printf("Unable to create texture from %s! SDL Error: %s\n", path.c_str(), SDL_GetError());
         }
+        else
+        {
+            this->m_width = loaded_surface->w;
+            this->m_height = loaded_surface->h;
+        }
+
+        //SDL_FreeSurface(optimized_surface);
+        //}
 
         SDL_FreeSurface(loaded_surface);
     }

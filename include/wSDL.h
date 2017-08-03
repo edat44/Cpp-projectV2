@@ -1,8 +1,13 @@
 #ifndef WSDL_H
 #define WSDL_H
 
-#include <SDL.h>
-#include <SDL_image.h>
+#if defined(_WIN32) || defined(_WIN64)
+    #include <SDL.h>
+    #include <SDL_image.h>
+#else
+    #include <SDL2/SDL.h>
+    #include <SDL2_image/SDL_image.h>
+#endif
 #include <stdio.h>
 
 class Map;
