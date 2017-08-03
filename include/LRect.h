@@ -1,8 +1,8 @@
 #ifndef LRECT_H
 #define LRECT_H
 
-#include <LGraphic.h>
-#include <wSDL.h>
+#include "LGraphic.h"
+#include "wSDL.h"
 
 
 class LRect : public LGraphic

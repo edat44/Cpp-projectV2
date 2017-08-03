@@ -30,7 +30,7 @@ Player::~Player()
 
 }
 
-void Player::HandleEvent(SDL_Event &e)
+void Player::HandleEvent(SDL_Event &e, SDL_Rect &camera)
 {
     if ((e.type == SDL_KEYDOWN || e.type == SDL_KEYUP) && e.key.repeat == 0)
     {
@@ -63,10 +63,13 @@ void Player::HandleEvent(SDL_Event &e)
         this->m_face_direction.x = x;
         this->m_face_direction.y = y;
     }
-    else if (e.type == SDL_MOUSEBUTTONUP || e.type == SDL_MOUSEBUTTONDOWN)
+    else if (e.type == SDL_MOUSEBUTTONDOWN)
     {
         int x, y;
         SDL_GetMouseState(&x, &y);
+        this->m_face_direction.x = x;
+        this->m_face_direction.y = y;
+        m_projectiles.push_back (new Projectile(DPoint {m_box.x + (m_box.w / 2), m_box.y + (m_box.h / 2)}, Point {camera.x + x, camera.y + y}));
     }
 }
 
@@ -107,6 +110,12 @@ void Player::Move(double time_step, std::vector<Tile*> tiles, Point level_size)
         else
             m_box.y = level_size.y - Player::S_HEIGHT;
     }
+    
+    for (Projectile* projectile: m_projectiles)
+    {
+        projectile->Move(time_step, tiles, level_size);
+    }
+        
 }
 
 void Player::SetCamera(SDL_Rect &camera, Point level_size)
@@ -121,27 +130,14 @@ void Player::SetCamera(SDL_Rect &camera, Point level_size)
 
 void Player::Render(SDL_Rect &camera)
 {
-    double angle = 0.0;
-    double x = fabs(m_box.x - camera.x + (m_box.w / 2));
-    double y = fabs(m_box.y - camera.y + (m_box.h / 2));
-    double dx = m_face_direction.x - x;
-    double dy = m_face_direction.y - y;
-    if (dx == 0.0)
-        angle = 90.0;
-    else
-        angle = atan(fabs(dy) / fabs(dx)) * 180.0 / PI;
-
-    if (m_face_direction.x <= x && m_face_direction.y >= y)       //Q4 (topright)
-        angle = 180.0 - angle;
-    else if (m_face_direction.x < x && m_face_direction.y < y)  //Q1 (bottomright)
-        angle += 180.0;
-    else if (m_face_direction.x >= x && m_face_direction.y <= y)  //Q2 (bottomleft)
-        angle = -angle;
-    else                                                        //Q3 (topleft)
-        angle = angle;
-
+    DPoint start = DPoint{(m_box.x - camera.x + (m_box.w / 2)), (m_box.y - camera.y + (m_box.h / 2))};
+    double angle = wSDL::GetAngle(start, m_face_direction);
     Player::s_texture->Render((int)m_box.x - camera.x, (int)m_box.y - camera.y, nullptr, angle);
-
+    
+    for (Projectile* projectile: m_projectiles)
+    {
+        projectile->Render(camera);
+    }
 }
 
 Tile* Player::TouchesWall(std::vector<Tile*> tiles)

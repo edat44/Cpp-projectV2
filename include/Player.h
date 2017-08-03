@@ -5,6 +5,7 @@
 #include "Tile.h"
 #include "LTexture.h"
 #include "LRect.h"
+#include "Projectile.h"
 #include <vector>
 #include <algorithm>
 #include <string>
@@ -22,7 +23,7 @@ class Player
 
         void Position(DPoint pos);
 
-        void HandleEvent(SDL_Event &e);
+        void HandleEvent(SDL_Event &e, SDL_Rect &camera);
 
         //time_step is measured in seconds
         void Move(double time_step, std::vector<Tile*> tiles, Point level_size);
@@ -49,6 +50,8 @@ class Player
         DPoint m_vel;
 
         Point m_face_direction;
+    
+        std::vector<Projectile*> m_projectiles;
 };
 
 #endif // PLAYER_H
