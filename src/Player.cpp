@@ -63,6 +63,11 @@ void Player::HandleEvent(SDL_Event &e)
         this->m_face_direction.x = x;
         this->m_face_direction.y = y;
     }
+    else if (e.type == SDL_MOUSEBUTTONUP || e.type == SDL_MOUSEBUTTONDOWN)
+    {
+        int x, y;
+        SDL_GetMouseState(&x, &y);
+    }
 }
 
 void Player::Move(std::vector<Tile*> tiles, Point level_size)
