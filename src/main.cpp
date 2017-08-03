@@ -1,6 +1,7 @@
 #include "wSDL.h"
 #include <stdio.h>
 #include "Map.h"
+#include "LTimer.h"
 
 int main(int argc, char* args[])
 {
@@ -22,6 +23,9 @@ int main(int argc, char* args[])
 
         SDL_Event e;
 
+        LTimer step_timer;
+        step_timer.Start();
+
         while (!quit)
         {
             while (SDL_PollEvent(&e) != 0)
@@ -33,7 +37,12 @@ int main(int argc, char* args[])
                     quit = true;
             }
 
-            board.MovePlayer();
+            double time_step = step_timer.GetTicks() / 1000.0;
+
+            board.MovePlayer(time_step);
+
+            step_timer.Start();
+
             board.SetCamera();
 
             wSDL::ClearScreen();

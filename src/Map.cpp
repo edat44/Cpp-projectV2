@@ -6,6 +6,7 @@ Map::Map(std::string file_path)
     this->m_file_path = file_path;
     this->m_camera = {0, 0, wSDL::SCREEN_WIDTH, wSDL::SCREEN_HEIGHT};
     this->m_player = new Player();
+    this->AddItemFrames();
 }
 
 Map::~Map()
@@ -24,9 +25,9 @@ bool Map::HandleEvent(SDL_Event &e)
     return false;
 }
 
-void Map::MovePlayer()
+void Map::MovePlayer(double time_step)
 {
-    this->m_player->Move(this->m_tiles, this->GetPixelSize());
+    this->m_player->Move(time_step, this->m_tiles, this->GetPixelSize());
 }
 
 void Map::SetCamera()
@@ -42,6 +43,10 @@ void Map::Render()
         tile->Render(this->m_camera);
     }
     this->m_player->Render(this->m_camera);
+    for (ItemFrame* frame : this->m_frames)
+    {
+        frame->Render();
+    }
 }
 
 bool Map::SetTiles()
@@ -96,9 +101,9 @@ bool Map::SetTiles()
 		}
 		this->m_height = y;
 
-		Point p;
-		p.x = 1;
-		p.y = 1;
+		DPoint p;
+		p.x = 1.f;
+		p.y = 1.f;
 		this->m_player->Position(p);
 		this->AddBorder();
 	}
@@ -113,6 +118,7 @@ bool Map::SetTiles()
 void Map::Free()
 {
     this->m_tiles.erase(this->m_tiles.begin(), this->m_tiles.end());
+    this->m_frames.erase(this->m_frames.begin(), this->m_frames.end());
 }
 
 Point Map::GetPixelSize()
@@ -186,5 +192,16 @@ void Map::AddBorder()
 
         x += (x_add * Tile::S_WIDTH);
         y += (y_add * Tile::S_HEIGHT);
+    }
+}
+
+void Map::AddItemFrames()
+{
+    int x = wSDL::SCREEN_WIDTH - Map::ITEM_FRAME_SIZE - Map::ITEM_FRAME_SPACING;
+    int y = wSDL::SCREEN_HEIGHT - Map::ITEM_FRAME_SIZE - Map::ITEM_FRAME_SPACING;
+    for (int i = 0; i < Map::NUM_ITEM_FRAMES; ++i)
+    {
+        this->m_frames.push_back(new ItemFrame(x, y, Map::ITEM_FRAME_SIZE));
+        x -= (Map::ITEM_FRAME_SIZE + Map::ITEM_FRAME_SPACING);
     }
 }

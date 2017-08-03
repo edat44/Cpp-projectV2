@@ -4,6 +4,7 @@
 #include "wSDL.h"
 #include "Tile.h"
 #include "LTexture.h"
+#include "LRect.h"
 #include <vector>
 #include <algorithm>
 #include <string>
@@ -17,19 +18,20 @@ class Player
         static const int S_WIDTH = 20;
         static const int S_HEIGHT = 20;
 
-        static const int S_MAX_VEL = 10;
+        static const int S_MAX_VEL = 600;
 
-        void Position(Point pos);
+        void Position(DPoint pos);
 
         void HandleEvent(SDL_Event &e);
 
-        void Move(std::vector<Tile*> tiles, Point level_size);
+        //time_step is measured in seconds
+        void Move(double time_step, std::vector<Tile*> tiles, Point level_size);
 
         void SetCamera(SDL_Rect &camera, Point level_size);
 
         void Render(SDL_Rect &camera);
 
-        bool TouchesWall(std::vector<Tile*> tiles);
+        Tile* TouchesWall(std::vector<Tile*> tiles);
 
         static bool S_SetTexture();
         static void S_Free();
@@ -43,10 +45,9 @@ class Player
         static const SDL_Keycode LEFT = SDLK_a;
         static const SDL_Keycode RIGHT = SDLK_d;
 
-        SDL_Rect m_box;
+        DRect m_box;
+        DPoint m_vel;
 
-        Point m_vel;
-    
         Point m_face_direction;
 };
 

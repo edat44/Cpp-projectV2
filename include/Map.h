@@ -7,6 +7,7 @@
 #include <sstream>
 #include "wSDL.h"
 #include "Player.h"
+#include "ItemFrame.h"
 
 class Map
 {
@@ -17,7 +18,7 @@ class Map
         //Returns true if game should quit
         bool HandleEvent(SDL_Event &e);
 
-        void MovePlayer();
+        void MovePlayer(double time_step = 1);
         void SetCamera();
 
         void Render();
@@ -37,7 +38,14 @@ class Map
 
         int m_width, m_height;
 
+        std::vector<ItemFrame*> m_frames;
+
+        static const int ITEM_FRAME_SIZE = 100;
+        static const int ITEM_FRAME_SPACING = 10;
+        static const int NUM_ITEM_FRAMES = 0;
+
         void AddBorder();
+        void AddItemFrames();
 };
 
 #endif // MAP_H

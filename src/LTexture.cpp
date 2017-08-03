@@ -1,10 +1,8 @@
 #include "LTexture.h"
 
-LTexture::LTexture()
+LTexture::LTexture() : LGraphic()
 {
     m_texture = nullptr;
-    m_width = 0;
-    m_height = 0;
 }
 
 LTexture::~LTexture()
@@ -60,7 +58,7 @@ bool LTexture::LoadFromRenderedText(std::string texture_text, SDL_Color text_col
 {
     this->Free();
 
-    SDL_Surface* text_surface = TTF_RenderText_Solid(g_font, textureText.c_str(), text_color);
+    SDL_Surface* text_surface = TTF_RenderText_Solid(wSDL::s_font_skip_leg_day_20, texture_text.c_str(), text_color);
     if (text_surface == nullptr)
     {
         printf("Unable to render text surface! SDL_ttf Error: %s\n", TTF_GetError());
@@ -88,13 +86,18 @@ void LTexture::Free()
 {
     SDL_DestroyTexture(m_texture);
     m_texture = nullptr;
-    m_width = 0;
-    m_height = 0;
+    this->LGraphic::Free();
 }
 
 void LTexture::SetColor(uint8_t red, uint8_t green, uint8_t blue)
 {
     SDL_SetTextureColorMod(m_texture, red, green, blue);
+}
+
+void LTexture::SetColor(uint8_t red, uint8_t green, uint8_t blue, uint8_t alpha)
+{
+    this->SetColor(red, green, blue);
+    this->SetAlpha(alpha);
 }
 
 void LTexture::SetBlendMode(SDL_BlendMode blending)
@@ -118,14 +121,4 @@ void LTexture::Render(int x, int y, SDL_Rect* clip, double angle, SDL_Point* cen
     }
 
     SDL_RenderCopyEx(wSDL::s_renderer, this->m_texture, clip, &render_quad, angle, center, flip);
-}
-
-int LTexture::GetWidth()
-{
-    return this->m_width;
-}
-
-int LTexture::GetHeight()
-{
-    return this->m_height;
 }

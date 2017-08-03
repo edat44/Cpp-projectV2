@@ -6,6 +6,7 @@
 SDL_Window *wSDL::s_window;
 SDL_Renderer *wSDL::s_renderer;
 SDL_Surface *wSDL::s_screen_surface;
+TTF_Font *wSDL::s_font_skip_leg_day_20;
 
 bool wSDL::Init()
 {
@@ -48,12 +49,25 @@ bool wSDL::Init()
         wSDL::s_screen_surface = SDL_GetWindowSurface(wSDL::s_window);
     }
 
+    if (TTF_Init() < 0)
+    {
+        printf("SDL_ttf could not initialize! SDL_ttf error: %s\n", TTF_GetError());
+        return false;
+    }
+
     return true;
 }
 
 bool wSDL::LoadMedia(Map &m)
 {
     bool success = Player::S_SetTexture() && Tile::S_SetTexture() && m.SetTiles();
+
+    wSDL::s_font_skip_leg_day_20 = TTF_OpenFont("resources/fonts/SkipLegDay.ttf", 20);
+    if (wSDL::s_font_skip_leg_day_20 == nullptr)
+    {
+        printf("Could not load 'Skip Leg Day' font! SDL_ttf Error: %s\n", TTF_GetError());
+        success = false;
+    }
 
     return success;
 }
@@ -73,12 +87,12 @@ void wSDL::Close(Map &m)
     SDL_Quit();
 }
 
-bool wSDL::CheckCollision(SDL_Rect a, SDL_Rect b)
+bool wSDL::CheckCollision(const DRect &a, const DRect &b)
 {
-    int left_a = a.x, left_b = b.x;
-    int right_a = a.x + a.w, right_b = b.x + b.w;
-    int top_a = a.y, top_b = b.y;
-    int bot_a = a.y + a.h, bot_b = b.y + b.h;
+    double left_a = a.x, left_b = b.x;
+    double right_a = a.x + a.w, right_b = b.x + b.w;
+    double top_a = a.y, top_b = b.y;
+    double bot_a = a.y + a.h, bot_b = b.y + b.h;
 
     if (bot_a <= top_b)
         return false;
@@ -90,6 +104,47 @@ bool wSDL::CheckCollision(SDL_Rect a, SDL_Rect b)
         return false;
 
     return true;
+}
+
+bool wSDL::CheckCollision(const DRect &a, const SDL_Rect &b)
+{
+    return wSDL::CheckCollision(a, wSDL::SDL_RectToDRect(b));
+}
+
+bool wSDL::CheckCollision(const SDL_Rect &a, const SDL_Rect &b)
+{
+    return wSDL::CheckCollision(SDL_RectToDRect(a), SDL_RectToDRect(b));
+}
+
+DRect wSDL::SDL_RectToDRect(const SDL_Rect &r)
+{
+    return DRect{(double)r.x, (double)r.y, (double)r.w, (double)r.h};
+}
+
+DPoint wSDL::Distance(const DRect &a, const DRect &b)
+{
+    double left_a = a.x, left_b = b.x;
+    double right_a = a.x + a.w, right_b = b.x + b.w;
+    double top_a = a.y, top_b = b.y;
+    double bot_a = a.y + a.h, bot_b = b.y + b.h;
+
+    DPoint d;
+
+    if (bot_a <= top_b)
+        d.y = top_b - bot_a;
+    if (top_a >= bot_b)
+        d.y = bot_b - top_a;
+    if (right_a <= left_b)
+        d.x = left_b - right_a;
+    if (left_a >= right_b)
+        d.x = right_b - left_a;
+
+    return d;
+}
+
+DPoint wSDL::Distance(const DRect &a, const SDL_Rect &b)
+{
+    return Distance(a, wSDL::SDL_RectToDRect(b));
 }
 
 void wSDL::ClearScreen()
