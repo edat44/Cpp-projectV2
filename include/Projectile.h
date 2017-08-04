@@ -9,12 +9,13 @@ class Projectile
 {
 public:
     Projectile(DPoint start, Point target);
+    Projectile(DRect start, Point target);
     virtual ~Projectile();
     
-    static const int S_WIDTH = 6;
-    static const int S_HEIGHT = 6;
+    static const int WIDTH = 6;
+    static const int HEIGHT = 6;
     
-    static const int S_MAX_VEL = 500.f;
+    static const int MAX_VEL = 500.f;
 
     void Move(double time_step, std::vector<Tile*> tiles, Point level_size);
 

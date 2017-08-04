@@ -70,7 +70,7 @@ void Player::HandleEvent(SDL_Event &e, SDL_Rect &camera)
         SDL_GetMouseState(&x, &y);
         this->m_face_direction.x = x;
         this->m_face_direction.y = y;
-        m_projectiles.push_back (new Projectile(DPoint {m_box.x + (m_box.w / 2), m_box.y + (m_box.h / 2)}, Point {camera.x + x, camera.y + y}));
+        m_projectiles.push_back (new Projectile(m_box, Point {camera.x + x, camera.y + y}));
     }
 }
 
