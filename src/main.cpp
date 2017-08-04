@@ -13,7 +13,7 @@ int main(int argc, char* args[])
 
     Map board = Map("resources/jewon.map");
 
-    if (!wSDL::LoadMedia(board))
+    if (!wSDL::LoadMedia())
     {
         printf("Failed to load media!\n");
     }
@@ -52,7 +52,7 @@ int main(int argc, char* args[])
             wSDL::UpdateScreen();
         }
 
-        wSDL::Close(board);
+        wSDL::Close();
     }
 
     return 0;

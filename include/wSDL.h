@@ -48,15 +48,16 @@ class wSDL
         //What file types does this project use?
         static const int IMG_FLAGS = IMG_INIT_PNG;
 
-        static SDL_Window* s_window;
-        static SDL_Renderer* s_renderer;
-        static SDL_Surface* s_screen_surface;
-        static TTF_Font* s_font_skip_leg_day_20;
+        static SDL_Window *s_window;
+        static SDL_Renderer *s_renderer;
+        static SDL_Surface *s_screen_surface;
+        static TTF_Font *s_font_skip_leg_day_20;
 
+        static constexpr double PI =3.14159265f;
 
         static bool Init();
-        static bool LoadMedia(Map &m);
-        static void Close(Map &m);
+        static bool LoadMedia();
+        static void Close();
 
         static bool CheckCollision(const DRect &a, const DRect &b);
         static bool CheckCollision(const DRect &a, const SDL_Rect &b);
@@ -68,7 +69,7 @@ class wSDL
         static DRect SDL_RectToDRect(const SDL_Rect &r);
         static DPoint SDL_PointToDPoint(const SDL_Point &p);
 
-    
+
         static double GetAngle(const DPoint &a, const DPoint &b);
         static double GetAngle(const DPoint &a, const SDL_Point &b);
 

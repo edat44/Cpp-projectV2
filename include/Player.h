@@ -34,12 +34,12 @@ class Player
 
         Tile* TouchesWall(std::vector<Tile*> tiles);
 
-        static bool S_SetTexture();
-        static void S_Free();
+        bool LoadTexture();
+        void Free();
 
     private:
-        static const std::string S_TEXTURE_PATH;
-        static LTexture* s_texture;
+        static const std::string m_path_texture;
+        LTexture* m_texture;
 
         static const SDL_Keycode UP = SDLK_w;
         static const SDL_Keycode DOWN = SDLK_s;

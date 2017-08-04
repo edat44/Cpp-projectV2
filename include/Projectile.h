@@ -20,12 +20,12 @@ public:
 
     void Render(SDL_Rect &camera);
 
-    static bool S_SetTexture();
-    static void S_Free();
+    bool LoadTexture();
+    void Free();
 
 private:
-    static const std::string S_TEXTURE_PATH;
-    static LTexture* s_texture;
+    static const std::string m_path_texture;
+    LTexture* m_texture;
 
     DRect m_box;
     DPoint m_vel;

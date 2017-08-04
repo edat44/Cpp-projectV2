@@ -1,9 +1,8 @@
 #include "Player.h"
+#include "Map.h"
 #include <cmath>
-#define PI 3.14159265
 
-const std::string Player::S_TEXTURE_PATH = "resources/dot_with_arrow.png";
-LTexture* Player::s_texture = nullptr;
+const std::string Player::m_path_texture = "resources/dot_with_arrow.png";
 
 Player::Player()
 {
@@ -17,17 +16,19 @@ Player::Player()
 
     this->m_face_direction.x = wSDL::SCREEN_WIDTH / 2.0f;
     this->m_face_direction.y = wSDL::SCREEN_HEIGHT / 2.0f;
+
+    this->LoadTexture();
 }
 
 void Player::Position(DPoint pos)
 {
-    this->m_box.x = ((pos.x * Tile::S_WIDTH) + (Tile::S_WIDTH / 2) - (Player::S_WIDTH / 2));
-    this->m_box.y = ((pos.y * Tile::S_HEIGHT) + (Tile::S_HEIGHT / 2) - (Player::S_HEIGHT / 2));
+    this->m_box.x = ((pos.x * Map::TILE_WIDTH) + (Map::TILE_WIDTH / 2) - (Player::S_WIDTH / 2));
+    this->m_box.y = ((pos.y * Map::TILE_HEIGHT) + (Map::TILE_HEIGHT / 2) - (Player::S_HEIGHT / 2));
 }
 
 Player::~Player()
 {
-
+    this->Free();
 }
 
 void Player::HandleEvent(SDL_Event &e, SDL_Rect &camera)
@@ -110,12 +111,12 @@ void Player::Move(double time_step, std::vector<Tile*> tiles, Point level_size)
         else
             m_box.y = level_size.y - Player::S_HEIGHT;
     }
-    
+
     for (Projectile* projectile: m_projectiles)
     {
         projectile->Move(time_step, tiles, level_size);
     }
-        
+
 }
 
 void Player::SetCamera(SDL_Rect &camera, Point level_size)
@@ -132,8 +133,8 @@ void Player::Render(SDL_Rect &camera)
 {
     DPoint start = DPoint{(m_box.x - camera.x + (m_box.w / 2)), (m_box.y - camera.y + (m_box.h / 2))};
     double angle = wSDL::GetAngle(start, m_face_direction);
-    Player::s_texture->Render((int)m_box.x - camera.x, (int)m_box.y - camera.y, nullptr, angle);
-    
+    this->m_texture->Render((int)m_box.x - camera.x, (int)m_box.y - camera.y, nullptr, angle);
+
     for (Projectile* projectile: m_projectiles)
     {
         projectile->Render(camera);
@@ -146,24 +147,26 @@ Tile* Player::TouchesWall(std::vector<Tile*> tiles)
     {
         switch(tile->GetType())
         {
-        case Tile::BLUE:
-        case Tile::RED:
-        case Tile::GREEN:
+        case Map::TILE_BLUE:
+        case Map::TILE_RED:
+        case Map::TILE_GREEN:
             break;
         default:
             if (wSDL::CheckCollision(this->m_box, tile->GetBox()))
+            {
                 return tile;
+            }
         }
     }
 
     return nullptr;
 }
 
-bool Player::S_SetTexture()
+bool Player::LoadTexture()
 {
     bool success = true;
-    Player::s_texture = new LTexture();
-    if (!Player::s_texture->LoadFromFile(Player::S_TEXTURE_PATH))
+    this->m_texture = new LTexture();
+    if (!this->m_texture->LoadFromFile(this->m_path_texture))
     {
         printf("Could not load player texture!\n");
         success = false;
@@ -172,8 +175,11 @@ bool Player::S_SetTexture()
     return success;
 }
 
-void Player::S_Free()
+void Player::Free()
 {
-    Player::s_texture->Free();
-    delete Player::s_texture;
+    if (this->m_texture != nullptr)
+    {
+        this->m_texture->Free();
+        delete this->m_texture;
+    }
 }
