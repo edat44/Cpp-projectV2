@@ -19,7 +19,7 @@ class Player
         static const int S_WIDTH = 20;
         static const int S_HEIGHT = 20;
 
-        static const int S_MAX_VEL = 600;
+        static const int S_MAX_VEL = 300;
 
         void Position(DPoint pos);
 
@@ -50,7 +50,7 @@ class Player
         DPoint m_vel;
 
         Point m_face_direction;
-    
+
         std::vector<Projectile*> m_projectiles;
 };
 
