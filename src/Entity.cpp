@@ -37,41 +37,28 @@ bool Entity::LoadTexture()
     return success;
 }
 
-void Entity::Move(double time_step, std::vector<Tile*> tiles, Point level_size)
+void Entity::Position(DPoint pos)
+{
+    this->m_box.x = ((pos.x * Map::TILE_WIDTH) + (Map::TILE_WIDTH / 2) - (m_box.w / 2));
+    this->m_box.y = ((pos.y * Map::TILE_HEIGHT) + (Map::TILE_HEIGHT / 2) - (m_box.h / 2));
+}
+
+Tile* Entity::Move(double time_step, std::vector<Tile*> tiles, Point level_size)
 {
     double dx = (m_vel.x * time_step);
-    m_box.x += dx;
+    double dy = (m_vel.y * time_step);
+    m_box.x = wSDL::Constrain(m_box.x + dx, 0, level_size.x - m_box.w);
+    m_box.y = wSDL::Constrain(m_box.y + dy, 0, level_size.y - m_box.h);
     Tile* wall = this->TouchesWall(tiles);
-    if (m_box.x < 0 || (m_box.x + m_box.w > level_size.x) || wall != nullptr)
+    if (wall != nullptr)
     {
         m_box.x -= dx;
-        if (wall != nullptr)
-        {
-            DPoint dist = wSDL::Distance(this->m_box, wall->GetBox());
-            m_box.x += dist.x;
-        }
-        else if (m_box.x < 0)
-            m_box.x = 0;
-        else
-            m_box.x = level_size.x - m_box.w;
-    }
-
-    double dy = (m_vel.y * time_step);
-    m_box.y += dy;
-    wall = this->TouchesWall(tiles);
-    if (m_box.y < 0 || (m_box.y + m_box.h > level_size.y) || wall != nullptr)
-    {
         m_box.y -= dy;
-        if (wall != nullptr)
-        {
-            DPoint dist = wSDL::Distance(this->m_box, wall->GetBox());
-            m_box.y += dist.y;
-        }
-        else if (m_box.y < 0)
-            m_box.y = 0;
-        else
-            m_box.y = level_size.y - m_box.h;
+        DPoint dist = wSDL::Distance(this->m_box, wall->GetBox());
+        m_box.x += dist.x;
+        m_box.y += dist.y;
     }
+    return wall;
 }
 
 void Entity::Render(SDL_Rect &camera)

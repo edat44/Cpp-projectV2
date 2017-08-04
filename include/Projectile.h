@@ -18,7 +18,7 @@ class Projectile: public Entity
 
         static const int MAX_VEL = 500.f;
 
-        void Move(double time_step, std::vector<Tile*> tiles, Point level_size);
+        Tile* Move(double time_step, std::vector<Tile*> tiles, Point level_size);
 
         bool LoadTexture();
         void Free();

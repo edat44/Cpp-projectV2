@@ -25,9 +25,9 @@ Projectile::~Projectile()
     this->Free();
 }
 
-void Projectile::Move(double time_step, std::vector<Tile*> tiles, Point level_size)
+Tile* Projectile::Move(double time_step, std::vector<Tile*> tiles, Point level_size)
 {
-    this->Entity::Move(time_step, tiles, level_size);
+    return this->Entity::Move(time_step, tiles, level_size);
 }
 
 void Projectile::Free()

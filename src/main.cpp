@@ -58,8 +58,8 @@ int main(int argc, char* args[])
 
             wSDL::UpdateScreen();
         }
-
         wSDL::Close();
+        board.Free();
     }
 
     return 0;

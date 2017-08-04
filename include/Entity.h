@@ -12,11 +12,13 @@ class Entity
         Entity(std::string type, std::string path_texture);
         virtual ~Entity();
 
-    virtual void Move(double time_step, std::vector<Tile*> tiles, Point level_size);
+        void Position(DPoint pos);
 
-    void Render(SDL_Rect &camera);
+        virtual Tile* Move(double time_step, std::vector<Tile*> tiles, Point level_size) = 0;
 
-    virtual void Free();
+        virtual void Render(SDL_Rect &camera);
+
+        virtual void Free() = 0;
 
     protected:
         DRect m_box;

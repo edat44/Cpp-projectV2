@@ -73,6 +73,8 @@ class wSDL
         static double GetAngle(const DPoint &a, const DPoint &b);
         static double GetAngle(const DPoint &a, const SDL_Point &b);
 
+        static double Constrain(double val, double min_val, double max_val);
+
 
         static void ClearScreen();
         static void UpdateScreen();

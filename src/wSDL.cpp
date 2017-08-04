@@ -187,6 +187,11 @@ double wSDL::GetAngle(const DPoint &a, const SDL_Point &b)
     return wSDL::GetAngle(a, wSDL::SDL_PointToDPoint(b));
 }
 
+double wSDL::Constrain(double val, double min_val, double max_val)
+{
+    return std::min(std::max(val, min_val), max_val);
+}
+
 void wSDL::ClearScreen()
 {
     SDL_SetRenderDrawColor(wSDL::s_renderer, 0xFF, 0xFF, 0xFF, 0xFF);
