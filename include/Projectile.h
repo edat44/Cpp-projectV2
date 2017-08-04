@@ -11,8 +11,8 @@ public:
     Projectile(DPoint start, Point target);
     virtual ~Projectile();
     
-    static const int S_WIDTH = 5;
-    static const int S_HEIGHT = 5;
+    static const int S_WIDTH = 6;
+    static const int S_HEIGHT = 6;
     
     static const int S_MAX_VEL = 300.f;
     
