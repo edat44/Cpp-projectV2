@@ -19,7 +19,7 @@ class Player
         static const int S_WIDTH = 20;
         static const int S_HEIGHT = 20;
 
-        static const int S_MAX_VEL = 600;
+        static const int S_MAX_VEL = 300;
 
         void Position(DPoint pos);
 
@@ -34,12 +34,12 @@ class Player
 
         Tile* TouchesWall(std::vector<Tile*> tiles);
 
-        static bool S_SetTexture();
-        static void S_Free();
+        bool LoadTexture();
+        void Free();
 
     private:
-        static const std::string S_TEXTURE_PATH;
-        static LTexture* s_texture;
+        static const std::string m_path_texture;
+        LTexture* m_texture;
 
         static const SDL_Keycode UP = SDLK_w;
         static const SDL_Keycode DOWN = SDLK_s;
@@ -50,7 +50,7 @@ class Player
         DPoint m_vel;
 
         Point m_face_direction;
-    
+
         std::vector<Projectile*> m_projectiles;
 };
 

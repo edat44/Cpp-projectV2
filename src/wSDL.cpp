@@ -11,6 +11,15 @@ SDL_Renderer *wSDL::s_renderer;
 SDL_Surface *wSDL::s_screen_surface;
 TTF_Font *wSDL::s_font_skip_leg_day_20;
 
+LTexture *texture_tiles = nullptr;
+const std::string path_texture_tiles = "resources/tiles.png";
+
+LTexture *texture_player;
+const std::string path_texture_player;
+
+LTexture *texture_bullet;
+const std::string path_texture_bullet;
+
 bool wSDL::Init()
 {
 
@@ -61,9 +70,9 @@ bool wSDL::Init()
     return true;
 }
 
-bool wSDL::LoadMedia(Map &m)
+bool wSDL::LoadMedia()
 {
-    bool success = Player::S_SetTexture() && Tile::S_SetTexture() && Projectile::S_SetTexture() && m.SetTiles();
+    bool success = true;
 
     wSDL::s_font_skip_leg_day_20 = TTF_OpenFont("resources/fonts/SkipLegDay.ttf", 20);
     if (wSDL::s_font_skip_leg_day_20 == nullptr)
@@ -75,13 +84,8 @@ bool wSDL::LoadMedia(Map &m)
     return success;
 }
 
-void wSDL::Close(Map &m)
+void wSDL::Close()
 {
-    m.Free();
-    Player::S_Free();
-    Projectile::S_Free();
-    Tile::S_Free();
-
     SDL_DestroyRenderer(wSDL::s_renderer);
     SDL_DestroyWindow(wSDL::s_window);
     wSDL::s_renderer = nullptr;
@@ -166,7 +170,7 @@ double wSDL::GetAngle(const DPoint &a, const DPoint &b)
         angle = 90.0;
     else
         angle = atan(fabs(dy) / fabs(dx)) * 180.0 / PI;
-    
+
     if (b.x <= a.x && b.y >= a.y)         //Q4 (topright)
         angle = 180.0 - angle;
     else if (b.x < a.x && b.y < a.y)      //Q1 (bottomright)

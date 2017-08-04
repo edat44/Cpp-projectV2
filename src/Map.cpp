@@ -1,12 +1,19 @@
 #include "Map.h"
 
+const std::string Map::m_path_texture_tiles = "resources/tiles.png";
 
 Map::Map(std::string file_path)
 {
-    this->m_file_path = file_path;
+    this->m_path_map = file_path;
     this->m_camera = {0, 0, wSDL::SCREEN_WIDTH, wSDL::SCREEN_HEIGHT};
     this->m_player = new Player();
+
+    this->m_fps_color = SDL_Color{0x66, 0x66, 0x66, 0xFF};
+    this->m_fps_font = wSDL::s_font_skip_leg_day_20;
+
+    this->LoadTexture();
     this->AddItemFrames();
+    this->SetTiles();
 }
 
 Map::~Map()
@@ -27,12 +34,12 @@ bool Map::HandleEvent(SDL_Event &e)
 
 void Map::MovePlayer(double time_step)
 {
-    this->m_player->Move(time_step, this->m_tiles, this->GetPixelSize());
+    this->m_player->Move(time_step, this->m_tiles, this->GetMapSizePixels());
 }
 
 void Map::SetCamera()
 {
-    this->m_player->SetCamera(this->m_camera, this->GetPixelSize());
+    this->m_player->SetCamera(this->m_camera, this->GetMapSizePixels());
 }
 
 void Map::Render()
@@ -47,6 +54,8 @@ void Map::Render()
     {
         frame->Render();
     }
+    if (this->m_texture_fps != nullptr)
+        this->m_texture_fps->Render(Map::FPS_X, Map::FPS_Y);
 }
 
 bool Map::SetTiles()
@@ -55,10 +64,10 @@ bool Map::SetTiles()
 	bool tiles_loaded = true;
 
     //The tile offsets
-    int x = 0, y = Tile::S_HEIGHT;
+    int x = 0, y = Map::TILE_HEIGHT;
 
     //Open the map
-    std::ifstream map_file(this->m_file_path.c_str());
+    std::ifstream map_file(this->m_path_map.c_str());
 
     //If the map couldn't be loaded
     if(map_file.fail())
@@ -72,16 +81,16 @@ bool Map::SetTiles()
 		//Initialize the tiles
         while (std::getline(map_file, row_data))
         {
-            x = Tile::S_WIDTH;
+            x = Map::TILE_WIDTH;
             std::istringstream iss(row_data);
             int tile_type = -1;
 
             while (iss >> tile_type)
             {
                 //If the number is a valid tile number
-                if(tile_type >= 0 && tile_type < Tile::TOTAL_TILE_SPRITES)
+                if(tile_type >= 0 && tile_type < Map::TILE_TOTAL_SPRITES)
                 {
-                    this->m_tiles.push_back(new Tile(x, y, tile_type));
+                    this->m_tiles.push_back(new Tile(x, y, tile_type, this->m_texture_tiles, &this->m_tile_clips));
                 }
                 //If we don't recognize the tile type
                 else
@@ -91,13 +100,13 @@ bool Map::SetTiles()
                     tiles_loaded = false;
                     break;
                 }
-                x += Tile::S_WIDTH;
+                x += Map::TILE_WIDTH;
             }
             if (tiles_loaded == false)
                 break;
 
             this->m_width = x;
-			y += Tile::S_HEIGHT;
+			y += Map::TILE_HEIGHT;
 		}
 		this->m_height = y;
 
@@ -115,13 +124,47 @@ bool Map::SetTiles()
     return tiles_loaded;
 }
 
+bool Map::LoadTexture()
+{
+    bool success = true;
+    this->m_texture_tiles = new LTexture();
+    if (!this->m_texture_tiles->LoadFromFile(this->m_path_texture_tiles))
+    {
+        printf("Failed to load tile texture\n");
+        success = false;
+    }
+    for (int y = 0; y < Map::TILE_SPRITE_ROWS; ++y)
+    {
+        for (int x = 0; x < Map::TILE_SPRITE_COLS; ++x)
+        {
+            this->m_tile_clips.push_back({x * Map::TILE_WIDTH, y * Map::TILE_HEIGHT, Map::TILE_WIDTH, Map::TILE_HEIGHT});
+        }
+    }
+    this->m_texture_fps = new LTexture();
+    return success;
+}
+
 void Map::Free()
 {
     this->m_tiles.erase(this->m_tiles.begin(), this->m_tiles.end());
     this->m_frames.erase(this->m_frames.begin(), this->m_frames.end());
+    if (this->m_texture_tiles != nullptr)
+    {
+        this->m_texture_tiles->Free();
+        delete this->m_texture_tiles;
+    }
+    if (this->m_texture_fps != nullptr)
+    {
+        this->m_texture_fps->Free();
+        delete this->m_texture_fps;
+    }
+    if (this->m_player != nullptr)
+    {
+        delete this->m_player;
+    }
 }
 
-Point Map::GetPixelSize()
+Point Map::GetMapSizePixels()
 {
     Point p;
     p.x = this->m_width;
@@ -129,17 +172,25 @@ Point Map::GetPixelSize()
     return p;
 }
 
-Point Map::GetTileSize()
+Point Map::GetMapSizeTiles()
 {
     Point p;
-    p.x = this->m_width / Tile::S_WIDTH;
-    p.y = this->m_height / Tile::S_HEIGHT;
+    p.x = this->m_width / Map::TILE_WIDTH;
+    p.y = this->m_height / Map::TILE_HEIGHT;
     return p;
+}
+
+void Map::UpdateFPS(double fps)
+{
+    std::stringstream time_text;
+    time_text.str("");
+    time_text << "FPS: " << fps;
+    this->m_texture_fps->LoadFromRenderedText(time_text.str(), this->m_fps_font, this->m_fps_color);
 }
 
 void Map::AddBorder()
 {
-    Point s = Map::GetTileSize();
+    Point s = Map::GetMapSizeTiles();
     int border_tiles = (s.y * 2) + (s.x * 2) - 4;
     int x = 0, y = 0;
 
@@ -157,41 +208,41 @@ void Map::AddBorder()
 
         if (i == top_left)
         {
-            tile_type = Tile::CENTER;
+            tile_type = Map::TILE_CENTER;
             x_add = 1;
             y_add = 0;
         }
         else if (i > top_left && i < top_right)
-            tile_type = Tile::BOTTOM;
+            tile_type = Map::TILE_BOTTOM;
         else if (i == top_right)
         {
-            tile_type = Tile::CENTER;
+            tile_type = Map::TILE_CENTER;
             x_add = 0;
             y_add = 1;
         }
         else if (i > top_right && i < bottom_right)
-            tile_type = Tile::LEFT;
+            tile_type = Map::TILE_LEFT;
         else if (i == bottom_right)
         {
-            tile_type = Tile::CENTER;
+            tile_type = Map::TILE_CENTER;
             x_add = -1;
             y_add = 0;
         }
         else if (i > bottom_right && i < bottom_left)
-            tile_type = Tile::TOP;
+            tile_type = Map::TILE_TOP;
         else if (i == bottom_left)
         {
-            tile_type = Tile::CENTER;
+            tile_type = Map::TILE_CENTER;
             x_add = 0;
             y_add = -1;
         }
         else
-            tile_type = Tile::RIGHT;
+            tile_type = Map::TILE_RIGHT;
 
-        this->m_tiles.push_back(new Tile(x, y, tile_type));
+        this->m_tiles.push_back(new Tile(x, y, tile_type, this->m_texture_tiles, &this->m_tile_clips));
 
-        x += (x_add * Tile::S_WIDTH);
-        y += (y_add * Tile::S_HEIGHT);
+        x += (x_add * Map::TILE_WIDTH);
+        y += (y_add * Map::TILE_HEIGHT);
     }
 }
 
