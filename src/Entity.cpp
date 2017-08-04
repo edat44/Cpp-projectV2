@@ -1,17 +1,18 @@
 #include "Entity.h"
 #include "Map.h"
 
-Entity::Entity(std::string path_texture)
+Entity::Entity(std::string type, std::string path_texture)
 {
+    this->m_type = type;
     this->m_path_texture = path_texture;
     this->LoadTexture();
-    
+
     this->m_box.x = 0.f;
     this->m_box.y = 0.f;
-    
+
     this->m_vel.x = 0.f;
     this->m_vel.y = 0.f;
-    
+
     this->m_angle = 0.f;
 }
 
@@ -29,10 +30,10 @@ bool Entity::LoadTexture()
         printf("Could not load texture %s!\n", this->m_path_texture.c_str());
         success = false;
     }
-    
+
     this->m_box.w = m_texture->GetWidth();
     this->m_box.h = m_texture->GetHeight();
-    
+
     return success;
 }
 
@@ -54,7 +55,7 @@ void Entity::Move(double time_step, std::vector<Tile*> tiles, Point level_size)
         else
             m_box.x = level_size.x - m_box.w;
     }
-    
+
     double dy = (m_vel.y * time_step);
     m_box.y += dy;
     wall = this->TouchesWall(tiles);
@@ -76,7 +77,10 @@ void Entity::Move(double time_step, std::vector<Tile*> tiles, Point level_size)
 void Entity::Render(SDL_Rect &camera)
 {
     if (wSDL::CheckCollision(this->m_box, camera))
+    {
         this->m_texture->Render((int)m_box.x - camera.x, (int)m_box.y - camera.y, nullptr, m_angle);
+
+    }
 }
 
 Tile* Entity::TouchesWall(std::vector<Tile*> tiles)

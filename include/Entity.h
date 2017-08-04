@@ -9,29 +9,31 @@
 class Entity
 {
     public:
-        Entity(std::string path_texture);
+        Entity(std::string type, std::string path_texture);
         virtual ~Entity();
-    
+
     virtual void Move(double time_step, std::vector<Tile*> tiles, Point level_size);
-    
+
     void Render(SDL_Rect &camera);
-    
+
     virtual void Free();
-    
+
     protected:
         DRect m_box;
-    
+
         DPoint m_vel;
-    
+
         double m_angle;
-    
+
         Tile* TouchesWall(std::vector<Tile*> tiles);
-    
+
+        std::string m_type;
+
     private:
         bool LoadTexture();
-    
+
         std::string m_path_texture;
-    
+
         LTexture *m_texture;
 };
 

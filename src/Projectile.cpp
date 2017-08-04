@@ -1,10 +1,8 @@
 #include "Projectile.h"
 #include <cmath>
 
-const std::string Projectile::m_path_texture = "resources/bullet.png";
-
 Projectile::Projectile(DPoint start, Point target)
-    : Entity("resources/bullet.png")
+    : Entity("Projectile", "resources/bullet.png")
 {
     this->m_box.x = start.x;
     this->m_box.y = start.y;
@@ -15,6 +13,7 @@ Projectile::Projectile(DPoint start, Point target)
 
     this->m_vel.x = MAX_VEL * cos(m_angle * wSDL::PI / 180);
     this->m_vel.y = MAX_VEL * sin(m_angle * wSDL::PI / 180);
+
 }
 
 Projectile::Projectile(DRect start, Point target)
