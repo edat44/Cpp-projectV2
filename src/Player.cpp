@@ -147,15 +147,15 @@ Tile* Player::TouchesWall(std::vector<Tile*> tiles)
     {
         switch(tile->GetType())
         {
-        case Map::TILE_BLUE:
-        case Map::TILE_RED:
-        case Map::TILE_GREEN:
-            break;
-        default:
-            if (wSDL::CheckCollision(this->m_box, tile->GetBox()))
-            {
-                return tile;
-            }
+            case Map::TILE_BLUE:
+            case Map::TILE_RED:
+            case Map::TILE_GREEN:
+                break;
+            default:
+                if (wSDL::CheckCollision(this->m_box, tile->GetBox()))
+                {
+                    return tile;
+                }
         }
     }
 
