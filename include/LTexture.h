@@ -15,7 +15,7 @@ class LTexture : public LGraphic
         bool LoadFromFile(std::string path);
 
         #ifdef _SDL_TTF_H
-        bool LoadFromRenderedText(std::string texture_text, SDL_Color text_color);
+        bool LoadFromRenderedText(std::string texture_text, TTF_Font *font, SDL_Color text_color);
         #endif
 
         virtual void Free();

@@ -11,23 +11,28 @@ int main(int argc, char* args[])
         return 1;
     }
 
-    Map board = Map("resources/jewon.map");
-
     if (!wSDL::LoadMedia())
     {
         printf("Failed to load media!\n");
+        return 2;
     }
+
     else
     {
         bool quit = false;
 
         SDL_Event e;
 
-        LTimer step_timer;
+        int frames = 0;
+        LTimer step_timer, fps_timer;
         step_timer.Start();
+        fps_timer.Start();
+
+        Map board = Map("resources/jewon.map");
 
         while (!quit)
         {
+            ++frames;
             while (SDL_PollEvent(&e) != 0)
             {
                 if (e.type == SDL_QUIT)
@@ -42,6 +47,8 @@ int main(int argc, char* args[])
             board.MovePlayer(time_step);
 
             step_timer.Start();
+
+            board.UpdateFPS(frames / (fps_timer.GetTicks() / 1000.0f));
 
             board.SetCamera();
 

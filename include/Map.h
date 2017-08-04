@@ -77,6 +77,8 @@ class Map
         LTexture *m_texture_fps;
         static const int FPS_X = 10;
         static const int FPS_Y = 10;
+        SDL_Color m_fps_color;
+        TTF_Font *m_fps_font;
 
         void AddBorder();
         void AddItemFrames();

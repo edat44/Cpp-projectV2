@@ -7,6 +7,10 @@ Map::Map(std::string file_path)
     this->m_path_map = file_path;
     this->m_camera = {0, 0, wSDL::SCREEN_WIDTH, wSDL::SCREEN_HEIGHT};
     this->m_player = new Player();
+
+    this->m_fps_color = SDL_Color{0x66, 0x66, 0x66, 0xFF};
+    this->m_fps_font = wSDL::s_font_skip_leg_day_20;
+
     this->LoadTexture();
     this->AddItemFrames();
     this->SetTiles();
@@ -50,8 +54,8 @@ void Map::Render()
     {
         frame->Render();
     }
-    if (this->m_texture != nullptr)
-    t   his->m_texture_fps->Render(Map::FPS_X, Map::FPS_Y);
+    if (this->m_texture_fps != nullptr)
+        this->m_texture_fps->Render(Map::FPS_X, Map::FPS_Y);
 }
 
 bool Map::SetTiles()
@@ -136,6 +140,7 @@ bool Map::LoadTexture()
             this->m_tile_clips.push_back({x * Map::TILE_WIDTH, y * Map::TILE_HEIGHT, Map::TILE_WIDTH, Map::TILE_HEIGHT});
         }
     }
+    this->m_texture_fps = new LTexture();
     return success;
 }
 
@@ -147,6 +152,11 @@ void Map::Free()
     {
         this->m_texture_tiles->Free();
         delete this->m_texture_tiles;
+    }
+    if (this->m_texture_fps != nullptr)
+    {
+        this->m_texture_fps->Free();
+        delete this->m_texture_fps;
     }
     if (this->m_player != nullptr)
     {
@@ -168,6 +178,14 @@ Point Map::GetMapSizeTiles()
     p.x = this->m_width / Map::TILE_WIDTH;
     p.y = this->m_height / Map::TILE_HEIGHT;
     return p;
+}
+
+void Map::UpdateFPS(double fps)
+{
+    std::stringstream time_text;
+    time_text.str("");
+    time_text << "FPS: " << fps;
+    this->m_texture_fps->LoadFromRenderedText(time_text.str(), this->m_fps_font, this->m_fps_color);
 }
 
 void Map::AddBorder()
