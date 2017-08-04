@@ -39,7 +39,8 @@ void Projectile::Move(double time_step, std::vector<Tile*> tiles, Point level_si
 
 void Projectile::Render(SDL_Rect &camera)
 {
-    this->m_texture->Render((int)m_box.x - camera.x, (int)m_box.y - camera.y, nullptr, m_angle);
+    if (wSDL::CheckCollision(this->m_box, camera))
+        this->m_texture->Render((int)m_box.x - camera.x, (int)m_box.y - camera.y, nullptr, m_angle);
 }
 
 bool Projectile::LoadTexture()
