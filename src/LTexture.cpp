@@ -7,33 +7,22 @@ LTexture::LTexture() : LGraphic()
 
 LTexture::~LTexture()
 {
-    this->Free();
 }
 
 bool LTexture::LoadFromFile(std::string path)
 {
-
-    SDL_Texture *new_texture = nullptr;
-    SDL_Surface *loaded_surface = IMG_Load(path.c_str());
+    std::shared_ptr<SDL_Surface> loaded_surface;
+    loaded_surface = sdl_shared(IMG_Load(path.c_str()));
     if (loaded_surface == nullptr || loaded_surface == NULL)
     {
         printf("Unable to load image %s! SDL_image Error: %s\n", path.c_str(), IMG_GetError());
     }
     else
     {
-        /*
-        optimized_surface = SDL_ConvertSurface(loaded_surface, wSDL::s_screen_surface->format, 0);
-        if (optimized_surface == nullptr)
-        {
-            printf("Could not optimize image %s! SDL Error: %s\n", path.c_str(), SDL_GetError());
-        }
-        else
-        {
-        */
-        SDL_SetColorKey(loaded_surface, SDL_TRUE, SDL_MapRGB(loaded_surface->format, 0xFF, 0xFF, 0xFF));
+        SDL_SetColorKey(loaded_surface.get(), SDL_TRUE, SDL_MapRGB(loaded_surface->format, 0xFF, 0xFF, 0xFF));
 
-        new_texture = SDL_CreateTextureFromSurface(wSDL::s_renderer, loaded_surface);
-        if (new_texture == nullptr)
+        m_texture = sdl_shared(SDL_CreateTextureFromSurface(wSDL::s_renderer.get(), loaded_surface.get()));
+        if (m_texture == nullptr)
         {
             printf("Unable to create texture from %s! SDL Error: %s\n", path.c_str(), SDL_GetError());
         }
@@ -42,30 +31,23 @@ bool LTexture::LoadFromFile(std::string path)
             this->m_width = loaded_surface->w;
             this->m_height = loaded_surface->h;
         }
-
-        //SDL_FreeSurface(optimized_surface);
-        //}
-
-        SDL_FreeSurface(loaded_surface);
     }
-
-    m_texture = new_texture;
-    return m_texture != nullptr;
+    return true;
 }
 
 #ifdef _SDL_TTF_H
-bool LTexture::LoadFromRenderedText(std::string texture_text, TTF_Font *font, SDL_Color text_color)
+bool LTexture::LoadFromRenderedText(std::string texture_text, std::shared_ptr<TTF_Font> font, SDL_Color text_color)
 {
-    this->Free();
 
-    SDL_Surface* text_surface = TTF_RenderText_Solid(font, texture_text.c_str(), text_color);
+    std::shared_ptr<SDL_Surface> text_surface;
+    text_surface.reset(TTF_RenderText_Solid(font.get(), texture_text.c_str(), text_color));
     if (text_surface == nullptr)
     {
         printf("Unable to render text surface! SDL_ttf Error: %s\n", TTF_GetError());
     }
     else
     {
-        m_texture = SDL_CreateTextureFromSurface(wSDL::s_renderer, text_surface);
+        m_texture = sdl_shared(SDL_CreateTextureFromSurface(wSDL::s_renderer.get(), text_surface.get()));
         if (m_texture == nullptr)
         {
             printf("Unable to create texture from rendered text! SDL Error: %s\n", SDL_GetError());
@@ -75,27 +57,14 @@ bool LTexture::LoadFromRenderedText(std::string texture_text, TTF_Font *font, SD
             m_width = text_surface->w;
             m_height = text_surface->h;
         }
-
-        SDL_FreeSurface(text_surface);
     }
     return m_texture != nullptr;
 }
 #endif // _SDL_TTF_H
 
-void LTexture::Free()
-{
-    this->LGraphic::Free();
-    if (m_texture != nullptr)
-    {
-        SDL_DestroyTexture(m_texture);
-        m_texture = nullptr;
-    }
-
-}
-
 void LTexture::SetColor(uint8_t red, uint8_t green, uint8_t blue)
 {
-    SDL_SetTextureColorMod(m_texture, red, green, blue);
+    SDL_SetTextureColorMod(m_texture.get(), red, green, blue);
 }
 
 void LTexture::SetColor(uint8_t red, uint8_t green, uint8_t blue, uint8_t alpha)
@@ -106,12 +75,12 @@ void LTexture::SetColor(uint8_t red, uint8_t green, uint8_t blue, uint8_t alpha)
 
 void LTexture::SetBlendMode(SDL_BlendMode blending)
 {
-    SDL_SetTextureBlendMode(m_texture, blending);
+    SDL_SetTextureBlendMode(m_texture.get(), blending);
 }
 
 void LTexture::SetAlpha(uint8_t alpha)
 {
-    SDL_SetTextureAlphaMod(m_texture, alpha);
+    SDL_SetTextureAlphaMod(m_texture.get(), alpha);
 }
 
 void LTexture::Render(int x, int y, SDL_Rect* clip, double angle, SDL_Point* center, SDL_RendererFlip flip)
@@ -124,5 +93,5 @@ void LTexture::Render(int x, int y, SDL_Rect* clip, double angle, SDL_Point* cen
         render_quad.h = clip->h;
     }
 
-    SDL_RenderCopyEx(wSDL::s_renderer, this->m_texture, clip, &render_quad, angle, center, flip);
+    SDL_RenderCopyEx(wSDL::s_renderer.get(), this->m_texture.get(), clip, &render_quad, angle, center, flip);
 }

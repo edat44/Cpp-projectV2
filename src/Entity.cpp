@@ -18,13 +18,12 @@ Entity::Entity(std::string type, std::string path_texture)
 
 Entity::~Entity()
 {
-    this->Free();
 }
 
 bool Entity::LoadTexture()
 {
     bool success = true;
-    this->m_texture = new LTexture();
+    this->m_texture = std::make_shared<LTexture>();
     if (!this->m_texture->LoadFromFile(this->m_path_texture))
     {
         printf("Could not load texture %s!\n", this->m_path_texture.c_str());
@@ -43,7 +42,7 @@ void Entity::Position(DPoint pos)
     this->m_box.y = ((pos.y * Map::TILE_HEIGHT) + (Map::TILE_HEIGHT / 2) - (m_box.h / 2));
 }
 
-Tile* Entity::Move(double time_step, std::vector<Tile*> tiles, Point level_size)
+Tile* Entity::Move(double time_step, std::vector<std::shared_ptr<Tile>> tiles, Point level_size)
 {
     double dx = (m_vel.x * time_step);
     double dy = (m_vel.y * time_step);
@@ -70,9 +69,9 @@ void Entity::Render(SDL_Rect &camera)
     }
 }
 
-Tile* Entity::TouchesWall(std::vector<Tile*> tiles)
+Tile* Entity::TouchesWall(std::vector<std::shared_ptr<Tile>> tiles)
 {
-    for (Tile* tile : tiles)
+    for (std::shared_ptr<Tile> tile : tiles)
     {
         switch(tile->GetType())
         {
@@ -83,19 +82,9 @@ Tile* Entity::TouchesWall(std::vector<Tile*> tiles)
             default:
                 if (wSDL::CheckCollision(this->m_box, tile->GetBox()))
                 {
-                    return tile;
+                    return tile.get();
                 }
         }
     }
     return nullptr;
-}
-
-void Entity::Free()
-{
-    if (this->m_texture != nullptr)
-    {
-        this->m_texture->Free();
-        this->m_texture = nullptr;
-        delete this->m_texture;
-    }
 }

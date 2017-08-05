@@ -6,10 +6,9 @@ Humanoid::Humanoid(std::string type, std::string path_texture)
 
 Humanoid::~Humanoid()
 {
-    this->Free();
 }
 
-Tile* Humanoid::Move(double time_step, std::vector<Tile*> tiles, Point level_size)
+Tile* Humanoid::Move(double time_step, std::vector<std::shared_ptr<Tile>> tiles, Point level_size)
 {
     double dx = (m_vel.x * time_step);
     m_box.x = wSDL::Constrain(m_box.x + dx, 0, level_size.x - m_box.w);
@@ -32,9 +31,4 @@ Tile* Humanoid::Move(double time_step, std::vector<Tile*> tiles, Point level_siz
     }
 
     return wall_x;
-}
-
-void Humanoid::Free()
-{
-    this->Entity::Free();
 }

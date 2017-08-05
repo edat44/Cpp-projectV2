@@ -5,11 +5,12 @@
 #include <string>
 #include "wSDL.h"
 #include <vector>
+#include <memory>
 
 class Tile
 {
     public:
-        Tile(int x, int y, int tile_type, LTexture *texture, std::vector<SDL_Rect> *clips);
+        Tile(int x, int y, int tile_type, std::shared_ptr<LTexture> texture, std::vector<SDL_Rect> *clips);
 
         void Render(SDL_Rect &camera);
 
@@ -20,7 +21,7 @@ class Tile
     private:
 
         std::vector<SDL_Rect> m_tile_clips;
-        LTexture* m_texture;
+        std::shared_ptr<LTexture> m_texture;
 
         SDL_Rect m_box;
 

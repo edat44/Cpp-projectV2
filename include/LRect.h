@@ -11,8 +11,6 @@ class LRect : public LGraphic
         LRect();
         virtual ~LRect();
 
-        virtual void Free();
-
         void SetSize(int w, int h);
 
         virtual void SetColor(uint8_t red, uint8_t green, uint8_t blue);

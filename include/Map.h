@@ -5,6 +5,7 @@
 #include <string>
 #include <fstream>
 #include <sstream>
+#include <memory>
 #include "wSDL.h"
 #include "Player.h"
 #include "ItemFrame.h"
@@ -26,7 +27,6 @@ class Map
 
         bool SetTiles();
         bool LoadTexture();
-        void Free();
 
         Point GetMapSizePixels();
         Point GetMapSizeTiles();
@@ -58,28 +58,28 @@ class Map
 
     private:
         std::string m_path_map;
-        std::vector<Tile*> m_tiles;
+        std::vector<std::shared_ptr<Tile>> m_tiles;
 
-        Player* m_player;
+        std::shared_ptr<Player> m_player;
         SDL_Rect m_camera;
 
         int m_width, m_height;
 
-        std::vector<ItemFrame*> m_frames;
+        std::vector<std::shared_ptr<ItemFrame>> m_frames;
 
         static const int ITEM_FRAME_SIZE = 100;
         static const int ITEM_FRAME_SPACING = 10;
         static const int NUM_ITEM_FRAMES = 0;
 
-        LTexture *m_texture_tiles;
+        std::shared_ptr<LTexture> m_texture_tiles;
         static const std::string m_path_texture_tiles;
         std::vector<SDL_Rect> m_tile_clips;
 
-        LTexture *m_texture_fps;
+        std::shared_ptr<LTexture> m_texture_fps;
         static const int FPS_X = 10;
         static const int FPS_Y = 10;
         SDL_Color m_fps_color;
-        TTF_Font *m_fps_font;
+        std::shared_ptr<TTF_Font> m_fps_font;
 
         void AddBorder();
         void AddItemFrames();

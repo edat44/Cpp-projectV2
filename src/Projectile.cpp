@@ -14,6 +14,8 @@ Projectile::Projectile(DPoint start, Point target)
     this->m_vel.x = MAX_VEL * cos(m_angle * wSDL::PI / 180);
     this->m_vel.y = MAX_VEL * sin(m_angle * wSDL::PI / 180);
 
+    this->LoadSounds();
+    this->m_sound_spawn->Play();
 }
 
 Projectile::Projectile(DRect start, Point target)
@@ -22,15 +24,16 @@ Projectile::Projectile(DRect start, Point target)
 
 Projectile::~Projectile()
 {
-    this->Free();
+    m_sound_wall->Play();
 }
 
-Tile* Projectile::Move(double time_step, std::vector<Tile*> tiles, Point level_size)
+void Projectile::LoadSounds()
+{
+    m_sound_spawn = wSDL::s_bullet_fire;
+    m_sound_wall = wSDL::s_bullet_wall;
+}
+
+Tile* Projectile::Move(double time_step, std::vector<std::shared_ptr<Tile>> tiles, Point level_size)
 {
     return this->Entity::Move(time_step, tiles, level_size);
-}
-
-void Projectile::Free()
-{
-    this->Entity::Free();
 }

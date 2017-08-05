@@ -17,8 +17,6 @@ class LGraphic
 
         virtual void SetAlpha(uint8_t alpha) = 0;
 
-        virtual void Free();
-
         virtual void Render(int x, int y, SDL_Rect* clip = nullptr, double angle = 0.0, SDL_Point* center = nullptr, SDL_RendererFlip flip = SDL_FLIP_NONE) = 0;
 
         int GetWidth();

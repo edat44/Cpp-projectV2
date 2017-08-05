@@ -13,8 +13,9 @@
     #include <SDL2_mixer/SDL_mixer.h>
 #endif
 #include <stdio.h>
+#include <memory>
 
-class Map;
+class LSound;
 
 using Point = SDL_Point;
 
@@ -41,6 +42,15 @@ struct DRect
     DRect(double x, double y, double w, double h) : x(x), y(y), w(w), h(h) {};
 };
 
+
+struct SDL_DelWindow {void operator()(SDL_Window*w) const {SDL_DestroyWindow(w);}};
+std::unique_ptr<SDL_Window, SDL_DelWindow> sdl_unique_window(SDL_Window *w);
+
+
+struct SDL_DelMixChunk {void operator()(Mix_Chunk *c) const {Mix_FreeChunk(c);}};
+using unique_mix_chunk = std::unique_ptr<Mix_Chunk, SDL_DelMixChunk>;
+unique_mix_chunk sdl_unique_mix_chunk(Mix_Chunk *c);
+
 class wSDL
 {
     public:
@@ -51,10 +61,13 @@ class wSDL
         //What file types does this project use?
         static const int IMG_FLAGS = IMG_INIT_PNG;
 
-        static SDL_Window *s_window;
-        static SDL_Renderer *s_renderer;
-        static SDL_Surface *s_screen_surface;
-        static TTF_Font *s_font_skip_leg_day_20;
+        static std::shared_ptr<SDL_Window> s_window;
+        static std::shared_ptr<SDL_Renderer> s_renderer;
+        static std::shared_ptr<SDL_Surface> s_screen_surface;
+        static std::shared_ptr<TTF_Font> s_font_skip_leg_day_20;
+
+        static std::shared_ptr<LSound> s_bullet_fire;
+        static std::shared_ptr<LSound> s_bullet_wall;
 
         static constexpr double PI =3.14159265f;
 
@@ -78,9 +91,22 @@ class wSDL
 
         static double Constrain(double val, double min_val, double max_val);
 
-
         static void ClearScreen();
         static void UpdateScreen();
+
+        static void SDL_DelRes(SDL_Window   *r);
+        static void SDL_DelRes(SDL_Renderer *r);
+        static void SDL_DelRes(SDL_Texture  *r);
+        static void SDL_DelRes(SDL_Surface  *r);
+        static void SDL_DelRes(TTF_Font     *r);
+        static void SDL_DelRes(Mix_Chunk    *r);
 };
+
+template <typename T>
+std::shared_ptr<T> sdl_shared(T *t)
+{
+    return std::shared_ptr<T>(t, [](T *t) {wSDL::SDL_DelRes(t);});
+}
+
 
 #endif // WSDL_H
