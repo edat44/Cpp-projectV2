@@ -2,38 +2,29 @@
 #define PROJECTILE_H
 
 #include "Tile.h"
+#include "Entity.h"
 #include "LTexture.h"
 #include <string>
 
-class Projectile
+class Projectile: public Entity
 {
-public:
-    Projectile(DPoint start, Point target);
-    Projectile(DRect start, Point target);
-    virtual ~Projectile();
-    
-    static const int WIDTH = 6;
-    static const int HEIGHT = 6;
-    
-    static const int MAX_VEL = 500.f;
+    public:
+        Projectile(DPoint start, Point target);
+        Projectile(DRect start, Point target);
+        virtual ~Projectile();
 
-    void Move(double time_step, std::vector<Tile*> tiles, Point level_size);
+        static const int WIDTH = 6;
+        static const int HEIGHT = 6;
 
-    void Render(SDL_Rect &camera);
+        static const int MAX_VEL = 500.f;
 
-    bool LoadTexture();
-    void Free();
+        Tile* Move(double time_step, std::vector<Tile*> tiles, Point level_size);
 
-private:
-    static const std::string m_path_texture;
-    LTexture* m_texture;
+        bool LoadTexture();
+        void Free();
 
-    DRect m_box;
-    DPoint m_vel;
-
-    Point m_target;
-
-    double m_angle;
+    protected:
+        Point m_target;
 
 };
 

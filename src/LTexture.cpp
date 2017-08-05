@@ -84,9 +84,13 @@ bool LTexture::LoadFromRenderedText(std::string texture_text, TTF_Font *font, SD
 
 void LTexture::Free()
 {
-    SDL_DestroyTexture(m_texture);
-    m_texture = nullptr;
     this->LGraphic::Free();
+    if (m_texture != nullptr)
+    {
+        SDL_DestroyTexture(m_texture);
+        m_texture = nullptr;
+    }
+
 }
 
 void LTexture::SetColor(uint8_t red, uint8_t green, uint8_t blue)

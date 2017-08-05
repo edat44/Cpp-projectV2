@@ -5,10 +5,12 @@
     #include <SDL.h>
     #include <SDL_image.h>
     #include <SDL_ttf.h>
+    #include <SDL_mixer.h>
 #else
     #include <SDL2/SDL.h>
     #include <SDL2_image/SDL_image.h>
     #include <SDL2_ttf/SDL_ttf.h>
+    #include <SDL2_mixer/SDL_mixer.h>
 #endif
 #include <stdio.h>
 
@@ -42,6 +44,7 @@ struct DRect
 class wSDL
 {
     public:
+        static bool debug;
         static const int SCREEN_WIDTH = 640;
         static const int SCREEN_HEIGHT = 480;
 
@@ -72,6 +75,8 @@ class wSDL
 
         static double GetAngle(const DPoint &a, const DPoint &b);
         static double GetAngle(const DPoint &a, const SDL_Point &b);
+
+        static double Constrain(double val, double min_val, double max_val);
 
 
         static void ClearScreen();

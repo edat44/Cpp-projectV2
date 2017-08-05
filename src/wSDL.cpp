@@ -4,7 +4,8 @@
 #include "Map.h"
 #include "Projectile.h"
 #include <cmath>
-#define PI 3.14159265
+
+bool wSDL::debug = false;
 
 SDL_Window *wSDL::s_window;
 SDL_Renderer *wSDL::s_renderer;
@@ -22,6 +23,8 @@ const std::string path_texture_bullet;
 
 bool wSDL::Init()
 {
+    // This line is only needed, if you want debug the program
+    SDL_SetHint(SDL_HINT_WINDOWS_DISABLE_THREAD_NAMING, "1");
 
     if (SDL_Init(SDL_INIT_VIDEO) < 0)
     {
@@ -64,6 +67,12 @@ bool wSDL::Init()
     if (TTF_Init() < 0)
     {
         printf("SDL_ttf could not initialize! SDL_ttf error: %s\n", TTF_GetError());
+        return false;
+    }
+
+    if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0)
+    {
+        printf("SDL_mixer could not initialize! SDL_mixer Error: %s\n", Mix_GetError());
         return false;
     }
 
@@ -185,6 +194,11 @@ double wSDL::GetAngle(const DPoint &a, const DPoint &b)
 double wSDL::GetAngle(const DPoint &a, const SDL_Point &b)
 {
     return wSDL::GetAngle(a, wSDL::SDL_PointToDPoint(b));
+}
+
+double wSDL::Constrain(double val, double min_val, double max_val)
+{
+    return std::min(std::max(val, min_val), max_val);
 }
 
 void wSDL::ClearScreen()

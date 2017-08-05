@@ -8,6 +8,7 @@
 #include "wSDL.h"
 #include "Player.h"
 #include "ItemFrame.h"
+#include "LTexture.h"
 
 class Map
 {
