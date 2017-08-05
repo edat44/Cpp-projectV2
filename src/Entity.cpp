@@ -95,6 +95,7 @@ void Entity::Free()
     if (this->m_texture != nullptr)
     {
         this->m_texture->Free();
+        this->m_texture = nullptr;
         delete this->m_texture;
     }
 }

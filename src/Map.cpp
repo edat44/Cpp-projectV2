@@ -146,22 +146,42 @@ bool Map::LoadTexture()
 
 void Map::Free()
 {
+    if (wSDL::debug)
+        printf("Freeing map\n");
+
     this->m_tiles.erase(this->m_tiles.begin(), this->m_tiles.end());
     this->m_frames.erase(this->m_frames.begin(), this->m_frames.end());
+
+    if (wSDL::debug)
+        printf("Done freeing map tiles and item frames\n");
+
     if (this->m_texture_tiles != nullptr)
     {
         this->m_texture_tiles->Free();
+        this->m_texture_tiles = nullptr;
         delete this->m_texture_tiles;
     }
+    if (wSDL::debug)
+        printf("Done freeing tile texture\n");
     if (this->m_texture_fps != nullptr)
     {
         this->m_texture_fps->Free();
+        this->m_texture_fps = nullptr;
         delete this->m_texture_fps;
     }
+    if (wSDL::debug)
+        printf("Done freeing fps texture\n");
     if (this->m_player != nullptr)
     {
+        this->m_player->Free();
+        this->m_player = nullptr;
         delete this->m_player;
     }
+    if (wSDL::debug)
+        printf("Done freeing player texture\n");
+
+    if (wSDL::debug)
+        printf("Done freeing map\n");
 }
 
 Point Map::GetMapSizePixels()
