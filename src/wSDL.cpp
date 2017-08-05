@@ -102,6 +102,7 @@ void wSDL::Close()
 
     IMG_Quit();
     SDL_Quit();
+    Mix_Quit();
 }
 
 bool wSDL::CheckCollision(const DRect &a, const DRect &b)
