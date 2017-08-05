@@ -6,7 +6,7 @@ Map::Map(std::string file_path)
 {
     this->m_path_map = file_path;
     this->m_camera = {0, 0, wSDL::SCREEN_WIDTH, wSDL::SCREEN_HEIGHT};
-    this->m_player = new Player();
+    this->m_player = std::make_shared<Player>();
 
     this->m_fps_color = SDL_Color{0x66, 0x66, 0x66, 0xFF};
     this->m_fps_font = wSDL::s_font_skip_leg_day_20;
@@ -18,7 +18,8 @@ Map::Map(std::string file_path)
 
 Map::~Map()
 {
-    this->Free();
+    this->m_tiles.erase(this->m_tiles.begin(), this->m_tiles.end());
+    this->m_frames.erase(this->m_frames.begin(), this->m_frames.end());
 }
 
 bool Map::HandleEvent(SDL_Event &e)
@@ -44,13 +45,12 @@ void Map::SetCamera()
 
 void Map::Render()
 {
-    for (std::vector<Tile*>::size_type i = 0; i < this->m_tiles.size(); ++i)
+    for (std::shared_ptr<Tile> tile : this->m_tiles)
     {
-        Tile* tile = this->m_tiles.at(i);
         tile->Render(this->m_camera);
     }
     this->m_player->Render(this->m_camera);
-    for (ItemFrame* frame : this->m_frames)
+    for (std::shared_ptr<ItemFrame> frame : this->m_frames)
     {
         frame->Render();
     }
@@ -90,7 +90,7 @@ bool Map::SetTiles()
                 //If the number is a valid tile number
                 if(tile_type >= 0 && tile_type < Map::TILE_TOTAL_SPRITES)
                 {
-                    this->m_tiles.push_back(new Tile(x, y, tile_type, this->m_texture_tiles, &this->m_tile_clips));
+                    this->m_tiles.push_back(std::make_shared<Tile>(x, y, tile_type, this->m_texture_tiles, &this->m_tile_clips));
                 }
                 //If we don't recognize the tile type
                 else
@@ -127,7 +127,7 @@ bool Map::SetTiles()
 bool Map::LoadTexture()
 {
     bool success = true;
-    this->m_texture_tiles = new LTexture();
+    this->m_texture_tiles = std::make_shared<LTexture>();
     if (!this->m_texture_tiles->LoadFromFile(this->m_path_texture_tiles))
     {
         printf("Failed to load tile texture\n");
@@ -140,48 +140,8 @@ bool Map::LoadTexture()
             this->m_tile_clips.push_back({x * Map::TILE_WIDTH, y * Map::TILE_HEIGHT, Map::TILE_WIDTH, Map::TILE_HEIGHT});
         }
     }
-    this->m_texture_fps = new LTexture();
+    this->m_texture_fps = std::make_shared<LTexture>();
     return success;
-}
-
-void Map::Free()
-{
-    if (wSDL::debug)
-        printf("Freeing map\n");
-
-    this->m_tiles.erase(this->m_tiles.begin(), this->m_tiles.end());
-    this->m_frames.erase(this->m_frames.begin(), this->m_frames.end());
-
-    if (wSDL::debug)
-        printf("Done freeing map tiles and item frames\n");
-
-    if (this->m_texture_tiles != nullptr)
-    {
-        this->m_texture_tiles->Free();
-        this->m_texture_tiles = nullptr;
-        delete this->m_texture_tiles;
-    }
-    if (wSDL::debug)
-        printf("Done freeing tile texture\n");
-    if (this->m_texture_fps != nullptr)
-    {
-        this->m_texture_fps->Free();
-        this->m_texture_fps = nullptr;
-        delete this->m_texture_fps;
-    }
-    if (wSDL::debug)
-        printf("Done freeing fps texture\n");
-    if (this->m_player != nullptr)
-    {
-        this->m_player->Free();
-        this->m_player = nullptr;
-        delete this->m_player;
-    }
-    if (wSDL::debug)
-        printf("Done freeing player texture\n");
-
-    if (wSDL::debug)
-        printf("Done freeing map\n");
 }
 
 Point Map::GetMapSizePixels()
@@ -259,7 +219,7 @@ void Map::AddBorder()
         else
             tile_type = Map::TILE_RIGHT;
 
-        this->m_tiles.push_back(new Tile(x, y, tile_type, this->m_texture_tiles, &this->m_tile_clips));
+        this->m_tiles.push_back(std::make_shared<Tile>(x, y, tile_type, this->m_texture_tiles, &this->m_tile_clips));
 
         x += (x_add * Map::TILE_WIDTH);
         y += (y_add * Map::TILE_HEIGHT);
@@ -272,7 +232,8 @@ void Map::AddItemFrames()
     int y = wSDL::SCREEN_HEIGHT - Map::ITEM_FRAME_SIZE - Map::ITEM_FRAME_SPACING;
     for (int i = 0; i < Map::NUM_ITEM_FRAMES; ++i)
     {
-        this->m_frames.push_back(new ItemFrame(x, y, Map::ITEM_FRAME_SIZE));
+        int s = Map::ITEM_FRAME_SIZE;
+        this->m_frames.push_back(std::make_shared<ItemFrame>(x, y, s));
         x -= (Map::ITEM_FRAME_SIZE + Map::ITEM_FRAME_SPACING);
     }
 }

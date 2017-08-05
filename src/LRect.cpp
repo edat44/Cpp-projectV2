@@ -51,7 +51,7 @@ void LRect::SetAlpha(uint8_t alpha)
 void LRect::Render(int x, int y, SDL_Rect* clip, double angle, SDL_Point* center, SDL_RendererFlip flip)
 {
     SDL_Rect rect = {x, y, this->m_width, this->m_height};
-    SDL_SetRenderDrawColor(wSDL::s_renderer, this->red, this->green, this->blue, this->alpha);
-    SDL_SetRenderDrawBlendMode(wSDL::s_renderer, this->blend);
-    SDL_RenderFillRect(wSDL::s_renderer, &rect);
+    SDL_SetRenderDrawColor(wSDL::s_renderer.get(), this->red, this->green, this->blue, this->alpha);
+    SDL_SetRenderDrawBlendMode(wSDL::s_renderer.get(), this->blend);
+    SDL_RenderFillRect(wSDL::s_renderer.get(), &rect);
 }

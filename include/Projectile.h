@@ -4,7 +4,9 @@
 #include "Tile.h"
 #include "Entity.h"
 #include "LTexture.h"
+#include "LSound.h"
 #include <string>
+#include <memory>
 
 class Projectile: public Entity
 {
@@ -18,13 +20,15 @@ class Projectile: public Entity
 
         static const int MAX_VEL = 500.f;
 
-        Tile* Move(double time_step, std::vector<Tile*> tiles, Point level_size);
-
-        bool LoadTexture();
-        void Free();
+        Tile* Move(double time_step, std::vector<std::shared_ptr<Tile>> tiles, Point level_size);
 
     protected:
         Point m_target;
+
+        std::shared_ptr<LSound> m_sound_spawn;
+        std::shared_ptr<LSound> m_sound_wall;
+
+        void LoadSounds();
 
 };
 

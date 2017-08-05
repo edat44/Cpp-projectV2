@@ -3,6 +3,7 @@
 
 #include <Entity.h>
 #include <string>
+#include <memory>
 
 class Humanoid : public Entity
 {
@@ -10,8 +11,7 @@ class Humanoid : public Entity
         Humanoid(std::string type, std::string path_texture);
         virtual ~Humanoid();
 
-        virtual Tile* Move(double time_step, std::vector<Tile*> tiles, Point level_size) = 0;
-        virtual void Free() = 0;
+        virtual Tile* Move(double time_step, std::vector<std::shared_ptr<Tile>> tiles, Point level_size) = 0;
 
     protected:
 

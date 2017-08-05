@@ -7,19 +7,10 @@
 
 bool wSDL::debug = false;
 
-SDL_Window *wSDL::s_window;
-SDL_Renderer *wSDL::s_renderer;
-SDL_Surface *wSDL::s_screen_surface;
-TTF_Font *wSDL::s_font_skip_leg_day_20;
-
-LTexture *texture_tiles = nullptr;
-const std::string path_texture_tiles = "resources/tiles.png";
-
-LTexture *texture_player;
-const std::string path_texture_player;
-
-LTexture *texture_bullet;
-const std::string path_texture_bullet;
+std::shared_ptr<SDL_Window> wSDL::s_window;
+std::shared_ptr<SDL_Renderer> wSDL::s_renderer;
+std::shared_ptr<SDL_Surface> wSDL::s_screen_surface;
+std::shared_ptr<TTF_Font> wSDL::s_font_skip_leg_day_20;
 
 bool wSDL::Init()
 {
@@ -37,22 +28,22 @@ bool wSDL::Init()
         printf("Warning: Linear texture filtering not enabled!");
     }
 
-    s_window = SDL_CreateWindow("Cpp-ProjectV2", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
-                                wSDL::SCREEN_WIDTH, wSDL::SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
-    if (s_window == NULL)
+    s_window = sdl_shared(SDL_CreateWindow("Cpp-ProjectV2", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
+                                wSDL::SCREEN_WIDTH, wSDL::SCREEN_HEIGHT, SDL_WINDOW_SHOWN));
+    if (s_window == nullptr)
     {
         printf("Window could not be created! SDL Error: %s\n", SDL_GetError());
         return false;
     }
 
-    s_renderer = SDL_CreateRenderer(s_window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
-    if (s_renderer == NULL)
+    s_renderer = sdl_shared(SDL_CreateRenderer(s_window.get(), -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC));
+    if (s_renderer == nullptr)
     {
         printf("Renderer could not be created! SDL Error: %s\n", SDL_GetError());
         return false;
     }
 
-    SDL_SetRenderDrawColor(s_renderer, 0xFF, 0xFF, 0xFF, 0xFF);
+    SDL_SetRenderDrawColor(s_renderer.get(), 0xFF, 0xFF, 0xFF, 0xFF);
 
     if (!(IMG_Init(wSDL::IMG_FLAGS) & wSDL::IMG_FLAGS))
     {
@@ -61,7 +52,7 @@ bool wSDL::Init()
     }
     else
     {
-        wSDL::s_screen_surface = SDL_GetWindowSurface(wSDL::s_window);
+        wSDL::s_screen_surface = sdl_shared(SDL_GetWindowSurface(wSDL::s_window.get()));
     }
 
     if (TTF_Init() < 0)
@@ -83,7 +74,7 @@ bool wSDL::LoadMedia()
 {
     bool success = true;
 
-    wSDL::s_font_skip_leg_day_20 = TTF_OpenFont("resources/fonts/SkipLegDay.ttf", 20);
+    wSDL::s_font_skip_leg_day_20 = sdl_shared(TTF_OpenFont("resources/fonts/SkipLegDay.ttf", 20));
     if (wSDL::s_font_skip_leg_day_20 == nullptr)
     {
         printf("Could not load 'Skip Leg Day' font! SDL_ttf Error: %s\n", TTF_GetError());
@@ -95,13 +86,12 @@ bool wSDL::LoadMedia()
 
 void wSDL::Close()
 {
-    SDL_DestroyRenderer(wSDL::s_renderer);
-    SDL_DestroyWindow(wSDL::s_window);
-    wSDL::s_renderer = nullptr;
-    wSDL::s_window = nullptr;
+    SDL_DestroyRenderer(wSDL::s_renderer.get());
+    SDL_DestroyWindow(wSDL::s_window.get());
 
     IMG_Quit();
     SDL_Quit();
+    Mix_Quit();
 }
 
 bool wSDL::CheckCollision(const DRect &a, const DRect &b)
@@ -203,8 +193,8 @@ double wSDL::Constrain(double val, double min_val, double max_val)
 
 void wSDL::ClearScreen()
 {
-    SDL_SetRenderDrawColor(wSDL::s_renderer, 0xFF, 0xFF, 0xFF, 0xFF);
-    SDL_RenderClear(wSDL::s_renderer);
+    SDL_SetRenderDrawColor(wSDL::s_renderer.get(), 0xFF, 0xFF, 0xFF, 0xFF);
+    SDL_RenderClear(wSDL::s_renderer.get());
 }
 
 void wSDL::UpdateScreen()
@@ -214,5 +204,5 @@ void wSDL::UpdateScreen()
     SDL_RenderDrawLine(wSDL::s_renderer, 0, wSDL::SCREEN_HEIGHT / 2, wSDL::SCREEN_WIDTH, wSDL::SCREEN_HEIGHT / 2);
     SDL_RenderDrawLine(wSDL::s_renderer, wSDL::SCREEN_WIDTH / 2, 0, wSDL::SCREEN_WIDTH / 2, wSDL::SCREEN_HEIGHT);
      */
-    SDL_RenderPresent(wSDL::s_renderer);
+    SDL_RenderPresent(wSDL::s_renderer.get());
 }

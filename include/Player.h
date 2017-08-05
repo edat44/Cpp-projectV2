@@ -7,6 +7,7 @@
 #include "Humanoid.h"
 #include <vector>
 #include <algorithm>
+#include <memory>
 #include <string>
 
 class Player : public Humanoid
@@ -25,11 +26,9 @@ class Player : public Humanoid
         virtual void Render(SDL_Rect &camera);
 
         //time_step is measured in seconds
-        virtual Tile* Move(double time_step, std::vector<Tile*> tiles, Point level_size);
+        virtual Tile* Move(double time_step, std::vector<std::shared_ptr<Tile>> tiles, Point level_size);
 
         void SetCamera(SDL_Rect &camera, Point level_size);
-
-        virtual void Free();
 
     private:
 
@@ -40,7 +39,7 @@ class Player : public Humanoid
 
         Point m_face_direction;
 
-        std::vector<Projectile*> m_projectiles;
+        std::vector<std::shared_ptr<Projectile>> m_projectiles;
 };
 
 #endif // PLAYER_H

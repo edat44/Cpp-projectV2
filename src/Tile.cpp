@@ -1,7 +1,7 @@
 #include "Tile.h"
 #include "Map.h"
 
-Tile::Tile(int x, int y, int tile_type, LTexture *texture, std::vector<SDL_Rect> *clips)
+Tile::Tile(int x, int y, int tile_type, std::shared_ptr<LTexture> texture, std::vector<SDL_Rect> *clips)
 {
     this->m_box.x = x;
     this->m_box.y = y;

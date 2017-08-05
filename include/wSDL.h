@@ -13,8 +13,7 @@
     #include <SDL2_mixer/SDL_mixer.h>
 #endif
 #include <stdio.h>
-
-class Map;
+#include <memory>
 
 using Point = SDL_Point;
 
@@ -41,6 +40,18 @@ struct DRect
     DRect(double x, double y, double w, double h) : x(x), y(y), w(w), h(h) {};
 };
 
+
+static void SDL_DelRes(SDL_Window   *r) { SDL_DestroyWindow(r);   }
+static void SDL_DelRes(SDL_Renderer *r) { SDL_DestroyRenderer(r); }
+static void SDL_DelRes(SDL_Texture  *r) { SDL_DestroyTexture(r);  }
+static void SDL_DelRes(SDL_Surface  *r) { SDL_FreeSurface(r);     }
+static void SDL_DelRes(TTF_Font    *r) { TTF_CloseFont(r);       }
+
+template <typename T>
+std::shared_ptr<T> sdl_shared(T *t) {
+    return std::shared_ptr<T>(t, [](T *t) { SDL_DelRes(t); });
+}
+
 class wSDL
 {
     public:
@@ -51,10 +62,10 @@ class wSDL
         //What file types does this project use?
         static const int IMG_FLAGS = IMG_INIT_PNG;
 
-        static SDL_Window *s_window;
-        static SDL_Renderer *s_renderer;
-        static SDL_Surface *s_screen_surface;
-        static TTF_Font *s_font_skip_leg_day_20;
+        static std::shared_ptr<SDL_Window> s_window;
+        static std::shared_ptr<SDL_Renderer> s_renderer;
+        static std::shared_ptr<SDL_Surface> s_screen_surface;
+        static std::shared_ptr<TTF_Font> s_font_skip_leg_day_20;
 
         static constexpr double PI =3.14159265f;
 
@@ -77,7 +88,6 @@ class wSDL
         static double GetAngle(const DPoint &a, const SDL_Point &b);
 
         static double Constrain(double val, double min_val, double max_val);
-
 
         static void ClearScreen();
         static void UpdateScreen();

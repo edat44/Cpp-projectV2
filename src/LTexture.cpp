@@ -13,8 +13,9 @@ LTexture::~LTexture()
 bool LTexture::LoadFromFile(std::string path)
 {
 
-    SDL_Texture *new_texture = nullptr;
-    SDL_Surface *loaded_surface = IMG_Load(path.c_str());
+    std::shared_ptr<SDL_Texture> new_texture;
+    std::shared_ptr<SDL_Surface> loaded_surface;
+    loaded_surface.reset(IMG_Load(path.c_str()));
     if (loaded_surface == nullptr || loaded_surface == NULL)
     {
         printf("Unable to load image %s! SDL_image Error: %s\n", path.c_str(), IMG_GetError());
@@ -30,9 +31,9 @@ bool LTexture::LoadFromFile(std::string path)
         else
         {
         */
-        SDL_SetColorKey(loaded_surface, SDL_TRUE, SDL_MapRGB(loaded_surface->format, 0xFF, 0xFF, 0xFF));
+        SDL_SetColorKey(loaded_surface.get(), SDL_TRUE, SDL_MapRGB(loaded_surface->format, 0xFF, 0xFF, 0xFF));
 
-        new_texture = SDL_CreateTextureFromSurface(wSDL::s_renderer, loaded_surface);
+        new_texture = sdl_shared(SDL_CreateTextureFromSurface(wSDL::s_renderer.get(), loaded_surface.get()));
         if (new_texture == nullptr)
         {
             printf("Unable to create texture from %s! SDL Error: %s\n", path.c_str(), SDL_GetError());
@@ -46,7 +47,7 @@ bool LTexture::LoadFromFile(std::string path)
         //SDL_FreeSurface(optimized_surface);
         //}
 
-        SDL_FreeSurface(loaded_surface);
+        SDL_FreeSurface(loaded_surface.get());
     }
 
     m_texture = new_texture;
@@ -54,18 +55,19 @@ bool LTexture::LoadFromFile(std::string path)
 }
 
 #ifdef _SDL_TTF_H
-bool LTexture::LoadFromRenderedText(std::string texture_text, TTF_Font *font, SDL_Color text_color)
+bool LTexture::LoadFromRenderedText(std::string texture_text, std::shared_ptr<TTF_Font> font, SDL_Color text_color)
 {
     this->Free();
 
-    SDL_Surface* text_surface = TTF_RenderText_Solid(font, texture_text.c_str(), text_color);
+    std::shared_ptr<SDL_Surface> text_surface;
+    text_surface.reset(TTF_RenderText_Solid(font.get(), texture_text.c_str(), text_color));
     if (text_surface == nullptr)
     {
         printf("Unable to render text surface! SDL_ttf Error: %s\n", TTF_GetError());
     }
     else
     {
-        m_texture = SDL_CreateTextureFromSurface(wSDL::s_renderer, text_surface);
+        m_texture = sdl_shared(SDL_CreateTextureFromSurface(wSDL::s_renderer.get(), text_surface.get()));
         if (m_texture == nullptr)
         {
             printf("Unable to create texture from rendered text! SDL Error: %s\n", SDL_GetError());
@@ -76,7 +78,7 @@ bool LTexture::LoadFromRenderedText(std::string texture_text, TTF_Font *font, SD
             m_height = text_surface->h;
         }
 
-        SDL_FreeSurface(text_surface);
+        SDL_FreeSurface(text_surface.get());
     }
     return m_texture != nullptr;
 }
@@ -87,7 +89,7 @@ void LTexture::Free()
     this->LGraphic::Free();
     if (m_texture != nullptr)
     {
-        SDL_DestroyTexture(m_texture);
+        SDL_DestroyTexture(m_texture.get());
         m_texture = nullptr;
     }
 
@@ -95,7 +97,7 @@ void LTexture::Free()
 
 void LTexture::SetColor(uint8_t red, uint8_t green, uint8_t blue)
 {
-    SDL_SetTextureColorMod(m_texture, red, green, blue);
+    SDL_SetTextureColorMod(m_texture.get(), red, green, blue);
 }
 
 void LTexture::SetColor(uint8_t red, uint8_t green, uint8_t blue, uint8_t alpha)
@@ -106,12 +108,12 @@ void LTexture::SetColor(uint8_t red, uint8_t green, uint8_t blue, uint8_t alpha)
 
 void LTexture::SetBlendMode(SDL_BlendMode blending)
 {
-    SDL_SetTextureBlendMode(m_texture, blending);
+    SDL_SetTextureBlendMode(m_texture.get(), blending);
 }
 
 void LTexture::SetAlpha(uint8_t alpha)
 {
-    SDL_SetTextureAlphaMod(m_texture, alpha);
+    SDL_SetTextureAlphaMod(m_texture.get(), alpha);
 }
 
 void LTexture::Render(int x, int y, SDL_Rect* clip, double angle, SDL_Point* center, SDL_RendererFlip flip)
@@ -124,5 +126,5 @@ void LTexture::Render(int x, int y, SDL_Rect* clip, double angle, SDL_Point* cen
         render_quad.h = clip->h;
     }
 
-    SDL_RenderCopyEx(wSDL::s_renderer, this->m_texture, clip, &render_quad, angle, center, flip);
+    SDL_RenderCopyEx(wSDL::s_renderer.get(), this->m_texture.get(), clip, &render_quad, angle, center, flip);
 }

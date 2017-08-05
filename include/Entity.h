@@ -5,6 +5,7 @@
 #include "LTexture.h"
 #include <vector>
 #include <string>
+#include <memory>
 
 class Entity
 {
@@ -14,11 +15,9 @@ class Entity
 
         void Position(DPoint pos);
 
-        virtual Tile* Move(double time_step, std::vector<Tile*> tiles, Point level_size) = 0;
+        virtual Tile* Move(double time_step, std::vector<std::shared_ptr<Tile>> tiles, Point level_size) = 0;
 
         virtual void Render(SDL_Rect &camera);
-
-        virtual void Free() = 0;
 
     protected:
         DRect m_box;
@@ -27,7 +26,7 @@ class Entity
 
         double m_angle;
 
-        Tile* TouchesWall(std::vector<Tile*> tiles);
+        Tile* TouchesWall(std::vector<std::shared_ptr<Tile>> tiles);
 
         std::string m_type;
 
@@ -36,7 +35,7 @@ class Entity
 
         std::string m_path_texture;
 
-        LTexture *m_texture;
+        std::shared_ptr<LTexture> m_texture;
 };
 
 #endif // ENTITY_H

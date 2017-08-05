@@ -19,7 +19,7 @@ Player::Player()
 
 Player::~Player()
 {
-    this->Free();
+    this->m_projectiles.erase(this->m_projectiles.begin(), this->m_projectiles.end());
 }
 
 void Player::HandleEvent(SDL_Event &e, SDL_Rect &camera)
@@ -57,7 +57,7 @@ void Player::HandleEvent(SDL_Event &e, SDL_Rect &camera)
         this->m_angle = wSDL::GetAngle(DPoint{m_box.x + (m_box.w/2) - camera.x, m_box.y + (m_box.h / 2) - camera.y}, m_face_direction);
         if (e.type == SDL_MOUSEBUTTONDOWN)
         {
-            m_projectiles.push_back (new Projectile(m_box, Point {camera.x + x, camera.y + y}));
+            m_projectiles.push_back(std::make_shared<Projectile>(m_box, Point {camera.x + x, camera.y + y}));
         }
     }
 }
@@ -65,18 +65,18 @@ void Player::HandleEvent(SDL_Event &e, SDL_Rect &camera)
 void Player::Render(SDL_Rect &camera)
 {
     this->Entity::Render(camera);
-    for (Projectile *projectile : m_projectiles)
+    for (std::shared_ptr<Projectile> projectile : m_projectiles)
     {
         projectile->Render(camera);
     }
 }
 
-Tile* Player::Move(double time_step, std::vector<Tile*> tiles, Point level_size)
+Tile* Player::Move(double time_step, std::vector<std::shared_ptr<Tile>> tiles, Point level_size)
 {
 
     Tile* tile = this->Humanoid::Move(time_step, tiles, level_size);
 
-    for (Projectile* projectile: m_projectiles)
+    for (std::shared_ptr<Projectile> projectile : m_projectiles)
     {
         projectile->Move(time_step, tiles, level_size);
     }
@@ -91,10 +91,4 @@ void Player::SetCamera(SDL_Rect &camera, Point level_size)
 
     camera.x = std::min(std::max(camera.x, 0), (level_size.x - camera.w));
     camera.y = std::min(std::max(camera.y, 0), (level_size.y - camera.h));
-}
-
-void Player::Free()
-{
-    this->m_projectiles.erase(this->m_projectiles.begin(), this->m_projectiles.end());
-    this->Humanoid::Free();
 }
