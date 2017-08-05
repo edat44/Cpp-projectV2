@@ -107,7 +107,7 @@ void wSDL::Close()
     SDL_DestroyRenderer(wSDL::s_renderer.get());
     SDL_DestroyWindow(wSDL::s_window.get());
     */
-     
+
     IMG_Quit();
     SDL_Quit();
     Mix_Quit();
@@ -218,10 +218,12 @@ void wSDL::ClearScreen()
 
 void wSDL::UpdateScreen()
 {
-    /*
-    SDL_SetRenderDrawColor(wSDL::s_renderer, 0xFF, 0xFF, 0xFF, 0xFF);
-    SDL_RenderDrawLine(wSDL::s_renderer, 0, wSDL::SCREEN_HEIGHT / 2, wSDL::SCREEN_WIDTH, wSDL::SCREEN_HEIGHT / 2);
-    SDL_RenderDrawLine(wSDL::s_renderer, wSDL::SCREEN_WIDTH / 2, 0, wSDL::SCREEN_WIDTH / 2, wSDL::SCREEN_HEIGHT);
-     */
     SDL_RenderPresent(wSDL::s_renderer.get());
 }
+
+void wSDL::SDL_DelRes(SDL_Window   *r) {SDL_DestroyWindow(r);}
+void wSDL::SDL_DelRes(SDL_Renderer *r) {SDL_DestroyRenderer(r);}
+void wSDL::SDL_DelRes(SDL_Texture  *r) {SDL_DestroyTexture(r);}
+void wSDL::SDL_DelRes(SDL_Surface  *r) {SDL_FreeSurface(r);}
+void wSDL::SDL_DelRes(TTF_Font     *r) {TTF_CloseFont(r);}
+void wSDL::SDL_DelRes(Mix_Chunk    *r) {Mix_FreeChunk(r);}

@@ -43,19 +43,6 @@ struct DRect
 };
 
 
-static void SDL_DelRes(SDL_Window   *r) {SDL_DestroyWindow(r);}
-static void SDL_DelRes(SDL_Renderer *r) {SDL_DestroyRenderer(r);}
-static void SDL_DelRes(SDL_Texture  *r) {SDL_DestroyTexture(r);}
-static void SDL_DelRes(SDL_Surface  *r) {SDL_FreeSurface(r);}
-static void SDL_DelRes(TTF_Font     *r) {TTF_CloseFont(r);}
-static void SDL_DelRes(Mix_Chunk    *r) {Mix_FreeChunk(r);}
-
-template <typename T>
-std::shared_ptr<T> sdl_shared(T *t)
-{
-    return std::shared_ptr<T>(t, [](T *t) {SDL_DelRes(t);});
-}
-
 struct SDL_DelWindow {void operator()(SDL_Window*w) const {SDL_DestroyWindow(w);}};
 std::unique_ptr<SDL_Window, SDL_DelWindow> sdl_unique_window(SDL_Window *w);
 
@@ -106,6 +93,20 @@ class wSDL
 
         static void ClearScreen();
         static void UpdateScreen();
+
+        static void SDL_DelRes(SDL_Window   *r);
+        static void SDL_DelRes(SDL_Renderer *r);
+        static void SDL_DelRes(SDL_Texture  *r);
+        static void SDL_DelRes(SDL_Surface  *r);
+        static void SDL_DelRes(TTF_Font     *r);
+        static void SDL_DelRes(Mix_Chunk    *r);
 };
+
+template <typename T>
+std::shared_ptr<T> sdl_shared(T *t)
+{
+    return std::shared_ptr<T>(t, [](T *t) {wSDL::SDL_DelRes(t);});
+}
+
 
 #endif // WSDL_H
