@@ -1,8 +1,5 @@
 #include "wSDL.h"
-#include "Player.h"
-#include "Tile.h"
-#include "Map.h"
-#include "Projectile.h"
+#include "LSound.h"
 #include <cmath>
 
 bool wSDL::debug = false;
@@ -11,6 +8,12 @@ std::shared_ptr<SDL_Window> wSDL::s_window;
 std::shared_ptr<SDL_Renderer> wSDL::s_renderer;
 std::shared_ptr<SDL_Surface> wSDL::s_screen_surface;
 std::shared_ptr<TTF_Font> wSDL::s_font_skip_leg_day_20;
+std::shared_ptr<LSound> wSDL::s_bullet_fire;
+std::shared_ptr<LSound> wSDL::s_bullet_wall;
+
+std::unique_ptr<SDL_Window, SDL_DelWindow> sdl_unique_window(SDL_Window *w) {return std::unique_ptr<SDL_Window, SDL_DelWindow>(w);}
+
+unique_mix_chunk sdl_unique_mix_chunk(Mix_Chunk *c) {return unique_mix_chunk(c);}
 
 bool wSDL::Init()
 {
@@ -78,6 +81,20 @@ bool wSDL::LoadMedia()
     if (wSDL::s_font_skip_leg_day_20 == nullptr)
     {
         printf("Could not load 'Skip Leg Day' font! SDL_ttf Error: %s\n", TTF_GetError());
+        success = false;
+    }
+
+    wSDL::s_bullet_fire = std::make_shared<LSound>("resources/gun_shot.wav");
+    if (wSDL::s_bullet_fire == nullptr)
+    {
+        printf("Could not load gun_shot.wav! %s\n", Mix_GetError());
+        success = false;
+    }
+
+    wSDL::s_bullet_wall = std::make_shared<LSound>("resources/explosion_mini.wav");
+    if (wSDL::s_bullet_wall == nullptr)
+    {
+        printf("Could not load explosion_mini.wav.wav! %s\n", Mix_GetError());
         success = false;
     }
 

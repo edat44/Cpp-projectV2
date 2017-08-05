@@ -3,6 +3,7 @@
 
 #include "wSDL.h"
 #include <string>
+#include <memory>
 
 class LSound
 {
@@ -14,7 +15,9 @@ class LSound
 
     private:
         std::string m_path_sound;
-        Mix_Chunk *m_sound;
+        unique_mix_chunk m_sound;
+
+        Mix_Chunk* LoadWAV(std::string path);
 };
 
 #endif // LSOUND_H

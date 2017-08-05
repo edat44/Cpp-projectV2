@@ -24,12 +24,13 @@ Projectile::Projectile(DRect start, Point target)
 
 Projectile::~Projectile()
 {
+    m_sound_wall->Play();
 }
 
 void Projectile::LoadSounds()
 {
-    m_sound_spawn = std::make_shared<LSound>("resources/gun_shot.wav");
-    m_sound_wall = std::make_shared<LSound>("resources/explosion_mini.wav");
+    m_sound_spawn = wSDL::s_bullet_fire;
+    m_sound_wall = wSDL::s_bullet_wall;
 }
 
 Tile* Projectile::Move(double time_step, std::vector<std::shared_ptr<Tile>> tiles, Point level_size)

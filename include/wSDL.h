@@ -15,6 +15,8 @@
 #include <stdio.h>
 #include <memory>
 
+class LSound;
+
 using Point = SDL_Point;
 
 struct DPoint
@@ -41,16 +43,26 @@ struct DRect
 };
 
 
-static void SDL_DelRes(SDL_Window   *r) { SDL_DestroyWindow(r);   }
-static void SDL_DelRes(SDL_Renderer *r) { SDL_DestroyRenderer(r); }
-static void SDL_DelRes(SDL_Texture  *r) { SDL_DestroyTexture(r);  }
-static void SDL_DelRes(SDL_Surface  *r) { SDL_FreeSurface(r);     }
-static void SDL_DelRes(TTF_Font    *r) { TTF_CloseFont(r);       }
+static void SDL_DelRes(SDL_Window   *r) {SDL_DestroyWindow(r);}
+static void SDL_DelRes(SDL_Renderer *r) {SDL_DestroyRenderer(r);}
+static void SDL_DelRes(SDL_Texture  *r) {SDL_DestroyTexture(r);}
+static void SDL_DelRes(SDL_Surface  *r) {SDL_FreeSurface(r);}
+static void SDL_DelRes(TTF_Font     *r) {TTF_CloseFont(r);}
+static void SDL_DelRes(Mix_Chunk    *r) {Mix_FreeChunk(r);}
 
 template <typename T>
-std::shared_ptr<T> sdl_shared(T *t) {
-    return std::shared_ptr<T>(t, [](T *t) { SDL_DelRes(t); });
+std::shared_ptr<T> sdl_shared(T *t)
+{
+    return std::shared_ptr<T>(t, [](T *t) {SDL_DelRes(t);});
 }
+
+struct SDL_DelWindow {void operator()(SDL_Window*w) const {SDL_DestroyWindow(w);}};
+std::unique_ptr<SDL_Window, SDL_DelWindow> sdl_unique_window(SDL_Window *w);
+
+
+struct SDL_DelMixChunk {void operator()(Mix_Chunk *c) const {Mix_FreeChunk(c);}};
+using unique_mix_chunk = std::unique_ptr<Mix_Chunk, SDL_DelMixChunk>;
+unique_mix_chunk sdl_unique_mix_chunk(Mix_Chunk *c);
 
 class wSDL
 {
@@ -66,6 +78,9 @@ class wSDL
         static std::shared_ptr<SDL_Renderer> s_renderer;
         static std::shared_ptr<SDL_Surface> s_screen_surface;
         static std::shared_ptr<TTF_Font> s_font_skip_leg_day_20;
+
+        static std::shared_ptr<LSound> s_bullet_fire;
+        static std::shared_ptr<LSound> s_bullet_wall;
 
         static constexpr double PI =3.14159265f;
 
