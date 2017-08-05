@@ -1,7 +1,7 @@
 #ifndef HUMANOID_H
 #define HUMANOID_H
 
-#include <Entity.h>
+#include "Entity.h"
 #include <string>
 #include <memory>
 

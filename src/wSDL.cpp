@@ -103,9 +103,11 @@ bool wSDL::LoadMedia()
 
 void wSDL::Close()
 {
+    /*
     SDL_DestroyRenderer(wSDL::s_renderer.get());
     SDL_DestroyWindow(wSDL::s_window.get());
-
+    */
+     
     IMG_Quit();
     SDL_Quit();
     Mix_Quit();

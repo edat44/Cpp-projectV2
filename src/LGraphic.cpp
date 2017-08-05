@@ -7,13 +7,6 @@ LGraphic::LGraphic()
 
 LGraphic::~LGraphic()
 {
-    this->Free();
-}
-
-void LGraphic::Free()
-{
-    this->m_width = 0;
-    this->m_height = 0;
 }
 
 int LGraphic::GetWidth()

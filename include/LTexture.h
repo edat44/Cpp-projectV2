@@ -19,8 +19,6 @@ class LTexture : public LGraphic
         bool LoadFromRenderedText(std::string texture_text, std::shared_ptr<TTF_Font> font, SDL_Color text_color);
         #endif
 
-        virtual void Free();
-
         virtual void SetColor(uint8_t red, uint8_t green, uint8_t blue);
         virtual void SetColor(uint8_t red, uint8_t green, uint8_t blue, uint8_t alpha);
 

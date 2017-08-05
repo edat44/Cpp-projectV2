@@ -7,34 +7,22 @@ LTexture::LTexture() : LGraphic()
 
 LTexture::~LTexture()
 {
-    this->Free();
 }
 
 bool LTexture::LoadFromFile(std::string path)
 {
-
-    std::shared_ptr<SDL_Texture> new_texture;
     std::shared_ptr<SDL_Surface> loaded_surface;
-    loaded_surface.reset(IMG_Load(path.c_str()));
+    loaded_surface = sdl_shared(IMG_Load(path.c_str()));
     if (loaded_surface == nullptr || loaded_surface == NULL)
     {
         printf("Unable to load image %s! SDL_image Error: %s\n", path.c_str(), IMG_GetError());
     }
     else
     {
-        /*
-        optimized_surface = SDL_ConvertSurface(loaded_surface, wSDL::s_screen_surface->format, 0);
-        if (optimized_surface == nullptr)
-        {
-            printf("Could not optimize image %s! SDL Error: %s\n", path.c_str(), SDL_GetError());
-        }
-        else
-        {
-        */
         SDL_SetColorKey(loaded_surface.get(), SDL_TRUE, SDL_MapRGB(loaded_surface->format, 0xFF, 0xFF, 0xFF));
 
-        new_texture = sdl_shared(SDL_CreateTextureFromSurface(wSDL::s_renderer.get(), loaded_surface.get()));
-        if (new_texture == nullptr)
+        m_texture = sdl_shared(SDL_CreateTextureFromSurface(wSDL::s_renderer.get(), loaded_surface.get()));
+        if (m_texture == nullptr)
         {
             printf("Unable to create texture from %s! SDL Error: %s\n", path.c_str(), SDL_GetError());
         }
@@ -43,21 +31,13 @@ bool LTexture::LoadFromFile(std::string path)
             this->m_width = loaded_surface->w;
             this->m_height = loaded_surface->h;
         }
-
-        //SDL_FreeSurface(optimized_surface);
-        //}
-
-        SDL_FreeSurface(loaded_surface.get());
     }
-
-    m_texture = new_texture;
-    return m_texture != nullptr;
+    return true;
 }
 
 #ifdef _SDL_TTF_H
 bool LTexture::LoadFromRenderedText(std::string texture_text, std::shared_ptr<TTF_Font> font, SDL_Color text_color)
 {
-    this->Free();
 
     std::shared_ptr<SDL_Surface> text_surface;
     text_surface.reset(TTF_RenderText_Solid(font.get(), texture_text.c_str(), text_color));
@@ -77,23 +57,10 @@ bool LTexture::LoadFromRenderedText(std::string texture_text, std::shared_ptr<TT
             m_width = text_surface->w;
             m_height = text_surface->h;
         }
-
-        SDL_FreeSurface(text_surface.get());
     }
     return m_texture != nullptr;
 }
 #endif // _SDL_TTF_H
-
-void LTexture::Free()
-{
-    this->LGraphic::Free();
-    if (m_texture != nullptr)
-    {
-        SDL_DestroyTexture(m_texture.get());
-        m_texture = nullptr;
-    }
-
-}
 
 void LTexture::SetColor(uint8_t red, uint8_t green, uint8_t blue)
 {

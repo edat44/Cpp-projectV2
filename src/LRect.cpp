@@ -11,12 +11,7 @@ LRect::LRect() : LGraphic()
 
 LRect::~LRect()
 {
-    this->Free();
-}
 
-void LRect::Free()
-{
-    this->LGraphic::Free();
 }
 
 void LRect::SetSize(int w, int h)
