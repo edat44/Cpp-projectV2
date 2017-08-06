@@ -24,6 +24,8 @@ int main(int argc, char* args[])
         SDL_Event e;
 
         int frames = 0;
+        int fps_frames_chunk = 3;
+
         LTimer step_timer, fps_timer;
         step_timer.Start();
         fps_timer.Start();
@@ -48,7 +50,11 @@ int main(int argc, char* args[])
 
             step_timer.Start();
 
-            board.UpdateFPS(frames / (fps_timer.GetTicks() / 1000.0f));
+            if (frames % fps_frames_chunk == 0)
+            {
+                board.UpdateFPS(fps_frames_chunk / (fps_timer.GetTicks() / 1000.0f));
+                fps_timer.Start();
+            }
 
             board.SetCamera();
 

@@ -13,6 +13,9 @@ std::shared_ptr<TTF_Font> wSDL::s_font_skip_leg_day_20;
 std::shared_ptr<LSound> wSDL::s_bullet_fire;
 std::shared_ptr<LSound> wSDL::s_bullet_wall;
 
+int wSDL::SCREEN_WIDTH = 900;
+int wSDL::SCREEN_HEIGHT = 650;
+
 std::unique_ptr<SDL_Window, SDL_DelWindow> sdl_unique_window(SDL_Window *w) {return std::unique_ptr<SDL_Window, SDL_DelWindow>(w);}
 
 unique_mix_chunk sdl_unique_mix_chunk(Mix_Chunk *c) {return unique_mix_chunk(c);}
@@ -22,7 +25,7 @@ bool wSDL::Init()
     // This line is only needed, if you want debug the program
     SDL_SetHint(SDL_HINT_WINDOWS_DISABLE_THREAD_NAMING, "1");
 
-    if (SDL_Init(SDL_INIT_VIDEO) < 0)
+    if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_EVENTS | SDL_INIT_TIMER) < 0)
     {
         printf("SDL could not initialize! SDL Error: %s\n", SDL_GetError());
         return false;
@@ -34,13 +37,12 @@ bool wSDL::Init()
     }
 
     s_window = sdl_shared(SDL_CreateWindow("Cpp-ProjectV2", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
-                                wSDL::SCREEN_WIDTH, wSDL::SCREEN_HEIGHT, SDL_WINDOW_SHOWN));
+                                            wSDL::SCREEN_WIDTH, wSDL::SCREEN_HEIGHT, SDL_WINDOW_SHOWN | SDL_WINDOW_ALLOW_HIGHDPI));
     if (s_window == nullptr)
     {
         printf("Window could not be created! SDL Error: %s\n", SDL_GetError());
         return false;
     }
-    //SDL_SetWindowFullscreen(s_window.get(), SDL_WINDOW_FULLSCREEN);
 
     s_renderer = sdl_shared(SDL_CreateRenderer(s_window.get(), -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC));
     if (s_renderer == nullptr)

@@ -55,8 +55,8 @@ class wSDL
 {
     public:
         static bool debug;
-        static const int SCREEN_WIDTH = 640;
-        static const int SCREEN_HEIGHT = 480;
+        static int SCREEN_WIDTH;
+        static int SCREEN_HEIGHT;
 
         //What file types does this project use?
         static const int IMG_FLAGS = IMG_INIT_PNG;
