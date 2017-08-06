@@ -5,32 +5,40 @@
 #include <string>
 #include <memory>
 
-
 class LTexture
 {
     public:
-        LTexture(std::string path, SDL_Color background = SDL_Color{0xFF, 0xFF, 0xFF, 0xFF});
-
+        LTexture(std::string path, int clip_rows = 1, int clip_cols = 1, SDL_Color background_mask = SDL_Color{0xFF, 0xFF, 0xFF, 0xFF});
+        LTexture(const LTexture &texture);
         virtual ~LTexture();
 
-        virtual void SetColor(uint8_t red, uint8_t green, uint8_t blue);
-        virtual void SetColor(uint8_t red, uint8_t green, uint8_t blue, uint8_t alpha);
+        void SetColor(uint8_t red, uint8_t green, uint8_t blue);
+        void SetColor(uint8_t red, uint8_t green, uint8_t blue, uint8_t alpha);
 
-        virtual void SetBlendMode(SDL_BlendMode blending);
+        void SetBlendMode(SDL_BlendMode blending);
 
-        virtual void SetAlpha(uint8_t alpha);
+        void SetAlpha(uint8_t alpha);
 
         virtual void Render(int x, int y, SDL_Rect* clip = nullptr, double angle = 0.0, SDL_Point* center = nullptr, SDL_RendererFlip flip = SDL_FLIP_NONE);
 
         int GetWidth();
         int GetHeight();
-    private:
-        std::shared_ptr<SDL_Texture> m_texture;
-        std::string m_path;
-        SDL_Color m_background;
 
+        PSprite MakeSprite(int start_frame = 0, int frame_time = 0, SPRITE_MODE mode = SPRITE_MODE::BOUNCE);
+
+    protected:
+        LTexture(PTexture texture);
+
+        std::string m_path;
+        std::shared_ptr<SDL_Texture> m_texture;
         int m_width;
         int m_height;
+
+        int m_clip_rows;
+        int m_clip_cols;
+
+        SDL_Color m_background_mask;
+    private:
 
         bool Load();
 };

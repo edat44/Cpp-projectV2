@@ -1,11 +1,25 @@
 #include "LTexture.h"
+#include "LSprite.h"
 
-LTexture::LTexture(std::string path, SDL_Color background)
+LTexture::LTexture(std::string path, int clip_rows, int clip_cols, SDL_Color background_mask)
 {
     this->m_path = path;
-    this->m_background = background;
+    this->m_background_mask = background_mask;
+    this->m_clip_rows = clip_rows;
+    this->m_clip_cols = clip_cols;
     if (!this->Load())
         delete this;
+}
+
+LTexture::LTexture(const LTexture &texture)
+{
+    this->m_path = texture.m_path;
+    this->m_background_mask = texture.m_background_mask;
+    this->m_texture = texture.m_texture;
+    this->m_clip_rows = texture.m_clip_rows;
+    this->m_clip_cols = texture.m_clip_cols;
+    this->m_width = texture.m_width;
+    this->m_height = texture.m_height;
 }
 
 LTexture::~LTexture()
@@ -22,7 +36,8 @@ bool LTexture::Load()
     }
     else
     {
-        SDL_SetColorKey(loaded_surface.get(), SDL_TRUE, SDL_MapRGB(loaded_surface->format, 0xFF, 0xFF, 0xFF));
+        SDL_Color c = m_background_mask;
+        SDL_SetColorKey(loaded_surface.get(), SDL_TRUE, SDL_MapRGB(loaded_surface->format, c.r, c.g, c.b));
 
         m_texture = sdl_shared(SDL_CreateTextureFromSurface(wSDL::s_renderer.get(), loaded_surface.get()));
         if (m_texture == nullptr)
@@ -31,8 +46,8 @@ bool LTexture::Load()
         }
         else
         {
-            this->m_width = loaded_surface->w;
-            this->m_height = loaded_surface->h;
+            this->m_width = loaded_surface->w / m_clip_cols;
+            this->m_height = loaded_surface->h / m_clip_rows;
         }
     }
     return true;
@@ -80,4 +95,10 @@ int LTexture::GetWidth()
 int LTexture::GetHeight()
 {
     return this->m_height;
+}
+
+
+PSprite LTexture::MakeSprite(int start_frame, int frame_time, SPRITE_MODE mode)
+{
+    return std::make_shared<LSprite>(*this, start_frame, frame_time, mode);
 }

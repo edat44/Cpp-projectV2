@@ -18,6 +18,8 @@ sdl_unique_font make_unique_font(TTF_Font *f) {return sdl_unique_font(f);}
 
 bool wSDL::Init()
 {
+    if (wSDL::debug)
+        printf("Initializing SDL!\n");
     // This line is only needed, if you want debug the program
     SDL_SetHint(SDL_HINT_WINDOWS_DISABLE_THREAD_NAMING, "1");
 
@@ -76,7 +78,11 @@ bool wSDL::Init()
 
 bool wSDL::LoadMedia()
 {
+    if (wSDL::debug)
+        printf("Loading Media...\n");
     return wResources::Load();
+    if (wSDL::debug)
+        printf("Done Loading Media!\n");
 }
 
 void wSDL::Close()

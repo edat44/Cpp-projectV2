@@ -20,13 +20,6 @@ bool wResources::Load()
 {
     bool success = true;
 
-    //wResources::font_skip_leg_day_20 = sdl_shared(TTF_OpenFont("resources/fonts/SkipLegDay.ttf", 20));
-    //if (wResources::font_skip_leg_day_20 == nullptr)
-    //{
-    //    printf("Could not load 'Skip Leg Day' font! SDL_ttf Error: %s\n", TTF_GetError());
-    //    success = false;
-    //}
-
     wResources::sound_bullet_fire = std::make_shared<LSound>("resources/gun_shot.wav");
     if (wResources::sound_bullet_fire == nullptr)
     {
@@ -59,13 +52,13 @@ bool wResources::Load()
         printf("Could not load dot_with_arrow.png! %s\n", SDL_GetError());
     }
 
-    wResources::texture_tiles = std::make_shared<LTexture>("resources/tiles.png");
+    wResources::texture_tiles = std::make_shared<LTexture>("resources/tiles.png", 3, 4);
     if (wResources::texture_tiles == nullptr)
     {
         printf("Could not load tiles.png! %s\n", SDL_GetError());
     }
 
-    wResources::texture_explosion = std::make_shared<LTexture>("resources/explosion_sprite.png");
+    wResources::texture_explosion = std::make_shared<LTexture>("resources/explosion_sprite.png", 1, 9);
     if (wResources::texture_explosion == nullptr)
     {
         printf("Could not load explosion_sprite.png! %s\n", SDL_GetError());

@@ -6,7 +6,9 @@ Map::Map(std::string file_path)
     this->m_camera = {0, 0, wSDL::SCREEN_WIDTH, wSDL::SCREEN_HEIGHT};
     this->m_player = std::make_shared<Player>();
 
-    this->LoadTextures();
+    this->m_texture_tiles = wResources::texture_tiles;
+    this->m_font_fps = std::make_shared<LFont>(wResources::font_skip_leg_day, 20, SDL_Color{0xCC, 0xCC, 0xCC, 0xFF});
+
     this->AddItemFrames();
     this->SetTiles();
 }
@@ -15,22 +17,6 @@ Map::~Map()
 {
     this->m_tiles.erase(this->m_tiles.begin(), this->m_tiles.end());
     this->m_frames.erase(this->m_frames.begin(), this->m_frames.end());
-}
-
-bool Map::LoadTextures()
-{
-    bool success = true;
-    this->m_texture_tiles = wResources::texture_tiles;
-
-    for (int y = 0; y < Map::TILE_SPRITE_ROWS; ++y)
-    {
-        for (int x = 0; x < Map::TILE_SPRITE_COLS; ++x)
-        {
-            this->m_tile_clips.push_back({x * Map::TILE_WIDTH, y * Map::TILE_HEIGHT, Map::TILE_WIDTH, Map::TILE_HEIGHT});
-        }
-    }
-    this->m_font_fps = std::make_shared<LFont>(wResources::font_skip_leg_day, 20, SDL_Color{0xCC, 0xCC, 0xCC, 0xFF});
-    return success;
 }
 
 bool Map::HandleEvent(SDL_Event &e)
@@ -101,7 +87,7 @@ bool Map::SetTiles()
                 //If the number is a valid tile number
                 if(tile_type >= 0 && tile_type < Map::TILE_TOTAL_SPRITES)
                 {
-                    this->m_tiles.push_back(std::make_shared<Tile>(x, y, tile_type, this->m_texture_tiles, &this->m_tile_clips));
+                    this->m_tiles.push_back(std::make_shared<Tile>(x, y, tile_type, this->m_texture_tiles));
                 }
                 //If we don't recognize the tile type
                 else
@@ -211,7 +197,7 @@ void Map::AddBorder()
         else
             tile_type = Map::TILE_RIGHT;
 
-        this->m_tiles.push_back(std::make_shared<Tile>(x, y, tile_type, this->m_texture_tiles, &this->m_tile_clips));
+        this->m_tiles.push_back(std::make_shared<Tile>(x, y, tile_type, this->m_texture_tiles));
 
         x += (x_add * Map::TILE_WIDTH);
         y += (y_add * Map::TILE_HEIGHT);
