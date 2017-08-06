@@ -1,9 +1,11 @@
 #include "Projectile.h"
 #include <cmath>
+#include "Weapon.h"
 
-Projectile::Projectile(DPoint start, Point target,  std::function<void(Projectile* p)> clean_up_lambda)
+Projectile::Projectile(Weapon* weapon, DPoint start, Point target)
     : Entity("Projectile", wResources::texture_bullet)
 {
+    this->m_weapon = weapon;
     this->m_box.x = start.x;
     this->m_box.y = start.y;
 
@@ -16,12 +18,10 @@ Projectile::Projectile(DPoint start, Point target,  std::function<void(Projectil
 
     this->LoadSounds();
     this->m_sound_spawn->Play();
-
-    this->CleanUp = clean_up_lambda;
 }
 
-Projectile::Projectile(DRect start, Point target,  std::function<void(Projectile* p)> clean_up_lambda)
-    : Projectile(DPoint {start.x + (start.w / 2) - (Projectile::WIDTH / 2), start.y + (start.h / 2) - (Projectile::HEIGHT / 2)}, target, clean_up_lambda)
+Projectile::Projectile(Weapon* weapon, DRect start, Point target)
+    : Projectile(weapon, DPoint {start.x + (start.w / 2) - (Projectile::WIDTH / 2), start.y + (start.h / 2) - (Projectile::HEIGHT / 2)}, target)
 {}
 
 Projectile::~Projectile()
@@ -45,7 +45,7 @@ Tile* Projectile::Move(double time_step, std::vector<std::shared_ptr<Tile>> tile
     Tile *wall = this->TouchesWall(tiles);
     if (wall != nullptr)
     {
-        this->CleanUp(this);
+        m_weapon->DeleteProjectile(this);
     }
     double dx = (m_vel.x * time_step);
     double dy = (m_vel.y * time_step);

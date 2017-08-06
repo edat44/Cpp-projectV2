@@ -9,11 +9,13 @@
 #include <string>
 #include <memory>
 
+class Weapon;
+
 class Projectile: public Entity
 {
     public:
-        Projectile(DPoint start, Point target, std::function<void(Projectile* p)> clean_up_lambda);
-        Projectile(DRect start, Point target, std::function<void(Projectile* p)> clean_up_lambda);
+        Projectile(Weapon *weapon, DPoint start, Point target);
+        Projectile(Weapon *weapon, DRect start, Point target);
         virtual ~Projectile();
 
         static const int WIDTH = 6;
@@ -31,9 +33,9 @@ class Projectile: public Entity
         PSound m_sound_spawn;
         PSound m_sound_wall;
 
-        void LoadSounds();
+        Weapon* m_weapon;
 
-        std::function<void(Projectile* p)> CleanUp;
+        void LoadSounds();
 
 };
 

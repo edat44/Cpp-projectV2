@@ -110,7 +110,7 @@ bool Map::SetTiles()
 		DPoint p;
 		p.x = 1.f;
 		p.y = 1.f;
-		this->m_player->Position(p);
+		this->m_player->SetPosition(p);
 		this->AddBorder();
 	}
 

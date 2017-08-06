@@ -13,11 +13,14 @@ class Entity
         Entity(std::string type, PTexture texture);
         virtual ~Entity();
 
-        void Position(DPoint pos);
+        void SetPosition(DPoint pos);
 
         virtual Tile* Move(double time_step, std::vector<std::shared_ptr<Tile>> tiles, Point level_size) = 0;
 
         virtual void Render(SDL_Rect &camera);
+
+        DRect GetBox();
+        DPoint GetPosition();
 
     protected:
         DRect m_box;

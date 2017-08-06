@@ -15,11 +15,13 @@ Player::Player()
 
     this->m_face_direction.x = wSDL::SCREEN_WIDTH / 2.0f;
     this->m_face_direction.y = wSDL::SCREEN_HEIGHT / 2.0f;
+
+    this->m_weapon = std::make_shared<Weapon>(this);
 }
 
 Player::~Player()
 {
-    this->m_projectiles.erase(this->m_projectiles.begin(), this->m_projectiles.end());
+
 }
 
 void Player::HandleEvent(SDL_Event &e, SDL_Rect &camera)
@@ -54,18 +56,7 @@ void Player::HandleEvent(SDL_Event &e, SDL_Rect &camera)
     {
         if (e.type == SDL_MOUSEBUTTONDOWN)
         {
-            m_projectiles.push_back(std::unique_ptr<Projectile>(new Projectile(m_box, Point {camera.x + m_face_direction.x, camera.y + m_face_direction.y},
-                [this](Projectile* p)
-                {
-                    for (unsigned int i = 0; i < m_projectiles.size(); ++i)
-                    {
-                        if (p == this->m_projectiles.at(i).get())
-                        {
-                            this->m_projectiles.erase(m_projectiles.begin() + i);
-                        }
-                    }
-                }
-            )));
+            m_weapon->Fire(Point{camera.x + m_face_direction.x, camera.y + m_face_direction.y});
         }
     }
 }
@@ -73,23 +64,14 @@ void Player::HandleEvent(SDL_Event &e, SDL_Rect &camera)
 void Player::Render(SDL_Rect &camera)
 {
     this->Entity::Render(camera);
-    for (auto& projectile : m_projectiles)
-    {
-        projectile->Render(camera);
-    }
+    m_weapon->Render(camera);
 }
 
 Tile* Player::Move(double time_step, std::vector<std::shared_ptr<Tile>> tiles, Point level_size)
 {
 
     Tile* tile = this->Humanoid::Move(time_step, tiles, level_size);
-
-    for (unsigned int i = 0; i < m_projectiles.size(); ++i)
-    {
-        Projectile *projectile = m_projectiles.at(i).get();
-        if (projectile != nullptr)
-            projectile->Move(time_step, tiles, level_size);
-    }
+    m_weapon->Move(time_step, tiles, level_size);
     return tile;
 }
 

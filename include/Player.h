@@ -3,12 +3,12 @@
 
 #include "wSDL.h"
 #include "Tile.h"
-#include "Projectile.h"
 #include "Humanoid.h"
 #include <vector>
 #include <algorithm>
 #include <memory>
 #include <string>
+#include "Weapon.h"
 
 class Player : public Humanoid
 {
@@ -39,9 +39,7 @@ class Player : public Humanoid
 
         Point m_face_direction;
 
-        std::vector<std::unique_ptr<Projectile>> m_projectiles;
-
-        std::vector<PSprite> m_explosions;
+        std::shared_ptr<Weapon> m_weapon;
 };
 
 #endif // PLAYER_H
