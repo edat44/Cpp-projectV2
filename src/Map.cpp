@@ -124,12 +124,8 @@ bool Map::SetTiles()
 bool Map::LoadTextures()
 {
     bool success = true;
-    this->m_texture_tiles = std::make_shared<LTexture>();
-    if (!this->m_texture_tiles->LoadFromFile(this->m_path_texture_tiles))
-    {
-        printf("Failed to load tile texture\n");
-        success = false;
-    }
+    this->m_texture_tiles = std::make_shared<LTexture>(this->m_path_texture_tiles);
+
     for (int y = 0; y < Map::TILE_SPRITE_ROWS; ++y)
     {
         for (int x = 0; x < Map::TILE_SPRITE_COLS; ++x)

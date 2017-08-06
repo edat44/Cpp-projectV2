@@ -1,21 +1,23 @@
 #include "LTexture.h"
 
-LTexture::LTexture()
+LTexture::LTexture(std::string path, SDL_Color background)
 {
-    m_texture = nullptr;
+    this->m_path = path;
+    this->m_background = background;
+    this->Load();
 }
 
 LTexture::~LTexture()
 {
 }
 
-bool LTexture::LoadFromFile(std::string path)
+bool LTexture::Load()
 {
     std::shared_ptr<SDL_Surface> loaded_surface;
-    loaded_surface = sdl_shared(IMG_Load(path.c_str()));
+    loaded_surface = sdl_shared(IMG_Load(m_path.c_str()));
     if (loaded_surface == nullptr || loaded_surface == NULL)
     {
-        printf("Unable to load image %s! SDL_image Error: %s\n", path.c_str(), IMG_GetError());
+        printf("Unable to load image %s! SDL_image Error: %s\n", m_path.c_str(), IMG_GetError());
     }
     else
     {
@@ -24,7 +26,7 @@ bool LTexture::LoadFromFile(std::string path)
         m_texture = sdl_shared(SDL_CreateTextureFromSurface(wSDL::s_renderer.get(), loaded_surface.get()));
         if (m_texture == nullptr)
         {
-            printf("Unable to create texture from %s! SDL Error: %s\n", path.c_str(), SDL_GetError());
+            printf("Unable to create texture from %s! SDL Error: %s\n", m_path.c_str(), SDL_GetError());
         }
         else
         {

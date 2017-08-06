@@ -9,10 +9,11 @@
 class LTexture
 {
     public:
-        LTexture();
+        LTexture(std::string path, SDL_Color background = SDL_Color{0xFF, 0xFF, 0xFF, 0xFF});
+
         virtual ~LTexture();
 
-        bool LoadFromFile(std::string path);
+        bool Load();
 
         virtual void SetColor(uint8_t red, uint8_t green, uint8_t blue);
         virtual void SetColor(uint8_t red, uint8_t green, uint8_t blue, uint8_t alpha);
@@ -28,6 +29,8 @@ class LTexture
 
     private:
         std::shared_ptr<SDL_Texture> m_texture;
+        std::string m_path;
+        SDL_Color m_background;
 
         int m_width;
         int m_height;

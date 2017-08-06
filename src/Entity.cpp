@@ -23,12 +23,7 @@ Entity::~Entity()
 bool Entity::LoadTexture()
 {
     bool success = true;
-    this->m_texture = std::make_shared<LTexture>();
-    if (!this->m_texture->LoadFromFile(this->m_path_texture))
-    {
-        printf("Could not load texture %s!\n", this->m_path_texture.c_str());
-        success = false;
-    }
+    this->m_texture = std::make_shared<LTexture>(this->m_path_texture);
 
     this->m_box.w = m_texture->GetWidth();
     this->m_box.h = m_texture->GetHeight();
