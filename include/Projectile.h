@@ -11,8 +11,8 @@
 class Projectile: public Entity
 {
     public:
-        Projectile(DPoint start, Point target);
-        Projectile(DRect start, Point target);
+        Projectile(DPoint start, Point target, std::function<void(Projectile* p)> clean_up_lambda);
+        Projectile(DRect start, Point target, std::function<void(Projectile* p)> clean_up_lambda);
         virtual ~Projectile();
 
         static const int WIDTH = 6;
@@ -22,6 +22,8 @@ class Projectile: public Entity
 
         Tile* Move(double time_step, std::vector<std::shared_ptr<Tile>> tiles, Point level_size);
 
+        bool operator==(const Projectile &p);
+
     protected:
         Point m_target;
 
@@ -29,6 +31,8 @@ class Projectile: public Entity
         std::shared_ptr<LSound> m_sound_wall;
 
         void LoadSounds();
+
+        std::function<void(Projectile* p)> CleanUp;
 
 };
 
