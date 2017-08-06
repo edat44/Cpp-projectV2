@@ -1,7 +1,7 @@
 #include "Tile.h"
 #include "Map.h"
 
-Tile::Tile(int x, int y, int tile_type, std::shared_ptr<LTexture> texture, std::vector<SDL_Rect> *clips)
+Tile::Tile(int x, int y, int tile_type, PTexture texture)
 {
     this->m_box.x = x;
     this->m_box.y = y;
@@ -10,9 +10,7 @@ Tile::Tile(int x, int y, int tile_type, std::shared_ptr<LTexture> texture, std::
 
     this->m_type = tile_type;
 
-    this->m_texture = texture;
-
-    this->m_tile_clips = *clips;
+    this->m_sprite = texture->MakeSprite(tile_type, 0, LSprite::SPRITE_STATIC);
 }
 
 void Tile::Render(SDL_Rect &camera)
@@ -20,7 +18,7 @@ void Tile::Render(SDL_Rect &camera)
     //if tile is on the screen
     if (wSDL::CheckCollision(camera, this->m_box))
     {
-        this->m_texture->Render(this->m_box.x - camera.x, this->m_box.y - camera.y, &this->m_tile_clips.at(this->m_type));
+        this->m_sprite->Render(this->m_box.x - camera.x, this->m_box.y - camera.y);
     }
 }
 

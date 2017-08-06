@@ -1,16 +1,17 @@
 #ifndef TILE_H
 #define TILE_H
 
+#include "LSprite.h"
 #include "LTexture.h"
-#include <string>
 #include "wSDL.h"
 #include <vector>
 #include <memory>
+#include <string>
 
 class Tile
 {
     public:
-        Tile(int x, int y, int tile_type, std::shared_ptr<LTexture> texture, std::vector<SDL_Rect> *clips);
+        Tile(int x, int y, int tile_type, PTexture texture);
 
         void Render(SDL_Rect &camera);
 
@@ -19,9 +20,7 @@ class Tile
         SDL_Rect GetBox();
 
     private:
-
-        std::vector<SDL_Rect> m_tile_clips;
-        std::shared_ptr<LTexture> m_texture;
+        PSprite m_sprite;
 
         SDL_Rect m_box;
 

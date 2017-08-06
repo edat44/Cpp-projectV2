@@ -19,47 +19,55 @@ int main(int argc, char* args[])
 
     else
     {
-        bool quit = false;
 
-        SDL_Event e;
-
-        int frames = 0;
-        LTimer step_timer, fps_timer;
-        step_timer.Start();
-        fps_timer.Start();
-
-        Map board = Map("resources/jewon.map");
-
-        while (!quit)
         {
-            ++frames;
-            while (SDL_PollEvent(&e) != 0)
-            {
-                if (e.type == SDL_QUIT)
-                    quit = true;
+            bool quit = false;
 
-                if (board.HandleEvent(e))
-                    quit = true;
-            }
+            SDL_Event e;
 
-            double time_step = step_timer.GetTicks() / 1000.0;
+            int frames = 0;
+            int fps_frames_chunk = 3;
 
-            board.MovePlayer(time_step);
-
+            LTimer step_timer, fps_timer;
             step_timer.Start();
+            fps_timer.Start();
+            std::shared_ptr<Map> board = std::make_shared<Map>("resources/jewon.map");
 
-            board.UpdateFPS(frames / (fps_timer.GetTicks() / 1000.0f));
+            while (!quit)
+            {
+                ++frames;
+                while (SDL_PollEvent(&e) != 0)
+                {
+                    if (e.type == SDL_QUIT)
+                        quit = true;
 
-            board.SetCamera();
+                    if (board->HandleEvent(e))
+                        quit = true;
+                }
 
-            wSDL::ClearScreen();
+                double time_step = step_timer.GetTicks() / 1000.0;
 
-            board.Render();
+                board->MovePlayer(time_step);
 
-            wSDL::UpdateScreen();
+                step_timer.Start();
+
+                if (frames % fps_frames_chunk == 0)
+                {
+                    board->UpdateFPS(fps_frames_chunk / (fps_timer.GetTicks() / 1000.0f));
+                    fps_timer.Start();
+                }
+
+                board->SetCamera();
+
+                wSDL::ClearScreen();
+
+                board->Render();
+
+                wSDL::UpdateScreen();
+            }
+            if (wSDL::debug)
+                printf("Exiting main loop\n");
         }
-        if (wSDL::debug)
-            printf("Exiting main loop\n");
         wSDL::Close();
 
     }

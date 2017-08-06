@@ -10,6 +10,7 @@
 #include "Player.h"
 #include "ItemFrame.h"
 #include "LTexture.h"
+#include "LFont.h"
 
 class Map
 {
@@ -26,7 +27,6 @@ class Map
         void Render();
 
         bool SetTiles();
-        bool LoadTexture();
 
         Point GetMapSizePixels();
         Point GetMapSizeTiles();
@@ -71,15 +71,11 @@ class Map
         static const int ITEM_FRAME_SPACING = 10;
         static const int NUM_ITEM_FRAMES = 4;
 
-        std::shared_ptr<LTexture> m_texture_tiles;
-        static const std::string m_path_texture_tiles;
-        std::vector<SDL_Rect> m_tile_clips;
+        PTexture m_texture_tiles;
 
-        std::shared_ptr<LTexture> m_texture_fps;
+        std::shared_ptr<LFont> m_font_fps;
         static const int FPS_X = 10;
         static const int FPS_Y = 10;
-        SDL_Color m_fps_color;
-        std::shared_ptr<TTF_Font> m_fps_font;
 
         void AddBorder();
         void AddItemFrames();

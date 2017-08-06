@@ -40,6 +40,8 @@ class Player : public Humanoid
         Point m_face_direction;
 
         std::vector<std::unique_ptr<Projectile>> m_projectiles;
+
+        std::vector<PSprite> m_explosions;
 };
 
 #endif // PLAYER_H

@@ -14,8 +14,7 @@
 #endif
 #include <stdio.h>
 #include <memory>
-
-class LSound;
+#include "wResources.h"
 
 using Point = SDL_Point;
 
@@ -43,63 +42,64 @@ struct DRect
 };
 
 
-struct SDL_DelWindow {void operator()(SDL_Window*w) const {SDL_DestroyWindow(w);}};
-std::unique_ptr<SDL_Window, SDL_DelWindow> sdl_unique_window(SDL_Window *w);
+struct SDL_DelTexture {void operator()(SDL_Texture *t) const {SDL_DestroyTexture(t);}};
+using sdl_unique_texture = std::unique_ptr<SDL_Texture, SDL_DelTexture>;
+sdl_unique_texture make_unique_texture(SDL_Texture *t);
 
 
 struct SDL_DelMixChunk {void operator()(Mix_Chunk *c) const {Mix_FreeChunk(c);}};
-using unique_mix_chunk = std::unique_ptr<Mix_Chunk, SDL_DelMixChunk>;
-unique_mix_chunk sdl_unique_mix_chunk(Mix_Chunk *c);
+using sdl_unique_mix_chunk = std::unique_ptr<Mix_Chunk, SDL_DelMixChunk>;
+sdl_unique_mix_chunk make_unique_mix_chunk(Mix_Chunk *c);
+
+struct SDL_DelFont {void operator()(TTF_Font *f) const {TTF_CloseFont(f);}};
+using sdl_unique_font = std::unique_ptr<TTF_Font, SDL_DelFont>;
+sdl_unique_font make_unique_font(TTF_Font *f);
 
 class wSDL
 {
-    public:
-        static bool debug;
-        static const int SCREEN_WIDTH = 640;
-        static const int SCREEN_HEIGHT = 480;
+public:
+    static bool debug;
+    static int SCREEN_WIDTH;
+    static int SCREEN_HEIGHT;
 
-        //What file types does this project use?
-        static const int IMG_FLAGS = IMG_INIT_PNG;
+    static std::shared_ptr<SDL_Window> s_window;
+    static std::shared_ptr<SDL_Renderer> s_renderer;
+    static std::shared_ptr<SDL_Surface> s_screen_surface;
 
-        static std::shared_ptr<SDL_Window> s_window;
-        static std::shared_ptr<SDL_Renderer> s_renderer;
-        static std::shared_ptr<SDL_Surface> s_screen_surface;
-        static std::shared_ptr<TTF_Font> s_font_skip_leg_day_20;
+    //What file types does this project use?
+    static const int IMG_FLAGS = IMG_INIT_PNG;
 
-        static std::shared_ptr<LSound> s_bullet_fire;
-        static std::shared_ptr<LSound> s_bullet_wall;
+    static constexpr double PI =3.14159265f;
 
-        static constexpr double PI =3.14159265f;
+    static bool Init();
+    static bool LoadMedia();
+    static void Close();
 
-        static bool Init();
-        static bool LoadMedia();
-        static void Close();
+    static bool CheckCollision(const DRect &a, const DRect &b);
+    static bool CheckCollision(const DRect &a, const SDL_Rect &b);
+    static bool CheckCollision(const SDL_Rect &a, const SDL_Rect &b);
 
-        static bool CheckCollision(const DRect &a, const DRect &b);
-        static bool CheckCollision(const DRect &a, const SDL_Rect &b);
-        static bool CheckCollision(const SDL_Rect &a, const SDL_Rect &b);
+    static DPoint Distance(const DRect &a, const DRect &b);
+    static DPoint Distance(const DRect &a, const SDL_Rect &b);
 
-        static DPoint Distance(const DRect &a, const DRect &b);
-        static DPoint Distance(const DRect &a, const SDL_Rect &b);
-
-        static DRect SDL_RectToDRect(const SDL_Rect &r);
-        static DPoint SDL_PointToDPoint(const SDL_Point &p);
+    static DRect SDL_RectToDRect(const SDL_Rect &r);
+    static DPoint SDL_PointToDPoint(const SDL_Point &p);
 
 
-        static double GetAngle(const DPoint &a, const DPoint &b);
-        static double GetAngle(const DPoint &a, const SDL_Point &b);
+    static double GetAngle(const DPoint &a, const DPoint &b);
+    static double GetAngle(const DPoint &a, const SDL_Point &b);
 
-        static double Constrain(double val, double min_val, double max_val);
+    static double Constrain(double val, double min_val, double max_val);
 
-        static void ClearScreen();
-        static void UpdateScreen();
+    static void ClearScreen();
+    static void UpdateScreen();
 
-        static void SDL_DelRes(SDL_Window   *r);
-        static void SDL_DelRes(SDL_Renderer *r);
-        static void SDL_DelRes(SDL_Texture  *r);
-        static void SDL_DelRes(SDL_Surface  *r);
-        static void SDL_DelRes(TTF_Font     *r);
-        static void SDL_DelRes(Mix_Chunk    *r);
+    static void SDL_DelRes(SDL_Window   *r);
+    static void SDL_DelRes(SDL_Renderer *r);
+    static void SDL_DelRes(SDL_Texture  *r);
+    static void SDL_DelRes(SDL_Surface  *r);
+    static void SDL_DelRes(TTF_Font     *r);
+    static void SDL_DelRes(Mix_Chunk    *r);
 };
 
 template <typename T>

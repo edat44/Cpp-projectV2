@@ -1,28 +1,29 @@
 #include "wSDL.h"
-#include "LSound.h"
 #include <cmath>
 
 bool wSDL::debug = false;
-//int wSDL::SCREEN_WIDTH = 0;
-//int wSDL::SCREEN_HEIGHT = 0;
+int wSDL::SCREEN_WIDTH = 900;
+int wSDL::SCREEN_HEIGHT = 650;
 
 std::shared_ptr<SDL_Window> wSDL::s_window;
 std::shared_ptr<SDL_Renderer> wSDL::s_renderer;
 std::shared_ptr<SDL_Surface> wSDL::s_screen_surface;
-std::shared_ptr<TTF_Font> wSDL::s_font_skip_leg_day_20;
-std::shared_ptr<LSound> wSDL::s_bullet_fire;
-std::shared_ptr<LSound> wSDL::s_bullet_wall;
 
-std::unique_ptr<SDL_Window, SDL_DelWindow> sdl_unique_window(SDL_Window *w) {return std::unique_ptr<SDL_Window, SDL_DelWindow>(w);}
 
-unique_mix_chunk sdl_unique_mix_chunk(Mix_Chunk *c) {return unique_mix_chunk(c);}
+
+sdl_unique_texture make_unique_texture(SDL_Texture *t) {return sdl_unique_texture(t);}
+sdl_unique_mix_chunk make_unique_mix_chunk(Mix_Chunk *c) {return sdl_unique_mix_chunk(c);}
+sdl_unique_font make_unique_font(TTF_Font *f) {return sdl_unique_font(f);}
+
 
 bool wSDL::Init()
 {
+    if (wSDL::debug)
+        printf("Initializing SDL!\n");
     // This line is only needed, if you want debug the program
     SDL_SetHint(SDL_HINT_WINDOWS_DISABLE_THREAD_NAMING, "1");
 
-    if (SDL_Init(SDL_INIT_VIDEO) < 0)
+    if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_EVENTS | SDL_INIT_TIMER) < 0)
     {
         printf("SDL could not initialize! SDL Error: %s\n", SDL_GetError());
         return false;
@@ -34,13 +35,12 @@ bool wSDL::Init()
     }
 
     s_window = sdl_shared(SDL_CreateWindow("Cpp-ProjectV2", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
-                                wSDL::SCREEN_WIDTH, wSDL::SCREEN_HEIGHT, SDL_WINDOW_SHOWN));
+                                            wSDL::SCREEN_WIDTH, wSDL::SCREEN_HEIGHT, SDL_WINDOW_SHOWN | SDL_WINDOW_ALLOW_HIGHDPI));
     if (s_window == nullptr)
     {
         printf("Window could not be created! SDL Error: %s\n", SDL_GetError());
         return false;
     }
-    //SDL_SetWindowFullscreen(s_window.get(), SDL_WINDOW_FULLSCREEN);
 
     s_renderer = sdl_shared(SDL_CreateRenderer(s_window.get(), -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC));
     if (s_renderer == nullptr)
@@ -78,42 +78,19 @@ bool wSDL::Init()
 
 bool wSDL::LoadMedia()
 {
-    bool success = true;
-
-    wSDL::s_font_skip_leg_day_20 = sdl_shared(TTF_OpenFont("resources/fonts/SkipLegDay.ttf", 20));
-    if (wSDL::s_font_skip_leg_day_20 == nullptr)
-    {
-        printf("Could not load 'Skip Leg Day' font! SDL_ttf Error: %s\n", TTF_GetError());
-        success = false;
-    }
-
-    wSDL::s_bullet_fire = std::make_shared<LSound>("resources/gun_shot.wav");
-    if (wSDL::s_bullet_fire == nullptr)
-    {
-        printf("Could not load gun_shot.wav! %s\n", Mix_GetError());
-        success = false;
-    }
-
-    wSDL::s_bullet_wall = std::make_shared<LSound>("resources/explosion_mini.wav");
-    if (wSDL::s_bullet_wall == nullptr)
-    {
-        printf("Could not load explosion_mini.wav.wav! %s\n", Mix_GetError());
-        success = false;
-    }
-
-    return success;
+    if (wSDL::debug)
+        printf("Loading Media...\n");
+    return wResources::Load();
+    if (wSDL::debug)
+        printf("Done Loading Media!\n");
 }
 
 void wSDL::Close()
 {
-    /*
-    SDL_DestroyRenderer(wSDL::s_renderer.get());
-    SDL_DestroyWindow(wSDL::s_window.get());
-    */
-
     IMG_Quit();
-    SDL_Quit();
     Mix_Quit();
+    SDL_Quit();
+    TTF_Quit();
 }
 
 bool wSDL::CheckCollision(const DRect &a, const DRect &b)

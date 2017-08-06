@@ -3,7 +3,7 @@
 #include <cmath>
 
 Player::Player()
-    : Humanoid("Humanoid", "resources/dot_with_arrow.png")
+    : Humanoid("Humanoid", wResources::texture_player)
 {
     this->m_box.x = 0.f;
     this->m_box.y = 0.f;
@@ -24,6 +24,8 @@ Player::~Player()
 
 void Player::HandleEvent(SDL_Event &e, SDL_Rect &camera)
 {
+    SDL_GetMouseState(&m_face_direction.x, &m_face_direction.y);
+    this->m_angle = wSDL::GetAngle(DPoint{m_box.x + (m_box.w/2) - camera.x, m_box.y + (m_box.h / 2) - camera.y}, m_face_direction);
     if ((e.type == SDL_KEYDOWN || e.type == SDL_KEYUP) && e.key.repeat == 0)
     {
         int inverted = e.type == SDL_KEYDOWN ? 1 : -1;
@@ -48,16 +50,22 @@ void Player::HandleEvent(SDL_Event &e, SDL_Rect &camera)
             break;
         }
     }
-    else if (e.type == SDL_MOUSEMOTION || e.type == SDL_MOUSEBUTTONDOWN)
+    else if (e.type == SDL_MOUSEBUTTONDOWN)
     {
-        int x, y;
-        SDL_GetMouseState(&x, &y);
-        this->m_face_direction.x = x;
-        this->m_face_direction.y = y;
-        this->m_angle = wSDL::GetAngle(DPoint{m_box.x + (m_box.w/2) - camera.x, m_box.y + (m_box.h / 2) - camera.y}, m_face_direction);
         if (e.type == SDL_MOUSEBUTTONDOWN)
         {
-            m_projectiles.push_back(std::unique_ptr<Projectile>(new Projectile(m_box, Point {camera.x + x, camera.y + y})));
+            m_projectiles.push_back(std::unique_ptr<Projectile>(new Projectile(m_box, Point {camera.x + m_face_direction.x, camera.y + m_face_direction.y},
+                [this](Projectile* p)
+                {
+                    for (unsigned int i = 0; i < m_projectiles.size(); ++i)
+                    {
+                        if (p == this->m_projectiles.at(i).get())
+                        {
+                            this->m_projectiles.erase(m_projectiles.begin() + i);
+                        }
+                    }
+                }
+            )));
         }
     }
 }
@@ -79,10 +87,8 @@ Tile* Player::Move(double time_step, std::vector<std::shared_ptr<Tile>> tiles, P
     for (unsigned int i = 0; i < m_projectiles.size(); ++i)
     {
         Projectile *projectile = m_projectiles.at(i).get();
-        if (projectile->Move(time_step, tiles, level_size) != nullptr)
-        {
-            m_projectiles.erase(m_projectiles.begin() + i);
-        }
+        if (projectile != nullptr)
+            projectile->Move(time_step, tiles, level_size);
     }
     return tile;
 }

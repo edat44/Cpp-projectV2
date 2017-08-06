@@ -1,17 +1,14 @@
 #include "Map.h"
 
-const std::string Map::m_path_texture_tiles = "resources/tiles.png";
-
 Map::Map(std::string file_path)
 {
     this->m_path_map = file_path;
     this->m_camera = {0, 0, wSDL::SCREEN_WIDTH, wSDL::SCREEN_HEIGHT};
     this->m_player = std::make_shared<Player>();
 
-    this->m_fps_color = SDL_Color{0x66, 0x66, 0x66, 0xFF};
-    this->m_fps_font = wSDL::s_font_skip_leg_day_20;
+    this->m_texture_tiles = wResources::texture_tiles;
+    this->m_font_fps = std::make_shared<LFont>(wResources::font_skip_leg_day, 20, SDL_Color{0xCC, 0xCC, 0xCC, 0xFF});
 
-    this->LoadTexture();
     this->AddItemFrames();
     this->SetTiles();
 }
@@ -54,8 +51,8 @@ void Map::Render()
     {
         frame->Render();
     }
-    if (this->m_texture_fps != nullptr)
-        this->m_texture_fps->Render(Map::FPS_X, Map::FPS_Y);
+    if (this->m_font_fps != nullptr)
+        this->m_font_fps->Render(Map::FPS_X, Map::FPS_Y);
 }
 
 bool Map::SetTiles()
@@ -90,7 +87,7 @@ bool Map::SetTiles()
                 //If the number is a valid tile number
                 if(tile_type >= 0 && tile_type < Map::TILE_TOTAL_SPRITES)
                 {
-                    this->m_tiles.push_back(std::make_shared<Tile>(x, y, tile_type, this->m_texture_tiles, &this->m_tile_clips));
+                    this->m_tiles.push_back(std::make_shared<Tile>(x, y, tile_type, this->m_texture_tiles));
                 }
                 //If we don't recognize the tile type
                 else
@@ -124,26 +121,6 @@ bool Map::SetTiles()
     return tiles_loaded;
 }
 
-bool Map::LoadTexture()
-{
-    bool success = true;
-    this->m_texture_tiles = std::make_shared<LTexture>();
-    if (!this->m_texture_tiles->LoadFromFile(this->m_path_texture_tiles))
-    {
-        printf("Failed to load tile texture\n");
-        success = false;
-    }
-    for (int y = 0; y < Map::TILE_SPRITE_ROWS; ++y)
-    {
-        for (int x = 0; x < Map::TILE_SPRITE_COLS; ++x)
-        {
-            this->m_tile_clips.push_back({x * Map::TILE_WIDTH, y * Map::TILE_HEIGHT, Map::TILE_WIDTH, Map::TILE_HEIGHT});
-        }
-    }
-    this->m_texture_fps = std::make_shared<LTexture>();
-    return success;
-}
-
 Point Map::GetMapSizePixels()
 {
     Point p;
@@ -165,7 +142,8 @@ void Map::UpdateFPS(double fps)
     std::stringstream time_text;
     time_text.str("");
     time_text << "FPS: " << fps;
-    this->m_texture_fps->LoadFromRenderedText(time_text.str(), this->m_fps_font, this->m_fps_color);
+    if (this->m_font_fps != nullptr)
+        this->m_font_fps->ChangeText(time_text.str());
 }
 
 void Map::AddBorder()
@@ -219,7 +197,7 @@ void Map::AddBorder()
         else
             tile_type = Map::TILE_RIGHT;
 
-        this->m_tiles.push_back(std::make_shared<Tile>(x, y, tile_type, this->m_texture_tiles, &this->m_tile_clips));
+        this->m_tiles.push_back(std::make_shared<Tile>(x, y, tile_type, this->m_texture_tiles));
 
         x += (x_add * Map::TILE_WIDTH);
         y += (y_add * Map::TILE_HEIGHT);
