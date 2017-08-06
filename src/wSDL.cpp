@@ -1,24 +1,20 @@
 #include "wSDL.h"
-#include "LSound.h"
 #include <cmath>
 
 bool wSDL::debug = false;
-//int wSDL::SCREEN_WIDTH = 0;
-//int wSDL::SCREEN_HEIGHT = 0;
+int wSDL::SCREEN_WIDTH = 900;
+int wSDL::SCREEN_HEIGHT = 650;
 
 std::shared_ptr<SDL_Window> wSDL::s_window;
 std::shared_ptr<SDL_Renderer> wSDL::s_renderer;
 std::shared_ptr<SDL_Surface> wSDL::s_screen_surface;
-std::shared_ptr<TTF_Font> wSDL::s_font_skip_leg_day_20;
-std::shared_ptr<LSound> wSDL::s_bullet_fire;
-std::shared_ptr<LSound> wSDL::s_bullet_wall;
 
-int wSDL::SCREEN_WIDTH = 900;
-int wSDL::SCREEN_HEIGHT = 650;
 
-std::unique_ptr<SDL_Window, SDL_DelWindow> sdl_unique_window(SDL_Window *w) {return std::unique_ptr<SDL_Window, SDL_DelWindow>(w);}
 
-unique_mix_chunk sdl_unique_mix_chunk(Mix_Chunk *c) {return unique_mix_chunk(c);}
+sdl_unique_texture make_unique_texture(SDL_Texture *t) {return sdl_unique_texture(t);}
+sdl_unique_mix_chunk make_unique_mix_chunk(Mix_Chunk *c) {return sdl_unique_mix_chunk(c);}
+sdl_unique_font make_unique_font(TTF_Font *f) {return sdl_unique_font(f);}
+
 
 bool wSDL::Init()
 {
@@ -80,42 +76,15 @@ bool wSDL::Init()
 
 bool wSDL::LoadMedia()
 {
-    bool success = true;
-
-    wSDL::s_font_skip_leg_day_20 = sdl_shared(TTF_OpenFont("resources/fonts/SkipLegDay.ttf", 20));
-    if (wSDL::s_font_skip_leg_day_20 == nullptr)
-    {
-        printf("Could not load 'Skip Leg Day' font! SDL_ttf Error: %s\n", TTF_GetError());
-        success = false;
-    }
-
-    wSDL::s_bullet_fire = std::make_shared<LSound>("resources/gun_shot.wav");
-    if (wSDL::s_bullet_fire == nullptr)
-    {
-        printf("Could not load gun_shot.wav! %s\n", Mix_GetError());
-        success = false;
-    }
-
-    wSDL::s_bullet_wall = std::make_shared<LSound>("resources/explosion_mini.wav");
-    if (wSDL::s_bullet_wall == nullptr)
-    {
-        printf("Could not load explosion_mini.wav.wav! %s\n", Mix_GetError());
-        success = false;
-    }
-
-    return success;
+    return wResources::Load();
 }
 
 void wSDL::Close()
 {
-    /*
-    SDL_DestroyRenderer(wSDL::s_renderer.get());
-    SDL_DestroyWindow(wSDL::s_window.get());
-    */
-
     IMG_Quit();
-    SDL_Quit();
     Mix_Quit();
+    SDL_Quit();
+    TTF_Quit();
 }
 
 bool wSDL::CheckCollision(const DRect &a, const DRect &b)

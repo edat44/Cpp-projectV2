@@ -8,10 +8,7 @@ Map::Map(std::string file_path)
     this->m_camera = {0, 0, wSDL::SCREEN_WIDTH, wSDL::SCREEN_HEIGHT};
     this->m_player = std::make_shared<Player>();
 
-    this->m_fps_color = SDL_Color{0x66, 0x66, 0x66, 0xFF};
-    this->m_fps_font = wSDL::s_font_skip_leg_day_20;
-
-    this->LoadTexture();
+    this->LoadTextures();
     this->AddItemFrames();
     this->SetTiles();
 }
@@ -54,8 +51,8 @@ void Map::Render()
     {
         frame->Render();
     }
-    if (this->m_texture_fps != nullptr)
-        this->m_texture_fps->Render(Map::FPS_X, Map::FPS_Y);
+    if (this->m_font_fps != nullptr)
+        this->m_font_fps->Render(Map::FPS_X, Map::FPS_Y);
 }
 
 bool Map::SetTiles()
@@ -124,7 +121,7 @@ bool Map::SetTiles()
     return tiles_loaded;
 }
 
-bool Map::LoadTexture()
+bool Map::LoadTextures()
 {
     bool success = true;
     this->m_texture_tiles = std::make_shared<LTexture>();
@@ -140,7 +137,7 @@ bool Map::LoadTexture()
             this->m_tile_clips.push_back({x * Map::TILE_WIDTH, y * Map::TILE_HEIGHT, Map::TILE_WIDTH, Map::TILE_HEIGHT});
         }
     }
-    this->m_texture_fps = std::make_shared<LTexture>();
+    this->m_font_fps = std::make_shared<LFont>(wResources::font_skip_leg_day, 20, SDL_Color{0xCC, 0xCC, 0xCC, 0xFF});
     return success;
 }
 
@@ -165,7 +162,8 @@ void Map::UpdateFPS(double fps)
     std::stringstream time_text;
     time_text.str("");
     time_text << "FPS: " << fps;
-    this->m_texture_fps->LoadFromRenderedText(time_text.str(), this->m_fps_font, this->m_fps_color);
+    if (this->m_font_fps != nullptr)
+        this->m_font_fps->ChangeText(time_text.str());
 }
 
 void Map::AddBorder()

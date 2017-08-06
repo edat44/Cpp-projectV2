@@ -18,7 +18,7 @@ class Projectile: public Entity
         static const int WIDTH = 6;
         static const int HEIGHT = 6;
 
-        static const int MAX_VEL = 500.f;
+        static const int MAX_VEL = 600.f;
 
         Tile* Move(double time_step, std::vector<std::shared_ptr<Tile>> tiles, Point level_size);
 

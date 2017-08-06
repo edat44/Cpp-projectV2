@@ -29,43 +29,44 @@ int main(int argc, char* args[])
         LTimer step_timer, fps_timer;
         step_timer.Start();
         fps_timer.Start();
-
-        Map board = Map("resources/jewon.map");
-
-        while (!quit)
         {
-            ++frames;
-            while (SDL_PollEvent(&e) != 0)
+            Map board = Map("resources/jewon.map");
+
+            while (!quit)
             {
-                if (e.type == SDL_QUIT)
-                    quit = true;
+                ++frames;
+                while (SDL_PollEvent(&e) != 0)
+                {
+                    if (e.type == SDL_QUIT)
+                        quit = true;
 
-                if (board.HandleEvent(e))
-                    quit = true;
+                    if (board.HandleEvent(e))
+                        quit = true;
+                }
+
+                double time_step = step_timer.GetTicks() / 1000.0;
+
+                board.MovePlayer(time_step);
+
+                step_timer.Start();
+
+                if (frames % fps_frames_chunk == 0)
+                {
+                    board.UpdateFPS(fps_frames_chunk / (fps_timer.GetTicks() / 1000.0f));
+                    fps_timer.Start();
+                }
+
+                board.SetCamera();
+
+                wSDL::ClearScreen();
+
+                board.Render();
+
+                wSDL::UpdateScreen();
             }
-
-            double time_step = step_timer.GetTicks() / 1000.0;
-
-            board.MovePlayer(time_step);
-
-            step_timer.Start();
-
-            if (frames % fps_frames_chunk == 0)
-            {
-                board.UpdateFPS(fps_frames_chunk / (fps_timer.GetTicks() / 1000.0f));
-                fps_timer.Start();
-            }
-
-            board.SetCamera();
-
-            wSDL::ClearScreen();
-
-            board.Render();
-
-            wSDL::UpdateScreen();
+            if (wSDL::debug)
+                printf("Exiting main loop\n");
         }
-        if (wSDL::debug)
-            printf("Exiting main loop\n");
         wSDL::Close();
 
     }

@@ -15,7 +15,7 @@ class LSound
 
     private:
         std::string m_path_sound;
-        unique_mix_chunk m_sound;
+        sdl_unique_mix_chunk m_sound;
 
         Mix_Chunk* LoadWAV(std::string path);
 };

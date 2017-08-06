@@ -3,7 +3,7 @@
 LSound::LSound(std::string path)
 {
     m_path_sound = path;
-    m_sound = sdl_unique_mix_chunk(LoadWAV(path));
+    m_sound = make_unique_mix_chunk(LoadWAV(path));
     if (m_sound == nullptr)
     {
         printf("Sound %s could not be loaded! Mix Error: %s\n", path.c_str(), Mix_GetError());

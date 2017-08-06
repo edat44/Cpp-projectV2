@@ -29,8 +29,8 @@ Projectile::~Projectile()
 
 void Projectile::LoadSounds()
 {
-    m_sound_spawn = wSDL::s_bullet_fire;
-    m_sound_wall = wSDL::s_bullet_wall;
+    m_sound_spawn = wResources::sound_bullet_fire;
+    m_sound_wall = wResources::sound_bullet_wall;
 }
 
 Tile* Projectile::Move(double time_step, std::vector<std::shared_ptr<Tile>> tiles, Point level_size)

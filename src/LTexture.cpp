@@ -35,33 +35,6 @@ bool LTexture::LoadFromFile(std::string path)
     return true;
 }
 
-#ifdef _SDL_TTF_H
-bool LTexture::LoadFromRenderedText(std::string texture_text, std::shared_ptr<TTF_Font> font, SDL_Color text_color)
-{
-
-    std::shared_ptr<SDL_Surface> text_surface;
-    text_surface.reset(TTF_RenderText_Solid(font.get(), texture_text.c_str(), text_color));
-    if (text_surface == nullptr)
-    {
-        printf("Unable to render text surface! SDL_ttf Error: %s\n", TTF_GetError());
-    }
-    else
-    {
-        m_texture = sdl_shared(SDL_CreateTextureFromSurface(wSDL::s_renderer.get(), text_surface.get()));
-        if (m_texture == nullptr)
-        {
-            printf("Unable to create texture from rendered text! SDL Error: %s\n", SDL_GetError());
-        }
-        else
-        {
-            m_width = text_surface->w;
-            m_height = text_surface->h;
-        }
-    }
-    return m_texture != nullptr;
-}
-#endif // _SDL_TTF_H
-
 void LTexture::SetColor(uint8_t red, uint8_t green, uint8_t blue)
 {
     SDL_SetTextureColorMod(m_texture.get(), red, green, blue);
