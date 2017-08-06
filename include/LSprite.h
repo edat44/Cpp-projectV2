@@ -8,12 +8,20 @@
 class LSprite : LTexture
 {
     public:
-        LSprite(const LTexture &texture, int start_frame = 0, int frame_time = 0, SPRITE_MODE mode = SPRITE_MODE::BOUNCE);
+        LSprite(const LTexture &texture, int start_frame, int frame_time, SPRITE_MODE mode);
         virtual ~LSprite();
 
         virtual void Render(int x, int y, SDL_Rect* clip = nullptr, double angle = 0.0, SDL_Point* center = nullptr, SDL_RendererFlip flip = SDL_FLIP_NONE);
 
         void NextFrame();
+
+        static const SPRITE_MODE SPRITE_FORWARD =   0b00000001;
+        static const SPRITE_MODE SPRITE_BACKWARD =  0b00000010;
+        static const SPRITE_MODE SPRITE_BOUNCE =    0b00000100;
+        static const SPRITE_MODE SPRITE_STATIC =    0b00010000;
+        static const SPRITE_MODE SPRITE_DELETE =    0b00001000;
+        static const SPRITE_MODE SPRITE_CONTINUOUS =0b00010000;
+
     private:
         void SetClips();
 

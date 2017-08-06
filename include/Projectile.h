@@ -5,6 +5,7 @@
 #include "Entity.h"
 #include "LTexture.h"
 #include "LSound.h"
+#include "wSDL.h"
 #include <string>
 #include <memory>
 

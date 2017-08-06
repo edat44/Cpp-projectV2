@@ -27,6 +27,7 @@ Projectile::Projectile(DRect start, Point target,  std::function<void(Projectile
 Projectile::~Projectile()
 {
     m_sound_wall->Play();
+    wResources::texture_explosion->MakeSprite(0, 1000, LSprite::SPRITE_FORWARD | LSprite::SPRITE_DELETE);
 }
 
 void Projectile::LoadSounds()

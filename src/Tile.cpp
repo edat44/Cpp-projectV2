@@ -10,7 +10,7 @@ Tile::Tile(int x, int y, int tile_type, PTexture texture)
 
     this->m_type = tile_type;
 
-    this->m_sprite = texture->MakeSprite(tile_type, 0, SPRITE_MODE::STATIC);
+    this->m_sprite = texture->MakeSprite(tile_type, 0, LSprite::SPRITE_STATIC);
 }
 
 void Tile::Render(SDL_Rect &camera)

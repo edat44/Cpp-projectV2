@@ -5,6 +5,8 @@
 #include <string>
 #include <memory>
 
+using SPRITE_MODE = uint8_t;
+
 class LTexture
 {
     public:
@@ -24,7 +26,7 @@ class LTexture
         int GetWidth();
         int GetHeight();
 
-        PSprite MakeSprite(int start_frame = 0, int frame_time = 0, SPRITE_MODE mode = SPRITE_MODE::BOUNCE);
+        PSprite MakeSprite(int start_frame, int frame_time, SPRITE_MODE mode);
 
     protected:
         LTexture(PTexture texture);
