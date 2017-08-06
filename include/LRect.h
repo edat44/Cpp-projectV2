@@ -1,11 +1,10 @@
 #ifndef LRECT_H
 #define LRECT_H
 
-#include "LGraphic.h"
 #include "wSDL.h"
 
 
-class LRect : public LGraphic
+class LRect
 {
     public:
         LRect();
@@ -20,12 +19,18 @@ class LRect : public LGraphic
 
         virtual void SetAlpha(uint8_t alpha);
 
-        virtual void Render(int x, int y, SDL_Rect* clip = nullptr, double angle = 0.0, SDL_Point* center = nullptr, SDL_RendererFlip flip = SDL_FLIP_NONE);
+        virtual void Render(int x, int y);
+
+        int GetWidth();
+        int GetHeight();
 
     private:
-        uint8_t red, blue, green, alpha;
+        uint8_t m_red, m_blue, m_green, m_alpha;
 
-        SDL_BlendMode blend;
+        SDL_BlendMode m_blend;
+
+        int m_width;
+        int m_height;
 };
 
 #endif // LRECT_H

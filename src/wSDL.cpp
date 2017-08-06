@@ -3,6 +3,8 @@
 #include <cmath>
 
 bool wSDL::debug = false;
+//int wSDL::SCREEN_WIDTH = 0;
+//int wSDL::SCREEN_HEIGHT = 0;
 
 std::shared_ptr<SDL_Window> wSDL::s_window;
 std::shared_ptr<SDL_Renderer> wSDL::s_renderer;
@@ -38,6 +40,7 @@ bool wSDL::Init()
         printf("Window could not be created! SDL Error: %s\n", SDL_GetError());
         return false;
     }
+    //SDL_SetWindowFullscreen(s_window.get(), SDL_WINDOW_FULLSCREEN);
 
     s_renderer = sdl_shared(SDL_CreateRenderer(s_window.get(), -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC));
     if (s_renderer == nullptr)

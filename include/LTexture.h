@@ -2,12 +2,11 @@
 #define LTEXTURE_H
 
 #include "wSDL.h"
-#include "LGraphic.h"
 #include <string>
 #include <memory>
 
 
-class LTexture : public LGraphic
+class LTexture
 {
     public:
         LTexture();
@@ -28,10 +27,14 @@ class LTexture : public LGraphic
 
         virtual void Render(int x, int y, SDL_Rect* clip = nullptr, double angle = 0.0, SDL_Point* center = nullptr, SDL_RendererFlip flip = SDL_FLIP_NONE);
 
-    protected:
+        int GetWidth();
+        int GetHeight();
 
     private:
         std::shared_ptr<SDL_Texture> m_texture;
+
+        int m_width;
+        int m_height;
 };
 
 #endif // LTEXTURE_H

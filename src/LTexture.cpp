@@ -1,6 +1,6 @@
 #include "LTexture.h"
 
-LTexture::LTexture() : LGraphic()
+LTexture::LTexture()
 {
     m_texture = nullptr;
 }
@@ -94,4 +94,14 @@ void LTexture::Render(int x, int y, SDL_Rect* clip, double angle, SDL_Point* cen
     }
 
     SDL_RenderCopyEx(wSDL::s_renderer.get(), this->m_texture.get(), clip, &render_quad, angle, center, flip);
+}
+
+int LTexture::GetWidth()
+{
+    return this->m_width;
+}
+
+int LTexture::GetHeight()
+{
+    return this->m_height;
 }

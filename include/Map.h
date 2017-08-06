@@ -69,7 +69,7 @@ class Map
 
         static const int ITEM_FRAME_SIZE = 100;
         static const int ITEM_FRAME_SPACING = 10;
-        static const int NUM_ITEM_FRAMES = 0;
+        static const int NUM_ITEM_FRAMES = 4;
 
         std::shared_ptr<LTexture> m_texture_tiles;
         static const std::string m_path_texture_tiles;

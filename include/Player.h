@@ -19,7 +19,7 @@ class Player : public Humanoid
         static const int S_WIDTH = 20;
         static const int S_HEIGHT = 20;
 
-        static const int S_MAX_VEL = 300;
+        static const int S_MAX_VEL = 150;
 
         void HandleEvent(SDL_Event &e, SDL_Rect &camera);
 
