@@ -10,7 +10,7 @@
 class Entity
 {
     public:
-        Entity(std::string type, std::string path_texture);
+        Entity(std::string type, PTexture texture);
         virtual ~Entity();
 
         void Position(DPoint pos);
@@ -31,11 +31,7 @@ class Entity
         std::string m_type;
 
     private:
-        bool LoadTexture();
-
-        std::string m_path_texture;
-
-        std::shared_ptr<LTexture> m_texture;
+        PTexture m_texture;
 };
 
 #endif // ENTITY_H

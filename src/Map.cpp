@@ -1,7 +1,5 @@
 #include "Map.h"
 
-const std::string Map::m_path_texture_tiles = "resources/tiles.png";
-
 Map::Map(std::string file_path)
 {
     this->m_path_map = file_path;
@@ -17,6 +15,22 @@ Map::~Map()
 {
     this->m_tiles.erase(this->m_tiles.begin(), this->m_tiles.end());
     this->m_frames.erase(this->m_frames.begin(), this->m_frames.end());
+}
+
+bool Map::LoadTextures()
+{
+    bool success = true;
+    this->m_texture_tiles = wResources::texture_tiles;
+
+    for (int y = 0; y < Map::TILE_SPRITE_ROWS; ++y)
+    {
+        for (int x = 0; x < Map::TILE_SPRITE_COLS; ++x)
+        {
+            this->m_tile_clips.push_back({x * Map::TILE_WIDTH, y * Map::TILE_HEIGHT, Map::TILE_WIDTH, Map::TILE_HEIGHT});
+        }
+    }
+    this->m_font_fps = std::make_shared<LFont>(wResources::font_skip_leg_day, 20, SDL_Color{0xCC, 0xCC, 0xCC, 0xFF});
+    return success;
 }
 
 bool Map::HandleEvent(SDL_Event &e)
@@ -119,22 +133,6 @@ bool Map::SetTiles()
 
     //If the map was loaded fine
     return tiles_loaded;
-}
-
-bool Map::LoadTextures()
-{
-    bool success = true;
-    this->m_texture_tiles = std::make_shared<LTexture>(this->m_path_texture_tiles);
-
-    for (int y = 0; y < Map::TILE_SPRITE_ROWS; ++y)
-    {
-        for (int x = 0; x < Map::TILE_SPRITE_COLS; ++x)
-        {
-            this->m_tile_clips.push_back({x * Map::TILE_WIDTH, y * Map::TILE_HEIGHT, Map::TILE_WIDTH, Map::TILE_HEIGHT});
-        }
-    }
-    this->m_font_fps = std::make_shared<LFont>(wResources::font_skip_leg_day, 20, SDL_Color{0xCC, 0xCC, 0xCC, 0xFF});
-    return success;
 }
 
 Point Map::GetMapSizePixels()

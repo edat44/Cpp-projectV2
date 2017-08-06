@@ -8,7 +8,7 @@
 class Humanoid : public Entity
 {
     public:
-        Humanoid(std::string type, std::string path_texture);
+        Humanoid(std::string type, PTexture texture);
         virtual ~Humanoid();
 
         virtual Tile* Move(double time_step, std::vector<std::shared_ptr<Tile>> tiles, Point level_size) = 0;

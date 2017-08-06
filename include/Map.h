@@ -73,7 +73,6 @@ class Map
         static const int NUM_ITEM_FRAMES = 4;
 
         std::shared_ptr<LTexture> m_texture_tiles;
-        static const std::string m_path_texture_tiles;
         std::vector<SDL_Rect> m_tile_clips;
 
         std::shared_ptr<LFont> m_font_fps;

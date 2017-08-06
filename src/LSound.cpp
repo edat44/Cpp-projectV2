@@ -2,16 +2,19 @@
 
 LSound::LSound(std::string path)
 {
-    m_path_sound = path;
-    m_sound = make_unique_mix_chunk(LoadWAV(path));
-    if (m_sound == nullptr)
-    {
-        printf("Sound %s could not be loaded! Mix Error: %s\n", path.c_str(), Mix_GetError());
-    }
+    m_path = path;
+    if (!this->Load())
+        delete this;
 }
 
 LSound::~LSound()
+{}
+
+
+bool LSound::Load()
 {
+    m_sound = make_unique_mix_chunk(LoadWAV(m_path));
+    return m_sound != nullptr;
 }
 
 bool LSound::Play(int channel, int loops)

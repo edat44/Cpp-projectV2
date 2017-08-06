@@ -4,7 +4,8 @@ LTexture::LTexture(std::string path, SDL_Color background)
 {
     this->m_path = path;
     this->m_background = background;
-    this->Load();
+    if (!this->Load())
+        delete this;
 }
 
 LTexture::~LTexture()

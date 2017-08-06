@@ -13,8 +13,6 @@ class LTexture
 
         virtual ~LTexture();
 
-        bool Load();
-
         virtual void SetColor(uint8_t red, uint8_t green, uint8_t blue);
         virtual void SetColor(uint8_t red, uint8_t green, uint8_t blue, uint8_t alpha);
 
@@ -26,7 +24,6 @@ class LTexture
 
         int GetWidth();
         int GetHeight();
-
     private:
         std::shared_ptr<SDL_Texture> m_texture;
         std::string m_path;
@@ -34,6 +31,8 @@ class LTexture
 
         int m_width;
         int m_height;
+
+        bool Load();
 };
 
 #endif // LTEXTURE_H

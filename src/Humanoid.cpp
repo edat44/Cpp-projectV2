@@ -1,7 +1,7 @@
 #include "Humanoid.h"
 
-Humanoid::Humanoid(std::string type, std::string path_texture)
-    : Entity("Humanoid: " + type, path_texture)
+Humanoid::Humanoid(std::string type, PTexture texture)
+    : Entity("Humanoid: " + type, texture)
 {}
 
 Humanoid::~Humanoid()

@@ -27,8 +27,8 @@ class Projectile: public Entity
     protected:
         Point m_target;
 
-        std::shared_ptr<LSound> m_sound_spawn;
-        std::shared_ptr<LSound> m_sound_wall;
+        PSound m_sound_spawn;
+        PSound m_sound_wall;
 
         void LoadSounds();
 

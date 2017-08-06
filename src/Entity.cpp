@@ -1,11 +1,13 @@
 #include "Entity.h"
 #include "Map.h"
 
-Entity::Entity(std::string type, std::string path_texture)
+Entity::Entity(std::string type, PTexture texture)
 {
     this->m_type = type;
-    this->m_path_texture = path_texture;
-    this->LoadTexture();
+    this->m_texture = texture;
+
+    this->m_box.w = m_texture->GetWidth();
+    this->m_box.h = m_texture->GetHeight();
 
     this->m_box.x = 0.f;
     this->m_box.y = 0.f;
@@ -18,17 +20,6 @@ Entity::Entity(std::string type, std::string path_texture)
 
 Entity::~Entity()
 {
-}
-
-bool Entity::LoadTexture()
-{
-    bool success = true;
-    this->m_texture = std::make_shared<LTexture>(this->m_path_texture);
-
-    this->m_box.w = m_texture->GetWidth();
-    this->m_box.h = m_texture->GetHeight();
-
-    return success;
 }
 
 void Entity::Position(DPoint pos)
