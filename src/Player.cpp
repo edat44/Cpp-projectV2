@@ -60,7 +60,9 @@ void Player::HandleEvent(SDL_Event &e, SDL_Rect &camera)
                     for (unsigned int i = 0; i < m_projectiles.size(); ++i)
                     {
                         if (p == this->m_projectiles.at(i).get())
+                        {
                             this->m_projectiles.erase(m_projectiles.begin() + i);
+                        }
                     }
                 }
             )));
@@ -85,7 +87,8 @@ Tile* Player::Move(double time_step, std::vector<std::shared_ptr<Tile>> tiles, P
     for (unsigned int i = 0; i < m_projectiles.size(); ++i)
     {
         Projectile *projectile = m_projectiles.at(i).get();
-        projectile->Move(time_step, tiles, level_size);
+        if (projectile != nullptr)
+            projectile->Move(time_step, tiles, level_size);
     }
     return tile;
 }

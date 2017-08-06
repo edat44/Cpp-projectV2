@@ -10,9 +10,7 @@ LSprite::LSprite(const LTexture &texture, int start_frame, int frame_time, SPRIT
 }
 
 LSprite::~LSprite()
-{
-    //dtor
-}
+{}
 
 void LSprite::SetClips()
 {
