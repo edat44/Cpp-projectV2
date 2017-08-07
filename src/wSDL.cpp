@@ -80,9 +80,10 @@ bool wSDL::LoadMedia()
 {
     if (wSDL::debug)
         printf("Loading Media...\n");
-    return wResources::Load();
+    bool success = wResources::Load();
     if (wSDL::debug)
         printf("Done Loading Media!\n");
+    return success;
 }
 
 void wSDL::Close()
