@@ -13,7 +13,7 @@ Weapon::~Weapon()
 
 void Weapon::Fire(Point target)
 {
-    Projectile* p = new Projectile(this, m_player->GetBox(), target);
+    Projectile* p = new Projectile(m_player->GetBox(), target);
     m_projectiles.push_back(std::unique_ptr<Projectile>(p));
 }
 
@@ -35,8 +35,9 @@ void Weapon::Move(double time_step, std::vector<std::shared_ptr<Tile>> tiles, Po
     for (unsigned int i = 0; i < m_projectiles.size(); ++i)
     {
         Projectile *projectile = m_projectiles.at(i).get();
-        if (projectile != nullptr)
-            projectile->Move(time_step, tiles, level_size);
+        projectile->Move(time_step, tiles, level_size);
+        if (!projectile->Update(tiles))
+            DeleteProjectile(i);
     }
 
     for (unsigned int i = 0; i < m_explosions.size(); ++i)
@@ -48,16 +49,10 @@ void Weapon::Move(double time_step, std::vector<std::shared_ptr<Tile>> tiles, Po
     }
 }
 
-void Weapon::DeleteProjectile(Projectile *p)
+void Weapon::DeleteProjectile(unsigned int index)
 {
-    for (unsigned int i = 0; i < m_projectiles.size(); ++i)
-    {
-        if (p == this->m_projectiles.at(i).get())
-        {
-            this->m_projectiles.erase(m_projectiles.begin() + i);
-            DPoint pos = p->GetMiddle();
-            Explosion* explosion = new Explosion(15, (int)pos.x, (int)pos.y);
-            this->m_explosions.push_back(std::unique_ptr<Explosion>(explosion));
-        }
-    }
+    DPoint pos = m_projectiles.at(index)->GetMiddle();
+    this->m_projectiles.erase(m_projectiles.begin() + index);
+    Explosion *explosion = new Explosion(15, (int)pos.x, (int)pos.y);
+    this->m_explosions.push_back(std::unique_ptr<Explosion>(explosion));
 }
