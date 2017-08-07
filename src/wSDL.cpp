@@ -35,7 +35,7 @@ bool wSDL::Init()
     }
 
     s_window = sdl_shared(SDL_CreateWindow("Cpp-ProjectV2", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
-                                            wSDL::SCREEN_WIDTH, wSDL::SCREEN_HEIGHT, SDL_WINDOW_SHOWN | SDL_WINDOW_ALLOW_HIGHDPI));
+                                            wSDL::SCREEN_WIDTH, wSDL::SCREEN_HEIGHT, SDL_WINDOW_SHOWN));
     if (s_window == nullptr)
     {
         printf("Window could not be created! SDL Error: %s\n", SDL_GetError());
