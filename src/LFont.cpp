@@ -14,15 +14,15 @@ LFont::~LFont() {}
 
 bool LFont::Load()
 {
-    std::shared_ptr<SDL_Surface> text_surface;
-    text_surface.reset(TTF_RenderText_Solid(m_font.get(), m_text.c_str(), m_color));
+    SDL_Surface* text_surface;
+    text_surface = TTF_RenderText_Solid(m_font.get(), m_text.c_str(), m_color);
     if (text_surface == nullptr)
     {
         printf("Unable to render text surface! SDL_ttf Error: %s\n", TTF_GetError());
     }
     else
     {
-        m_texture = sdl_shared(SDL_CreateTextureFromSurface(wSDL::s_renderer.get(), text_surface.get()));
+        m_texture = sdl_shared(SDL_CreateTextureFromSurface(wSDL::s_renderer.get(), text_surface));
         if (m_texture == nullptr)
         {
             printf("Unable to create texture from rendered text! SDL Error: %s\n", SDL_GetError());
@@ -32,6 +32,7 @@ bool LFont::Load()
             m_width = text_surface->w;
             m_height = text_surface->h;
         }
+        SDL_FreeSurface(text_surface);
     }
     return m_texture != nullptr;
 }
