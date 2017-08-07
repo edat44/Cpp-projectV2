@@ -10,7 +10,7 @@
 class LSprite : public LTexture
 {
     public:
-        LSprite(LTexture *texture, int start_frame, int frame_time, SPRITE_MODE mode);
+        LSprite(const LTexture &texture, int start_frame, int frame_time, SPRITE_MODE mode);
         virtual ~LSprite();
 
         virtual void Render(SDL_Rect &camera, int x, int y, SDL_Rect* clip = nullptr, double angle = 0.0, SDL_Point* center = nullptr, SDL_RendererFlip flip = SDL_FLIP_NONE);
