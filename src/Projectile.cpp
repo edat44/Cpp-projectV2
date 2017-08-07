@@ -2,11 +2,9 @@
 #include <cmath>
 #include "Weapon.h"
 
-Projectile::Projectile(Weapon* weapon, DPoint start, Point target)
+Projectile::Projectile(DPoint start, Point target)
     : Entity("Projectile", wResources::texture_bullet)
 {
-    this->m_weapon = weapon;
-    this->DeleteMe = [this]() {m_weapon->DeleteProjectile(this);};
     this->m_box.x = start.x;
     this->m_box.y = start.y;
 
@@ -21,8 +19,8 @@ Projectile::Projectile(Weapon* weapon, DPoint start, Point target)
     this->m_sound_spawn->Play();
 }
 
-Projectile::Projectile(Weapon* weapon, DRect start, Point target)
-    : Projectile(weapon, DPoint {start.x + (start.w / 2) - (Projectile::WIDTH / 2), start.y + (start.h / 2) - (Projectile::HEIGHT / 2)}, target)
+Projectile::Projectile(DRect start, Point target)
+    : Projectile(DPoint {start.x + (start.w / 2) - (Projectile::WIDTH / 2), start.y + (start.h / 2) - (Projectile::HEIGHT / 2)}, target)
 {}
 
 Projectile::~Projectile()
@@ -41,15 +39,16 @@ bool Projectile::operator==(const Projectile &p)
 
 Tile* Projectile::Move(double time_step, std::vector<std::shared_ptr<Tile>> tiles, Point level_size)
 {
-    Tile *wall = this->TouchesWall(tiles);
-    if (wall != nullptr)
-    {
-        this->DeleteMe();
-    }
     double dx = (m_vel.x * time_step);
     double dy = (m_vel.y * time_step);
     m_box.x = wSDL::Constrain(m_box.x + dx, 0, level_size.x - m_box.w);
     m_box.y = wSDL::Constrain(m_box.y + dy, 0, level_size.y - m_box.h);
-    wall = this->TouchesWall(tiles);
+    Tile *wall = this->TouchesWall(tiles);
     return wall;
+}
+
+bool Projectile::Update(std::vector<std::shared_ptr<Tile>> tiles)
+{
+    Tile *wall = this->TouchesWall(tiles);
+    return (wall == nullptr);
 }

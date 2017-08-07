@@ -27,7 +27,7 @@ class LFont
         std::string m_text;
         std::string m_font_path;
         int m_pt_size;
-        sdl_unique_font m_font;
+        std::shared_ptr<TTF_Font> m_font;
         SDL_Color m_color;
 
         bool Load();

@@ -21,7 +21,7 @@ class Weapon
 
         void Move(double time_step, std::vector<std::shared_ptr<Tile>> tiles, Point level_size);
 
-        void DeleteProjectile(Projectile *p);
+        void DeleteProjectile(unsigned int index);
         void DeleteExplosion(Explosion *e);
 
     protected:

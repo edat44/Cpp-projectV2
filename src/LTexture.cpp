@@ -29,8 +29,8 @@ LTexture::~LTexture()
 
 bool LTexture::Load()
 {
-    std::shared_ptr<SDL_Surface> loaded_surface;
-    loaded_surface = sdl_shared(IMG_Load(m_path.c_str()));
+    SDL_Surface *loaded_surface;
+    loaded_surface = IMG_Load(m_path.c_str());
     if (loaded_surface == nullptr || loaded_surface == NULL)
     {
         printf("Unable to load image %s! SDL_image Error: %s\n", m_path.c_str(), IMG_GetError());
@@ -38,9 +38,9 @@ bool LTexture::Load()
     else
     {
         SDL_Color c = m_background_mask;
-        SDL_SetColorKey(loaded_surface.get(), SDL_TRUE, SDL_MapRGB(loaded_surface->format, c.r, c.g, c.b));
+        SDL_SetColorKey(loaded_surface, SDL_TRUE, SDL_MapRGB(loaded_surface->format, c.r, c.g, c.b));
 
-        m_texture = sdl_shared(SDL_CreateTextureFromSurface(wSDL::s_renderer.get(), loaded_surface.get()));
+        m_texture = sdl_shared(SDL_CreateTextureFromSurface(wSDL::s_renderer.get(), loaded_surface));
         if (m_texture == nullptr)
         {
             printf("Unable to create texture from %s! SDL Error: %s\n", m_path.c_str(), SDL_GetError());
@@ -50,6 +50,7 @@ bool LTexture::Load()
             this->m_width = loaded_surface->w / m_clip_cols;
             this->m_height = loaded_surface->h / m_clip_rows;
         }
+        SDL_FreeSurface(loaded_surface);
     }
     return true;
 }

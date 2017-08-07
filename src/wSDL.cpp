@@ -1,7 +1,7 @@
 #include "wSDL.h"
 #include <cmath>
 
-bool wSDL::debug = false;
+bool wSDL::debug = true;
 int wSDL::SCREEN_WIDTH = 900;
 int wSDL::SCREEN_HEIGHT = 650;
 
