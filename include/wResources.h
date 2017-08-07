@@ -23,7 +23,7 @@ public:
     static std::string font_skip_leg_day;
 
     static PSound sound_bullet_fire;
-    static PSound sound_bullet_wall;
+    static PSound sound_explosion_mini;
     static PSound sound_arrow_swoosh;
 
     static PTexture texture_bullet;

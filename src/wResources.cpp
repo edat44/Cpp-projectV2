@@ -8,7 +8,7 @@
 std::string wResources::font_skip_leg_day = "resources/fonts/SkipLegDay.ttf";
 
 PSound wResources::sound_bullet_fire;
-PSound wResources::sound_bullet_wall;
+PSound wResources::sound_explosion_mini;
 PSound wResources::sound_arrow_swoosh;
 
 PTexture wResources::texture_bullet;
@@ -27,8 +27,8 @@ bool wResources::Load()
         success = false;
     }
 
-    wResources::sound_bullet_wall = std::make_shared<LSound>("resources/explosion_mini.wav");
-    if (wResources::sound_bullet_wall == nullptr)
+    wResources::sound_explosion_mini = std::make_shared<LSound>("resources/explosion_mini.wav");
+    if (wResources::sound_explosion_mini == nullptr)
     {
         printf("Could not load explosion_mini.wav! %s\n", Mix_GetError());
         success = false;

@@ -104,8 +104,8 @@ void LTexture::Render(SDL_Rect &camera, SDL_Rect* clip, double angle, SDL_Point*
         render_quad.w = clip->w;
         render_quad.h = clip->h;
     }
-
-    SDL_RenderCopyEx(wSDL::s_renderer.get(), this->m_texture.get(), clip, &render_quad, angle, center, flip);
+    if (wSDL::CheckCollision(SDL_Rect{m_pos.x, m_pos.y, render_quad.w, render_quad.h}, camera))
+        SDL_RenderCopyEx(wSDL::s_renderer.get(), this->m_texture.get(), clip, &render_quad, angle, center, flip);
 }
 
 Point LTexture::GetPosition()

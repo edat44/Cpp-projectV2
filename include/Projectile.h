@@ -21,7 +21,7 @@ class Projectile: public Entity
         static const int WIDTH = 6;
         static const int HEIGHT = 6;
 
-        static const int MAX_VEL = 600.f;
+        static const int MAX_VEL = 800.f;
 
         Tile* Move(double time_step, std::vector<std::shared_ptr<Tile>> tiles, Point level_size);
 
@@ -31,9 +31,10 @@ class Projectile: public Entity
         Point m_target;
 
         PSound m_sound_spawn;
-        PSound m_sound_wall;
 
         Weapon* m_weapon;
+
+        std::function<void()> DeleteMe;
 
         void LoadSounds();
 
