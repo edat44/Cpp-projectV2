@@ -32,7 +32,7 @@ void Entity::Render(SDL_Rect &camera)
 {
     if (wSDL::CheckCollision(this->m_box, camera))
     {
-        this->m_texture->Render((int)m_box.x - camera.x, (int)m_box.y - camera.y, nullptr, m_angle);
+        this->m_texture->Render(camera, (int)m_box.x, (int)m_box.y, nullptr, m_angle);
 
     }
 }
@@ -65,4 +65,9 @@ DRect Entity::GetBox()
 DPoint Entity::GetPosition()
 {
     return DPoint{m_box.x, m_box.y};
+}
+
+DPoint Entity::GetMiddle()
+{
+    return DPoint{m_box.x + m_box.w / 2, m_box.y + m_box.h / 2};
 }

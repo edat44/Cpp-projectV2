@@ -13,7 +13,8 @@ Weapon::~Weapon()
 
 void Weapon::Fire(Point target)
 {
-    m_projectiles.push_back(std::unique_ptr<Projectile>(new Projectile(this, m_player->GetBox(), target)));
+    Projectile* p = new Projectile(this, m_player->GetBox(), target);
+    m_projectiles.push_back(std::unique_ptr<Projectile>(p));
 }
 
 void Weapon::Render(SDL_Rect &camera)
@@ -25,7 +26,8 @@ void Weapon::Render(SDL_Rect &camera)
 
     for (auto &explosion : m_explosions)
     {
-        explosion->Render(camera)
+        //printf("(%d, %d)\n", explosion->GetPosition().x, explosion->GetPosition().y);
+        explosion->Render(camera);
     }
 }
 
@@ -46,6 +48,20 @@ void Weapon::DeleteProjectile(Projectile *p)
         if (p == this->m_projectiles.at(i).get())
         {
             this->m_projectiles.erase(m_projectiles.begin() + i);
+            DPoint pos = p->GetMiddle();
+            Explosion* explosion = new Explosion(this, 50, (int)pos.x, (int)pos.y);
+            this->m_explosions.push_back(std::unique_ptr<Explosion>(explosion));
+        }
+    }
+}
+
+void Weapon::DeleteExplosion(Explosion *e)
+{
+    for (unsigned int i = 0; i < m_explosions.size(); ++i)
+    {
+        if (e == this->m_explosions.at(i).get())
+        {
+            this->m_explosions.erase(m_explosions.begin() + i);
         }
     }
 }

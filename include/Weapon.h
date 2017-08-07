@@ -4,6 +4,7 @@
 #include "wSDL.h"
 #include "Tile.h"
 #include "Projectile.h"
+#include "Explosion.h"
 #include <vector>
 
 class Player;
@@ -21,11 +22,12 @@ class Weapon
         void Move(double time_step, std::vector<std::shared_ptr<Tile>> tiles, Point level_size);
 
         void DeleteProjectile(Projectile *p);
+        void DeleteExplosion(Explosion *e);
 
     protected:
     private:
         std::vector<std::unique_ptr<Projectile>> m_projectiles;
-        std::vector<PSprite> m_explosions;
+        std::vector<std::unique_ptr<Explosion>> m_explosions;
         Player* m_player;
 };
 

@@ -21,6 +21,7 @@ class Entity
 
         DRect GetBox();
         DPoint GetPosition();
+        DPoint GetMiddle();
 
     protected:
         DRect m_box;

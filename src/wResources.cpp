@@ -58,7 +58,7 @@ bool wResources::Load()
         printf("Could not load tiles.png! %s\n", SDL_GetError());
     }
 
-    wResources::texture_explosion = std::make_shared<LTexture>("resources/explosion_sprite.png", 1, 9);
+    wResources::texture_explosion = std::make_shared<LTexture>("resources/explosion_sprite.png", 1, 10);
     if (wResources::texture_explosion == nullptr)
     {
         printf("Could not load explosion_sprite.png! %s\n", SDL_GetError());
