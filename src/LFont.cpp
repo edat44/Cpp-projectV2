@@ -4,7 +4,7 @@ LFont::LFont(std::string font_path, int pt_size, SDL_Color color, std::string te
 {
     this->m_font_path = font_path;
     this->m_pt_size = pt_size;
-    this->m_font = make_unique_font(TTF_OpenFont(font_path.c_str(), pt_size));
+    this->m_font = sdl_shared(TTF_OpenFont(font_path.c_str(), pt_size));
     this->m_color = color;
     this->m_text = text;
     this->Load();
