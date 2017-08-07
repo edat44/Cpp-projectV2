@@ -28,9 +28,10 @@ int main(int argc, char* args[])
             int frames = 0;
             int fps_frames_chunk = 3;
 
-            LTimer step_timer, fps_timer;
-            step_timer.Start();
-            fps_timer.Start();
+            std::unique_ptr<LTimer> step_timer{new LTimer()};
+            std::unique_ptr<LTimer> fps_timer{new LTimer()};
+            step_timer->Start();
+            fps_timer->Start();
             std::shared_ptr<Map> board = std::make_shared<Map>("resources/jewon.map");
 
             while (!quit)
@@ -45,16 +46,16 @@ int main(int argc, char* args[])
                         quit = true;
                 }
 
-                double time_step = step_timer.GetTicks() / 1000.0;
+                double time_step = step_timer->GetTicks() / 1000.0;
 
                 board->MovePlayer(time_step);
 
-                step_timer.Start();
+                step_timer->Start();
 
                 if (frames % fps_frames_chunk == 0)
                 {
-                    board->UpdateFPS(fps_frames_chunk / (fps_timer.GetTicks() / 1000.0f));
-                    fps_timer.Start();
+                    board->UpdateFPS(fps_frames_chunk / (fps_timer->GetTicks() / 1000.0f));
+                    fps_timer->Start();
                 }
 
                 board->SetCamera();
