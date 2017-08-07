@@ -14,7 +14,7 @@ LFont::~LFont() {}
 
 bool LFont::Load()
 {
-    SDL_Surface* text_surface;
+    SDL_Surface *text_surface;
     text_surface = TTF_RenderText_Solid(m_font.get(), m_text.c_str(), m_color);
     if (text_surface == nullptr)
     {

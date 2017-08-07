@@ -6,7 +6,13 @@ Projectile::Projectile(Weapon* weapon, DPoint start, Point target)
     : Entity("Projectile", wResources::texture_bullet)
 {
     this->m_weapon = weapon;
-    this->DeleteMe = [this]() {m_weapon->DeleteProjectile(this);};
+    this->DeleteMe = [this]()
+    {
+        if (m_weapon != nullptr)
+            m_weapon->DeleteProjectile(this);
+        else
+            printf("WEAPON DOES NOT EXIST!\n");
+    };
     this->m_box.x = start.x;
     this->m_box.y = start.y;
 
