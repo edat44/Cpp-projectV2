@@ -2,6 +2,7 @@
 #define LFONT_H
 
 #include "wSDL.h"
+#include <string>
 #include <memory>
 
 class LFont
