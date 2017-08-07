@@ -202,9 +202,9 @@ void wSDL::UpdateScreen()
     SDL_RenderPresent(wSDL::s_renderer.get());
 }
 
-void wSDL::SDL_DelRes(SDL_Window   *r) {SDL_DestroyWindow(r);}
-void wSDL::SDL_DelRes(SDL_Renderer *r) {SDL_DestroyRenderer(r);}
-void wSDL::SDL_DelRes(SDL_Texture  *r) {SDL_DestroyTexture(r);}
-void wSDL::SDL_DelRes(SDL_Surface  *r) {SDL_FreeSurface(r);}
-void wSDL::SDL_DelRes(TTF_Font     *r) {TTF_CloseFont(r);}
-void wSDL::SDL_DelRes(Mix_Chunk    *r) {Mix_FreeChunk(r);}
+void wSDL::SDL_DelRes(SDL_Window   *r) {if (r != nullptr)SDL_DestroyWindow(r);}
+void wSDL::SDL_DelRes(SDL_Renderer *r) {if (r != nullptr)SDL_DestroyRenderer(r);}
+void wSDL::SDL_DelRes(SDL_Texture  *r) {if (r != nullptr)SDL_DestroyTexture(r);}
+void wSDL::SDL_DelRes(SDL_Surface  *r) {if (r != nullptr)SDL_FreeSurface(r);}
+void wSDL::SDL_DelRes(TTF_Font     *r) {if (r != nullptr)TTF_CloseFont(r);}
+void wSDL::SDL_DelRes(Mix_Chunk    *r) {if (r != nullptr)Mix_FreeChunk(r);}

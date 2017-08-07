@@ -25,7 +25,6 @@ LTexture::LTexture(const LTexture &texture)
 
 LTexture::~LTexture()
 {
-    m_texture.reset();
 }
 
 bool LTexture::Load()
