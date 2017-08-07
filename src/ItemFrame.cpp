@@ -2,7 +2,7 @@
 
 ItemFrame::ItemFrame(int x, int y, int size)
 {
-    this->m_rect = new LRect();
+    this->m_rect = std::unique_ptr<LRect>(new LRect());
 
     this->m_rect->SetColor(ItemFrame::GRAY, ItemFrame::GRAY, ItemFrame::GRAY, ItemFrame::ALPHA);
     this->m_rect->SetSize(size, size);
@@ -12,8 +12,6 @@ ItemFrame::ItemFrame(int x, int y, int size)
 
 ItemFrame::~ItemFrame()
 {
-    if (this->m_rect != nullptr)
-        delete this->m_rect;
 }
 
 void ItemFrame::Render()

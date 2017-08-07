@@ -3,8 +3,7 @@
 LSound::LSound(std::string path)
 {
     m_path = path;
-    if (!this->Load())
-        delete this;
+    this->Load();
 }
 
 LSound::~LSound()

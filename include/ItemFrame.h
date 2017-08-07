@@ -13,7 +13,7 @@ class ItemFrame
         void Render();
 
     private:
-        LRect* m_rect;
+        std::unique_ptr<LRect> m_rect;
         Point m_pos;
 
         static const uint8_t GRAY = 0x55;

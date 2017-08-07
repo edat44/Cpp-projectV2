@@ -8,8 +8,7 @@ LTexture::LTexture(std::string path, int clip_rows, int clip_cols, SDL_Color bac
     this->m_clip_rows = clip_rows;
     this->m_clip_cols = clip_cols;
     this->m_pos = Point{0, 0};
-    if (!this->Load())
-        delete this;
+    this->Load();
 }
 
 LTexture::LTexture(const LTexture &texture)
