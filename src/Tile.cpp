@@ -16,9 +16,9 @@ Tile::Tile(int x, int y, int tile_type, PTexture texture)
 void Tile::Render(SDL_Rect &camera)
 {
     //if tile is on the screen
-    if (wSDL::CheckCollision(camera, this->m_box))
+    //if (wSDL::CheckCollision(camera, this->m_box))
     {
-        this->m_sprite->Render(this->m_box.x - camera.x, this->m_box.y - camera.y);
+        this->m_sprite->Render(camera, this->m_box.x, this->m_box.y);
     }
 }
 
