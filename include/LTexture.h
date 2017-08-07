@@ -11,7 +11,7 @@ class LTexture
 {
     public:
         LTexture(std::string path, int clip_rows = 1, int clip_cols = 1, SDL_Color background_mask = SDL_Color{0xFF, 0xFF, 0xFF, 0xFF});
-        LTexture(const LTexture &texture);
+        LTexture(LTexture *texture);
         virtual ~LTexture();
 
         void SetPosition(const Point &pos);

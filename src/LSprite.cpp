@@ -1,6 +1,6 @@
 #include "LSprite.h"
 
-LSprite::LSprite(const LTexture &texture, int start_frame, int frame_time, SPRITE_MODE mode)
+LSprite::LSprite(LTexture *texture, int start_frame, int frame_time, SPRITE_MODE mode)
     : LTexture(texture)
 {
     m_current_frame = start_frame;
