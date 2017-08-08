@@ -20,74 +20,61 @@ bool wSDL::Init()
 {
     if (wSDL::debug)
         printf("Initializing SDL!\n");
-    // This line is only needed, if you want debug the program
-    SDL_SetHint(SDL_HINT_WINDOWS_DISABLE_THREAD_NAMING, "1");
+    bool success = true;
 
-    if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_EVENTS | SDL_INIT_TIMER) < 0)
+    try
     {
-        printf("SDL could not initialize! SDL Error: %s\n", SDL_GetError());
-        return false;
+        // This line is only needed, if you want debug the program
+        SDL_SetHint(SDL_HINT_WINDOWS_DISABLE_THREAD_NAMING, "1");
+
+        if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_EVENTS | SDL_INIT_TIMER) < 0)
+            throw std::runtime_error("SDL could not initialize! SDL Error: " + std::string(SDL_GetError()) + "\n");
+
+        if (!SDL_SetHint( SDL_HINT_RENDER_SCALE_QUALITY, "1"))
+            printf("Warning: Linear texture filtering not enabled!");
+
+        s_window = sdl_shared(SDL_CreateWindow("Cpp-ProjectV2", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
+                                                wSDL::SCREEN_WIDTH, wSDL::SCREEN_HEIGHT, SDL_WINDOW_SHOWN));
+        if (!s_window)
+            throw std::runtime_error("Window could not be created! SDL Error: " + std::string(SDL_GetError()) + "\n");
+
+        s_renderer = sdl_shared(SDL_CreateRenderer(s_window.get(), -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC));
+        if (s_renderer == nullptr)
+            throw std::runtime_error("Renderer could not be created! SDL Error: " + std::string(SDL_GetError()) + "\n");
+
+        SDL_SetRenderDrawColor(s_renderer.get(), 0xFF, 0xFF, 0xFF, 0xFF);
+
+        if (!(IMG_Init(wSDL::IMG_FLAGS) & wSDL::IMG_FLAGS))
+            throw std::runtime_error("SDL_image could not initialize! SDL_image Error: " + std::string(IMG_GetError()) + "\n");
+        else
+            wSDL::s_screen_surface = sdl_shared(SDL_GetWindowSurface(wSDL::s_window.get()));
+
+        if (TTF_Init() < 0)
+            throw std::runtime_error("SDL_ttf could not initialize! SDL_ttf error: " + std::string(TTF_GetError()) + "\n");
+
+        if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0)
+            throw std::runtime_error("SDL_mixer could not initialize! SDL_mixer Error: " + std::string(Mix_GetError()) + "\n");
+    }
+    catch (std::exception &e)
+    {
+        success = false;
+        printf("Failed to initialize SDL!\n");
     }
 
-    if (!SDL_SetHint( SDL_HINT_RENDER_SCALE_QUALITY, "1"))
-    {
-        printf("Warning: Linear texture filtering not enabled!");
-    }
-
-    s_window = sdl_shared(SDL_CreateWindow("Cpp-ProjectV2", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
-                                            wSDL::SCREEN_WIDTH, wSDL::SCREEN_HEIGHT, SDL_WINDOW_SHOWN));
-    if (s_window == nullptr)
-    {
-        printf("Window could not be created! SDL Error: %s\n", SDL_GetError());
-        return false;
-    }
-
-    s_renderer = sdl_shared(SDL_CreateRenderer(s_window.get(), -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC));
-    if (s_renderer == nullptr)
-    {
-        printf("Renderer could not be created! SDL Error: %s\n", SDL_GetError());
-        return false;
-    }
-
-    SDL_SetRenderDrawColor(s_renderer.get(), 0xFF, 0xFF, 0xFF, 0xFF);
-
-    if (!(IMG_Init(wSDL::IMG_FLAGS) & wSDL::IMG_FLAGS))
-    {
-        printf("SDL_image could not initialize! SDL_image Error: %s\n", IMG_GetError());
-        return false;
-    }
-    else
-    {
-        wSDL::s_screen_surface = sdl_shared(SDL_GetWindowSurface(wSDL::s_window.get()));
-    }
-
-    if (TTF_Init() < 0)
-    {
-        printf("SDL_ttf could not initialize! SDL_ttf error: %s\n", TTF_GetError());
-        return false;
-    }
-
-    if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0)
-    {
-        printf("SDL_mixer could not initialize! SDL_mixer Error: %s\n", Mix_GetError());
-        return false;
-    }
-
-    return true;
+    return success;
 }
 
 bool wSDL::LoadMedia()
 {
     if (wSDL::debug)
-        printf("Loading Media...\n");
-    bool success = wResources::Load();
-    if (wSDL::debug)
-        printf("Done Loading Media!\n");
-    return success;
+        printf("Loading Media!\n");
+    return wResources::Load();
 }
 
 void wSDL::Close()
 {
+    if (wSDL::debug)
+        printf("Closing SDL!\n");
     IMG_Quit();
     Mix_Quit();
     SDL_Quit();

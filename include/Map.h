@@ -21,7 +21,7 @@ class Map
         //Returns true if game should quit
         bool HandleEvent(SDL_Event &e);
 
-        void MovePlayer(double time_step = 1);
+        void Update(double time_step = 1);
         void SetCamera();
 
         void Render();

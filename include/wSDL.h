@@ -14,6 +14,7 @@
 #endif
 #include <stdio.h>
 #include <memory>
+#include <string>
 #include "wResources.h"
 
 using Point = SDL_Point;

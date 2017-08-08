@@ -18,7 +18,7 @@ class LSound
         sdl_unique_mix_chunk m_sound;
 
         Mix_Chunk* LoadWAV(std::string path);
-        bool Load();
+        void Load();
 };
 
 #endif // LSOUND_H

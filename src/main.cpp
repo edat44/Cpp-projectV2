@@ -1,37 +1,33 @@
 #include "wSDL.h"
 #include <stdio.h>
 #include "Map.h"
-#include "LTimer.h"
+#include <deque>
 
 int main(int argc, char* args[])
 {
     if (!wSDL::Init())
     {
-        printf("Failed to Initialize!\n");
         return 1;
     }
 
     if (!wSDL::LoadMedia())
     {
-        printf("Failed to load media!\n");
         return 2;
     }
 
     else
     {
-
+        if (wSDL::debug)
+            printf("Starting Main Game...\n");
         {
             bool quit = false;
 
             SDL_Event e;
 
             int frames = 0;
-            int fps_frames_chunk = 3;
+            int fps_frames = 3;
+            std::deque<uint32_t> ticks (fps_frames, 0);
 
-            std::unique_ptr<LTimer> step_timer{new LTimer()};
-            std::unique_ptr<LTimer> fps_timer{new LTimer()};
-            step_timer->Start();
-            fps_timer->Start();
             std::shared_ptr<Map> board = std::make_shared<Map>("resources/jewon.map");
 
             while (!quit)
@@ -46,17 +42,18 @@ int main(int argc, char* args[])
                         quit = true;
                 }
 
-                double time_step = step_timer->GetTicks() / 1000.0;
+                ticks.push_back(SDL_GetTicks());
 
-                board->MovePlayer(time_step);
+                board->Update((ticks.at(1) - ticks.at(0)) / 1000.f);
 
-                step_timer->Start();
 
-                if (frames % fps_frames_chunk == 0)
+
+                if (frames % fps_frames == 0)
                 {
-                    board->UpdateFPS(fps_frames_chunk / (fps_timer->GetTicks() / 1000.0f));
-                    fps_timer->Start();
+                    board->UpdateFPS(fps_frames / ((ticks.back() - ticks.front()) / 1000.f));
                 }
+
+                ticks.pop_front();
 
                 board->SetCamera();
 

@@ -13,7 +13,7 @@ class LFont
 
         virtual void Render(int x, int y, SDL_Rect* clip = nullptr, double angle = 0.0, SDL_Point* center = nullptr, SDL_RendererFlip flip = SDL_FLIP_NONE);
 
-        bool ChangeText(std::string text);
+        void ChangeText(std::string text);
 
         int GetWidth();
         int GetHeight();
@@ -30,7 +30,7 @@ class LFont
         std::shared_ptr<TTF_Font> m_font;
         SDL_Color m_color;
 
-        bool Load();
+        void Load();
 };
 
 #endif // LFONT_H

@@ -1,7 +1,7 @@
 #include "LTexture.h"
 #include "LSprite.h"
 
-LTexture::LTexture(std::string path, int clip_rows, int clip_cols, SDL_Color background_mask)
+LTexture::LTexture(std::string path, int clip_rows, int clip_cols, SDL_Color background_mask) try
 {
     this->m_path = path;
     this->m_background_mask = background_mask;
@@ -9,6 +9,11 @@ LTexture::LTexture(std::string path, int clip_rows, int clip_cols, SDL_Color bac
     this->m_clip_cols = clip_cols;
     this->m_pos = Point{0, 0};
     this->Load();
+}
+catch(std::exception &e)
+{
+    printf(e.what());
+    throw;
 }
 
 LTexture::LTexture(const LTexture &texture)
@@ -27,13 +32,13 @@ LTexture::~LTexture()
 {
 }
 
-bool LTexture::Load()
+void LTexture::Load()
 {
     SDL_Surface *loaded_surface;
     loaded_surface = IMG_Load(m_path.c_str());
     if (loaded_surface == nullptr || loaded_surface == NULL)
     {
-        printf("Unable to load image %s! SDL_image Error: %s\n", m_path.c_str(), IMG_GetError());
+        throw std::runtime_error("Could not load surface for " + m_path + "! " + SDL_GetError() + "\n");
     }
     else
     {
@@ -41,9 +46,9 @@ bool LTexture::Load()
         SDL_SetColorKey(loaded_surface, SDL_TRUE, SDL_MapRGB(loaded_surface->format, c.r, c.g, c.b));
 
         m_texture = sdl_shared(SDL_CreateTextureFromSurface(wSDL::s_renderer.get(), loaded_surface));
-        if (m_texture == nullptr)
+        if (!m_texture)
         {
-            printf("Unable to create texture from %s! SDL Error: %s\n", m_path.c_str(), SDL_GetError());
+            throw std::runtime_error("Could not load texture for " + m_path + "! " + SDL_GetError() + "\n");
         }
         else
         {
@@ -52,7 +57,7 @@ bool LTexture::Load()
         }
         SDL_FreeSurface(loaded_surface);
     }
-    return true;
+
 }
 
 void LTexture::SetPosition(const Point &pos)

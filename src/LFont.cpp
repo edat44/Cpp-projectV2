@@ -1,6 +1,6 @@
 #include "LFont.h"
 
-LFont::LFont(std::string font_path, int pt_size, SDL_Color color, std::string text)
+LFont::LFont(std::string font_path, int pt_size, SDL_Color color, std::string text) try
 {
     this->m_font_path = font_path;
     this->m_pt_size = pt_size;
@@ -9,23 +9,30 @@ LFont::LFont(std::string font_path, int pt_size, SDL_Color color, std::string te
     this->m_text = text;
     this->Load();
 }
+catch (std::exception &e)
+{
+    printf(e.what());
+    throw;
+}
 
 LFont::~LFont() {}
 
-bool LFont::Load()
+void LFont::Load()
 {
     SDL_Surface *text_surface;
+    if (m_text.length() == 0)
+        m_text = " ";
     text_surface = TTF_RenderText_Solid(m_font.get(), m_text.c_str(), m_color);
     if (text_surface == nullptr)
     {
-        printf("Unable to render text surface! SDL_ttf Error: %s\n", TTF_GetError());
+                throw std::runtime_error("Could not load font " + m_font_path + "! " + TTF_GetError());
     }
     else
     {
         m_texture = sdl_shared(SDL_CreateTextureFromSurface(wSDL::s_renderer.get(), text_surface));
         if (m_texture == nullptr)
         {
-            printf("Unable to create texture from rendered text! SDL Error: %s\n", SDL_GetError());
+            throw std::runtime_error("Could not create texture for font " + m_font_path + "! " + TTF_GetError());
         }
         else
         {
@@ -34,7 +41,7 @@ bool LFont::Load()
         }
         SDL_FreeSurface(text_surface);
     }
-    return m_texture != nullptr;
+
 }
 
 void LFont::Render(int x, int y, SDL_Rect* clip, double angle, SDL_Point* center, SDL_RendererFlip flip)
@@ -50,10 +57,10 @@ void LFont::Render(int x, int y, SDL_Rect* clip, double angle, SDL_Point* center
     SDL_RenderCopyEx(wSDL::s_renderer.get(), this->m_texture.get(), clip, &render_quad, angle, center, flip);
 }
 
-bool LFont::ChangeText(std::string text)
+void LFont::ChangeText(std::string text)
 {
     this->m_text = text;
-    return this->Load();
+    this->Load();
 }
 
 int LFont::GetWidth()
