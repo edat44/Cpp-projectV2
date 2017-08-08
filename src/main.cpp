@@ -44,9 +44,8 @@ int main(int argc, char* args[])
 
                 ticks.push_back(SDL_GetTicks());
 
-                double time_step = (ticks.at(1) - ticks.at(0)) / 1000.f;
+                board->Update((ticks.at(1) - ticks.at(0)) / 1000.f);
 
-                board->Update(time_step);
 
 
                 if (frames % fps_frames == 0)

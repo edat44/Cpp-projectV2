@@ -68,5 +68,5 @@ bool LTimer::IsStarted()
 
 bool LTimer::IsPaused()
 {
-    return this->m_paused;
+    return this->m_paused && this->m_started;
 }
