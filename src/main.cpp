@@ -7,19 +7,18 @@ int main(int argc, char* args[])
 {
     if (!wSDL::Init())
     {
-        printf("Failed to Initialize!\n");
         return 1;
     }
 
     if (!wSDL::LoadMedia())
     {
-        printf("Failed to load media!\n");
         return 2;
     }
 
     else
     {
-
+        if (wSDL::debug)
+            printf("Starting Main Game...\n");
         {
             bool quit = false;
 

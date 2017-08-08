@@ -47,9 +47,9 @@ class LTexture
         Point m_pos;
 
         SDL_Color m_background_mask;
-    private:
 
-        bool Load();
+    private:
+        void Load();
 };
 
 #endif // LTEXTURE_H
