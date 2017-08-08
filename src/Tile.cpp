@@ -31,3 +31,9 @@ SDL_Rect Tile::GetBox()
 {
     return this->m_box;
 }
+
+void Tile::Shift(int x, int y)
+{
+    m_box.x += (m_box.w * x);
+    m_box.y += (m_box.h * y);
+}

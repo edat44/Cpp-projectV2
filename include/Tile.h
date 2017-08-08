@@ -19,6 +19,8 @@ class Tile
 
         SDL_Rect GetBox();
 
+        void Shift(int x, int y);
+
     private:
         PSprite m_sprite;
 
