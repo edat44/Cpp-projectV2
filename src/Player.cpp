@@ -16,7 +16,7 @@ Player::Player()
     this->m_face_direction.x = wSDL::SCREEN_WIDTH / 2.0f;
     this->m_face_direction.y = wSDL::SCREEN_HEIGHT / 2.0f;
 
-    this->m_weapon = std::make_shared<Weapon>(this);
+    this->m_weapon = std::make_shared<Weapon>(this, 10);
 }
 
 Player::~Player()
@@ -71,7 +71,7 @@ Tile* Player::Move(double time_step, std::vector<std::shared_ptr<Tile>> tiles, P
 {
 
     Tile* tile = this->Humanoid::Move(time_step, tiles, level_size);
-    m_weapon->Move(time_step, tiles, level_size);
+    m_weapon->Update(time_step, tiles, level_size);
     return tile;
 }
 

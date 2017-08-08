@@ -1,9 +1,15 @@
 #include "Weapon.h"
 #include "Player.h"
 
-Weapon::Weapon(Player *player)
+Weapon::Weapon(Player *player, double fire_rate)
 {
     m_player = player;
+    m_fire_rate = fire_rate;
+    if (fire_rate > 0)
+    {
+        m_fire_timer = std::unique_ptr<LTimer>(new LTimer());
+        m_fire_timer->Start();
+    }
 }
 
 Weapon::~Weapon()
@@ -13,8 +19,13 @@ Weapon::~Weapon()
 
 void Weapon::Fire(Point target)
 {
-    Projectile* p = new Projectile(m_player->GetBox(), target);
-    m_projectiles.push_back(std::unique_ptr<Projectile>(p));
+    if (!m_fire_timer || m_fire_timer->GetTicks() >= (1000 / m_fire_rate))
+    {
+        if (m_fire_timer)
+            m_fire_timer->Start();
+        Projectile* p = new Projectile(m_player->GetBox(), target);
+        m_projectiles.push_back(std::unique_ptr<Projectile>(p));
+    }
 }
 
 void Weapon::Render(SDL_Rect &camera)
@@ -30,7 +41,7 @@ void Weapon::Render(SDL_Rect &camera)
     }
 }
 
-void Weapon::Move(double time_step, std::vector<std::shared_ptr<Tile>> tiles, Point level_size)
+void Weapon::Update(double time_step, std::vector<std::shared_ptr<Tile>> tiles, Point level_size)
 {
     for (unsigned int i = 0; i < m_projectiles.size(); ++i)
     {
