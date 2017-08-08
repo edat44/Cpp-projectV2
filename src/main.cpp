@@ -1,7 +1,7 @@
 #include "wSDL.h"
 #include <stdio.h>
 #include "Map.h"
-#include "LTimer.h"
+#include <deque>
 
 int main(int argc, char* args[])
 {
@@ -25,12 +25,9 @@ int main(int argc, char* args[])
             SDL_Event e;
 
             int frames = 0;
-            int fps_frames_chunk = 3;
+            int fps_frames = 3;
+            std::deque<uint32_t> ticks (fps_frames, 0);
 
-            std::unique_ptr<LTimer> step_timer{new LTimer()};
-            std::unique_ptr<LTimer> fps_timer{new LTimer()};
-            step_timer->Start();
-            fps_timer->Start();
             std::shared_ptr<Map> board = std::make_shared<Map>("resources/jewon.map");
 
             while (!quit)
@@ -45,17 +42,19 @@ int main(int argc, char* args[])
                         quit = true;
                 }
 
-                double time_step = step_timer->GetTicks() / 1000.0;
+                ticks.push_back(SDL_GetTicks());
 
-                board->MovePlayer(time_step);
+                double time_step = (ticks.at(1) - ticks.at(0)) / 1000.f;
 
-                step_timer->Start();
+                board->Update(time_step);
 
-                if (frames % fps_frames_chunk == 0)
+
+                if (frames % fps_frames == 0)
                 {
-                    board->UpdateFPS(fps_frames_chunk / (fps_timer->GetTicks() / 1000.0f));
-                    fps_timer->Start();
+                    board->UpdateFPS(fps_frames / ((ticks.back() - ticks.front()) / 1000.f));
                 }
+
+                ticks.pop_front();
 
                 board->SetCamera();
 

@@ -30,7 +30,7 @@ bool Map::HandleEvent(SDL_Event &e)
     return false;
 }
 
-void Map::MovePlayer(double time_step)
+void Map::Update(double time_step)
 {
     this->m_player->Move(time_step, this->m_tiles, this->GetMapSizePixels());
 }
