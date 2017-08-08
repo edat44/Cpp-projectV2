@@ -5,10 +5,6 @@
 Player::Player()
     : Humanoid("Humanoid", wResources::texture_player)
 {
-    this->m_box.x = 0.f;
-    this->m_box.y = 0.f;
-    this->m_box.w = Player::S_WIDTH;
-    this->m_box.h = Player::S_HEIGHT;
 
     this->m_vel.x = 0.f;
     this->m_vel.y = 0.f;
@@ -78,8 +74,8 @@ Tile* Player::Move(double time_step, std::vector<std::shared_ptr<Tile>> tiles, P
 void Player::SetCamera(SDL_Rect &camera, Point level_size)
 {
     //Center the camera over the player
-    camera.x = (int)(m_box.x + (Player::S_WIDTH / 2)) - (wSDL::SCREEN_WIDTH / 2);
-    camera.y = (int)(m_box.y + (Player::S_HEIGHT / 2)) - (wSDL::SCREEN_HEIGHT / 2);
+    camera.x = (int)(m_box.x + (m_box.w / 2)) - (wSDL::SCREEN_WIDTH / 2);
+    camera.y = (int)(m_box.y + (m_box.h / 2)) - (wSDL::SCREEN_HEIGHT / 2);
 
     camera.x = std::min(std::max(camera.x, 0), (level_size.x - camera.w));
     camera.y = std::min(std::max(camera.y, 0), (level_size.y - camera.h));

@@ -22,10 +22,10 @@ Entity::~Entity()
 {
 }
 
-void Entity::SetPosition(DPoint pos)
+void Entity::SetPosition(DPoint pos, Point tile_size)
 {
-    this->m_box.x = ((pos.x * Map::TILE_WIDTH) + (Map::TILE_WIDTH / 2) - (m_box.w / 2));
-    this->m_box.y = ((pos.y * Map::TILE_HEIGHT) + (Map::TILE_HEIGHT / 2) - (m_box.h / 2));
+    this->m_box.x = (((pos.x + 0.5f) * tile_size.x) - (m_box.w / 2));
+    this->m_box.y = (((pos.y + 0.5f) * tile_size.y) - (m_box.h / 2));
 }
 
 void Entity::Render(SDL_Rect &camera)

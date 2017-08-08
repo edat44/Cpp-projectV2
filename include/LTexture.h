@@ -30,6 +30,7 @@ class LTexture
         Point GetPosition();
         int GetWidth();
         int GetHeight();
+        Point GetSize();
 
         PSprite MakeSprite(int start_frame, int frame_time, SPRITE_MODE mode);
 

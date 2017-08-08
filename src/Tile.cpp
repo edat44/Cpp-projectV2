@@ -5,8 +5,8 @@ Tile::Tile(int x, int y, int tile_type, PTexture texture)
 {
     this->m_box.x = x;
     this->m_box.y = y;
-    this->m_box.w = Map::TILE_WIDTH;
-    this->m_box.h = Map::TILE_HEIGHT;
+    this->m_box.w = texture->GetWidth();
+    this->m_box.h = texture->GetHeight();
 
     this->m_type = tile_type;
 

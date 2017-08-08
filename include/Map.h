@@ -53,8 +53,7 @@ class Map
         static const int TILE_SPRITE_COLS = 4;
         static const int TILE_TOTAL_SPRITES = TILE_SPRITE_ROWS * TILE_SPRITE_COLS;
 
-        static const int TILE_WIDTH = 80;
-        static const int TILE_HEIGHT = 80;
+        Point GetTileSize();
 
     private:
         std::string m_path_map;
@@ -63,7 +62,7 @@ class Map
         std::shared_ptr<Player> m_player;
         SDL_Rect m_camera;
 
-        int m_width, m_height;
+        Point m_tile_size;
 
         std::vector<std::shared_ptr<ItemFrame>> m_frames;
 
@@ -72,6 +71,8 @@ class Map
         static const int NUM_ITEM_FRAMES = 4;
 
         PTexture m_texture_tiles;
+
+        int m_width, m_height;
 
         std::shared_ptr<LFont> m_font_fps;
         static const int FPS_X = 10;

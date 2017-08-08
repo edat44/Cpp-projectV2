@@ -7,6 +7,7 @@ Map::Map(std::string file_path)
     this->m_player = std::make_shared<Player>();
 
     this->m_texture_tiles = wResources::texture_tiles;
+    this->m_tile_size = m_texture_tiles->GetSize();
     this->m_font_fps = std::make_shared<LFont>(wResources::font_skip_leg_day, 20, SDL_Color{0xCC, 0xCC, 0xCC, 0xFF});
 
     this->AddItemFrames();
@@ -61,7 +62,7 @@ bool Map::SetTiles()
 	bool tiles_loaded = true;
 
     //The tile offsets
-    int x = 0, y = Map::TILE_HEIGHT;
+    int x = 0, y = m_tile_size.y;
 
     //Open the map
     std::ifstream map_file(this->m_path_map.c_str());
@@ -78,7 +79,7 @@ bool Map::SetTiles()
 		//Initialize the tiles
         while (std::getline(map_file, row_data))
         {
-            x = Map::TILE_WIDTH;
+            x = m_tile_size.x;
             std::istringstream iss(row_data);
             int tile_type = -1;
 
@@ -97,20 +98,20 @@ bool Map::SetTiles()
                     tiles_loaded = false;
                     break;
                 }
-                x += Map::TILE_WIDTH;
+                x += m_tile_size.x;
             }
             if (tiles_loaded == false)
                 break;
 
             this->m_width = x;
-			y += Map::TILE_HEIGHT;
+			y += m_tile_size.y;
 		}
 		this->m_height = y;
 
 		DPoint p;
 		p.x = 1.f;
 		p.y = 1.f;
-		this->m_player->SetPosition(p);
+		this->m_player->SetPosition(p, m_tile_size);
 		this->AddBorder();
 	}
 
@@ -132,9 +133,14 @@ Point Map::GetMapSizePixels()
 Point Map::GetMapSizeTiles()
 {
     Point p;
-    p.x = this->m_width / Map::TILE_WIDTH;
-    p.y = this->m_height / Map::TILE_HEIGHT;
+    p.x = this->m_width / m_tile_size.x;
+    p.y = this->m_height / m_tile_size.y;
     return p;
+}
+
+Point Map::GetTileSize()
+{
+    return m_tile_size;
 }
 
 void Map::UpdateFPS(double fps)
@@ -199,8 +205,9 @@ void Map::AddBorder()
 
         this->m_tiles.push_back(std::make_shared<Tile>(x, y, tile_type, this->m_texture_tiles));
 
-        x += (x_add * Map::TILE_WIDTH);
-        y += (y_add * Map::TILE_HEIGHT);
+
+        x += (x_add * m_tile_size.x);
+        y += (y_add * m_tile_size.y);
     }
 }
 

@@ -3,6 +3,7 @@
 
 #include "Tile.h"
 #include "LTexture.h"
+#include "wResources.h"
 #include <vector>
 #include <string>
 #include <memory>
@@ -13,7 +14,7 @@ class Entity
         Entity(std::string type, PTexture texture);
         virtual ~Entity();
 
-        void SetPosition(DPoint pos);
+        void SetPosition(DPoint pos, Point tile_size);
 
         virtual Tile* Move(double time_step, std::vector<std::shared_ptr<Tile>> tiles, Point level_size) = 0;
 

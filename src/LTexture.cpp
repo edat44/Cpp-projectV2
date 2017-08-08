@@ -128,6 +128,11 @@ int LTexture::GetHeight()
     return this->m_height;
 }
 
+Point LTexture::GetSize()
+{
+    return Point{m_width, m_height};
+}
+
 
 PSprite LTexture::MakeSprite(int start_frame, int frame_time, SPRITE_MODE mode)
 {
