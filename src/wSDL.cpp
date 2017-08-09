@@ -16,6 +16,12 @@ sdl_unique_mix_chunk make_unique_mix_chunk(Mix_Chunk *c) {return sdl_unique_mix_
 sdl_unique_font make_unique_font(TTF_Font *f) {return sdl_unique_font(f);}
 
 
+Point operator*(const Point &p1, const Point &p2) {return Point{p1.x * p2.x, p1.y * p2.y};}
+Point operator*(const Point &p1, double d) {return Point{(int)(p1.x * d), (int)(p1.y * d)};}
+Point operator-(const Point &p1, const Point &p2) {return Point{p1.x - p2.x, p1.y - p2.y};}
+
+
+
 bool wSDL::Init()
 {
     if (wSDL::debug)

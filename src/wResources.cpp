@@ -28,7 +28,7 @@ bool wResources::Load()
 
         wResources::texture_bullet = std::make_shared<LTexture>("resources/bullet.png");
         wResources::texture_player = std::make_shared<LTexture>("resources/dot_with_arrow.png");
-        wResources::texture_tiles = std::make_shared<LTexture>("resources/tiles.png", 3, 4);
+        wResources::texture_tiles = std::make_shared<LTexture>("resources/tiles_mini.png", 3, 4);
         wResources::texture_explosion = std::make_shared<LTexture>("resources/explosion_sprite.png", 1, 10);
     }
     catch (std::exception &e)

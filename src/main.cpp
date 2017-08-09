@@ -28,7 +28,7 @@ int main(int argc, char* args[])
             int fps_frames = 3;
             std::deque<uint32_t> ticks (fps_frames, 0);
 
-            std::shared_ptr<Map> board = std::make_shared<Map>("resources/jewon.map");
+            std::shared_ptr<Map> board = std::make_shared<Map>("resources/jewonoh.map");
 
             while (!quit)
             {

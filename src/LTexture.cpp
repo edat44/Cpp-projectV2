@@ -23,8 +23,7 @@ LTexture::LTexture(const LTexture &texture)
     this->m_texture = texture.m_texture;
     this->m_clip_rows = texture.m_clip_rows;
     this->m_clip_cols = texture.m_clip_cols;
-    this->m_width = texture.m_width;
-    this->m_height = texture.m_height;
+    this->m_size = texture.m_size;
     this->m_pos = texture.m_pos;
 }
 
@@ -52,8 +51,8 @@ void LTexture::Load()
         }
         else
         {
-            this->m_width = loaded_surface->w / m_clip_cols;
-            this->m_height = loaded_surface->h / m_clip_rows;
+            this->m_size.x = loaded_surface->w / m_clip_cols;
+            this->m_size.y = loaded_surface->h / m_clip_rows;
         }
         SDL_FreeSurface(loaded_surface);
     }
@@ -62,13 +61,13 @@ void LTexture::Load()
 
 void LTexture::SetPosition(const Point &pos)
 {
-    m_pos = pos;
+    SetPosition(pos.x, pos.y);
 }
 
 void LTexture::SetPosition(int x, int y)
 {
-    m_pos.x = x;
-    m_pos.y = y;
+    m_pos.x = x - (m_size.x / 2);
+    m_pos.y = y - (m_size.y / 2);
 }
 
 
@@ -102,13 +101,14 @@ void LTexture::Render(SDL_Rect &camera, int x, int y, SDL_Rect* clip, double ang
 
 void LTexture::Render(SDL_Rect &camera, SDL_Rect* clip, double angle, SDL_Point* center, SDL_RendererFlip flip)
 {
-    SDL_Rect render_quad = {m_pos.x - camera.x, m_pos.y - camera.y, m_width, m_height};
+    SDL_Rect render_quad = {m_pos.x - camera.x, m_pos.y - camera.y, m_size.x, m_size.y};
 
     if (clip != nullptr)
     {
         render_quad.w = clip->w;
         render_quad.h = clip->h;
     }
+
     if (wSDL::CheckCollision(SDL_Rect{m_pos.x, m_pos.y, render_quad.w, render_quad.h}, camera))
         SDL_RenderCopyEx(wSDL::s_renderer.get(), this->m_texture.get(), clip, &render_quad, angle, center, flip);
 }
@@ -120,17 +120,17 @@ Point LTexture::GetPosition()
 
 int LTexture::GetWidth()
 {
-    return this->m_width;
+    return this->m_size.x;
 }
 
 int LTexture::GetHeight()
 {
-    return this->m_height;
+    return this->m_size.y;
 }
 
 Point LTexture::GetSize()
 {
-    return Point{m_width, m_height};
+    return m_size;
 }
 
 

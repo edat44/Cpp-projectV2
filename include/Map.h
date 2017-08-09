@@ -63,6 +63,7 @@ class Map
         SDL_Rect m_camera;
 
         Point m_tile_size;
+        Point m_tile_grid;
 
         std::vector<std::shared_ptr<ItemFrame>> m_frames;
 

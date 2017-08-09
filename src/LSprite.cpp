@@ -49,7 +49,7 @@ void LSprite::SetClips()
     {
         for (int x = 0; x < m_clip_cols; ++x)
         {
-            this->m_clips.push_back({x * m_width, y * m_height, m_width, m_height});
+            this->m_clips.push_back({x * m_size.x, y * m_size.y, m_size.x, m_size.y});
         }
     }
 }

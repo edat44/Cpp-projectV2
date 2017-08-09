@@ -8,6 +8,7 @@ Map::Map(std::string file_path)
 
     this->m_texture_tiles = wResources::texture_tiles;
     this->m_tile_size = m_texture_tiles->GetSize();
+
     this->m_font_fps = std::make_shared<LFont>(wResources::font_skip_leg_day, 20, SDL_Color{0xCC, 0xCC, 0xCC, 0xFF});
 
     this->AddItemFrames();
@@ -61,8 +62,10 @@ bool Map::SetTiles()
 	//Success flag
 	bool tiles_loaded = true;
 
+	//int tile_digit_length = 2;
+
     //The tile offsets
-    int x = 0, y = m_tile_size.y;
+    int x = 0, y = 0;
 
     //Open the map
     std::ifstream map_file(this->m_path_map.c_str());
@@ -76,19 +79,35 @@ bool Map::SetTiles()
 	else
 	{
 	    std::string row_data;
+
 		//Initialize the tiles
         while (std::getline(map_file, row_data))
         {
-            x = m_tile_size.x;
+            if (row_data.find("END") != std::string::npos)
+                break;
+            x = 0;
             std::istringstream iss(row_data);
+
+            std::string tile_data;
             int tile_type = -1;
 
-            while (iss >> tile_type)
+            //Read in the tile_data
+            while (iss >> tile_data)
             {
                 //If the number is a valid tile number
+                //tile_type = std::atoi(tile_data.substr(0, tile_digit_length).c_str());
+                std::istringstream iss2{tile_data};
+                std::string tile_type_str;
+
+                std::getline(iss2, tile_type_str, '*');
+                tile_type = std::atoi(tile_type_str.c_str());
+
+                std::string tile_meta_data_key;
+                std::getline(iss2, tile_meta_data_key);
+
                 if(tile_type >= 0 && tile_type < Map::TILE_TOTAL_SPRITES)
                 {
-                    this->m_tiles.push_back(std::make_shared<Tile>(x, y, tile_type, this->m_texture_tiles));
+                    this->m_tiles.push_back(std::make_shared<Tile>(x, y, tile_type, this->m_texture_tiles, tile_meta_data_key));
                 }
                 //If we don't recognize the tile type
                 else
@@ -99,12 +118,16 @@ bool Map::SetTiles()
                     break;
                 }
                 x += m_tile_size.x;
+                if (y == m_tile_size.y)
+                    m_tile_grid.x++;
+
             }
             if (tiles_loaded == false)
                 break;
 
             this->m_width = x;
 			y += m_tile_size.y;
+			m_tile_grid.y++;
 		}
 		this->m_height = y;
 
@@ -125,17 +148,14 @@ bool Map::SetTiles()
 Point Map::GetMapSizePixels()
 {
     Point p;
-    p.x = this->m_width;
-    p.y = this->m_height;
+    p.x = m_tile_grid.x * m_tile_size.x;
+    p.y = m_tile_grid.y * m_tile_size.y;
     return p;
 }
 
 Point Map::GetMapSizeTiles()
 {
-    Point p;
-    p.x = this->m_width / m_tile_size.x;
-    p.y = this->m_height / m_tile_size.y;
-    return p;
+    return m_tile_grid;
 }
 
 Point Map::GetTileSize()
@@ -154,19 +174,25 @@ void Map::UpdateFPS(double fps)
 
 void Map::AddBorder()
 {
-    Point s = Map::GetMapSizeTiles();
-    int border_tiles = (s.y * 2) + (s.x * 2) - 4;
+    for (auto& tile : m_tiles)
+    {
+        tile->Shift(1, 1);
+    }
+
+    Point s = m_tile_grid;
+    int border_tiles = (s.y * 2) + (s.x * 2) + 4;
     int x = 0, y = 0;
 
     int x_add = 1, y_add = 0;
 
+    int top_left = 0,
+    top_right = s.x + 1,
+    bottom_right = top_right + s.y + 1,
+    bottom_left = bottom_right + s.x + 1;
+
     //Start at top left and work way clockwise
     for (int i = 0; i < border_tiles; ++i)
     {
-        int top_left = 0,
-            top_right = s.x - 1,
-            bottom_right = top_right + s.y - 1,
-            bottom_left = bottom_right + s.x -1;
 
         int tile_type = -1;
 
@@ -209,6 +235,8 @@ void Map::AddBorder()
         x += (x_add * m_tile_size.x);
         y += (y_add * m_tile_size.y);
     }
+    m_tile_grid.x += 2;
+    m_tile_grid.y += 2;
 }
 
 void Map::AddItemFrames()
