@@ -42,6 +42,10 @@ struct DRect
     DRect(double x, double y, double w, double h) : x(x), y(y), w(w), h(h) {};
 };
 
+Point operator*(const Point &p1, const Point &p2);
+Point operator*(const Point &p1, double d);
+Point operator-(const Point &p1, const Point &p2);
+
 
 struct SDL_DelTexture {void operator()(SDL_Texture *t) const {SDL_DestroyTexture(t);}};
 using sdl_unique_texture = std::unique_ptr<SDL_Texture, SDL_DelTexture>;

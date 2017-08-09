@@ -39,8 +39,10 @@ class LTexture
 
         std::string m_path;
         std::shared_ptr<SDL_Texture> m_texture;
-        int m_width;
-        int m_height;
+        Point m_size;
+
+        Point m_original_size;
+        double m_scale;
 
         int m_clip_rows;
         int m_clip_cols;

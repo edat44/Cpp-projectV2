@@ -7,7 +7,6 @@ Tile::Tile(int x, int y, int tile_type, PTexture texture)
     this->m_box.y = y;
     this->m_box.w = texture->GetWidth();
     this->m_box.h = texture->GetHeight();
-
     this->m_type = tile_type;
 
     this->m_sprite = texture->MakeSprite(tile_type, 0, LSprite::SPRITE_STATIC);

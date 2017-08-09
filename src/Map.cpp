@@ -8,6 +8,7 @@ Map::Map(std::string file_path)
 
     this->m_texture_tiles = wResources::texture_tiles;
     this->m_tile_size = m_texture_tiles->GetSize();
+
     this->m_font_fps = std::make_shared<LFont>(wResources::font_skip_leg_day, 20, SDL_Color{0xCC, 0xCC, 0xCC, 0xFF});
 
     this->AddItemFrames();
