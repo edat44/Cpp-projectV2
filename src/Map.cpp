@@ -62,6 +62,8 @@ bool Map::SetTiles()
 	//Success flag
 	bool tiles_loaded = true;
 
+	//int tile_digit_length = 2;
+
     //The tile offsets
     int x = 0, y = 0;
 
@@ -77,19 +79,35 @@ bool Map::SetTiles()
 	else
 	{
 	    std::string row_data;
+
 		//Initialize the tiles
         while (std::getline(map_file, row_data))
         {
+            if (row_data.find("END") != std::string::npos)
+                break;
             x = 0;
             std::istringstream iss(row_data);
+
+            std::string tile_data;
             int tile_type = -1;
 
-            while (iss >> tile_type)
+            //Read in the tile_data
+            while (iss >> tile_data)
             {
                 //If the number is a valid tile number
+                //tile_type = std::atoi(tile_data.substr(0, tile_digit_length).c_str());
+                std::istringstream iss2{tile_data};
+                std::string tile_type_str;
+
+                std::getline(iss2, tile_type_str, '*');
+                tile_type = std::atoi(tile_type_str.c_str());
+
+                std::string tile_meta_data_key;
+                std::getline(iss2, tile_meta_data_key);
+
                 if(tile_type >= 0 && tile_type < Map::TILE_TOTAL_SPRITES)
                 {
-                    this->m_tiles.push_back(std::make_shared<Tile>(x, y, tile_type, this->m_texture_tiles));
+                    this->m_tiles.push_back(std::make_shared<Tile>(x, y, tile_type, this->m_texture_tiles, tile_meta_data_key));
                 }
                 //If we don't recognize the tile type
                 else
@@ -102,6 +120,7 @@ bool Map::SetTiles()
                 x += m_tile_size.x;
                 if (y == m_tile_size.y)
                     m_tile_grid.x++;
+
             }
             if (tiles_loaded == false)
                 break;

@@ -1,13 +1,14 @@
 #include "Tile.h"
 #include "Map.h"
 
-Tile::Tile(int x, int y, int tile_type, PTexture texture)
+Tile::Tile(int x, int y, int tile_type, PTexture texture, std::string meta_data_key)
 {
     this->m_box.x = x;
     this->m_box.y = y;
     this->m_box.w = texture->GetWidth();
     this->m_box.h = texture->GetHeight();
     this->m_type = tile_type;
+    this->m_meta_data_key = meta_data_key;
 
     this->m_sprite = texture->MakeSprite(tile_type, 0, LSprite::SPRITE_STATIC);
 }
