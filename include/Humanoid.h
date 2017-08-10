@@ -14,10 +14,10 @@ class Humanoid : public Entity
         virtual ~Humanoid();
 
         virtual Tile* Move(double time_step, std::vector<std::shared_ptr<Tile>> tiles, Point level_size) = 0;
+    
+        virtual void Render(SDL_Rect &camera);
 
     protected:
-        virtual void Render(SDL_Rect &camera);
-    
         Map *m_map;
 
     private:

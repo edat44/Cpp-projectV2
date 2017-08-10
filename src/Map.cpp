@@ -5,6 +5,8 @@ Map::Map(std::string file_path)
     this->m_path_map = file_path;
     this->m_camera = {0, 0, wSDL::SCREEN_WIDTH, wSDL::SCREEN_HEIGHT};
     this->m_player = std::make_shared<Player>(this);
+    
+    m_humanoids.push_back(m_player);
 
     this->m_texture_tiles = wResources::texture_tiles;
     this->m_tile_size = m_texture_tiles->GetSize();
@@ -13,6 +15,8 @@ Map::Map(std::string file_path)
 
     this->AddItemFrames();
     this->SetTiles();
+    
+     m_humanoids.push_back(std::make_shared<Monster>(this));
 }
 
 Map::~Map()
@@ -34,7 +38,10 @@ bool Map::HandleEvent(SDL_Event &e)
 
 void Map::Update(double time_step)
 {
-    this->m_player->Move(time_step, this->m_tiles, this->GetMapSizePixels());
+    for (auto& humanoid : m_humanoids)
+    {
+        humanoid->Move(time_step, this->m_tiles, this->GetMapSizePixels());
+    }
 }
 
 void Map::SetCamera()
@@ -48,7 +55,10 @@ void Map::Render()
     {
         tile->Render(this->m_camera);
     }
-    this->m_player->Render(this->m_camera);
+    for (auto& humanoid : m_humanoids)
+    {
+        humanoid->Render(this->m_camera);
+    }
     for (std::shared_ptr<ItemFrame> frame : this->m_frames)
     {
         frame->Render();

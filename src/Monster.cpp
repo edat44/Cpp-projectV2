@@ -14,6 +14,7 @@ Monster::~Monster()
 
 void Monster::Render(SDL_Rect &camera)
 {
+    printf("(%f, %f)\n", m_box.x, m_box.y);
     this->Humanoid::Render(camera);
 }
 
