@@ -69,5 +69,5 @@ DPoint Entity::GetPosition()
 
 DPoint Entity::GetMiddle()
 {
-    return DPoint{m_box.x + m_box.w / 2, m_box.y + m_box.h / 2};
+    return DPoint{m_box.x + (m_box.w / 2), m_box.y + (m_box.h / 2)};
 }

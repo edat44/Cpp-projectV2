@@ -46,9 +46,12 @@ void Weapon::Update(double time_step, std::vector<std::shared_ptr<Tile>> tiles, 
     for (unsigned int i = 0; i < m_projectiles.size(); ++i)
     {
         Projectile *projectile = m_projectiles.at(i).get();
-        projectile->Move(time_step, tiles, level_size);
-        if (!projectile->Update(tiles))
+        if (projectile->Done())
+        {
             DeleteProjectile(i);
+            continue;
+        }
+        projectile->Move(time_step, tiles, level_size);
     }
 
     for (unsigned int i = 0; i < m_explosions.size(); ++i)

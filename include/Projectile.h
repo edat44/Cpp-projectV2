@@ -21,17 +21,20 @@ class Projectile: public Entity
         static const int WIDTH = 6;
         static const int HEIGHT = 6;
 
-        static const int MAX_VEL = 800.f;
+        static const int MAX_VEL = 200.f;
 
         Tile* Move(double time_step, std::vector<std::shared_ptr<Tile>> tiles, Point level_size);
-        bool Update(std::vector<std::shared_ptr<Tile>> tiles);
 
         bool operator==(const Projectile &p);
+
+        bool Done();
 
     protected:
         Point m_target;
 
         PSound m_sound_spawn;
+
+        bool m_done;
 
         void LoadSounds();
 
