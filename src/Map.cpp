@@ -105,6 +105,9 @@ bool Map::SetTiles()
 
                 std::string tile_meta_data_key;
                 std::getline(iss2, tile_meta_data_key);
+                if (wSDL::debug && !tile_meta_data_key.empty())
+                    printf("Tile Meta Data Key: %s\n", tile_meta_data_key.c_str());
+
 
                 if(tile_type >= 0 && tile_type < Map::TILE_TOTAL_SPRITES)
                 {
