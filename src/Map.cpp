@@ -171,7 +171,7 @@ void Map::UpdateFPS(double fps)
 {
     std::stringstream time_text;
     time_text.str("");
-    time_text << "FPS: " << fps;
+    time_text << "FPS: " << (int)fps;
     if (this->m_font_fps != nullptr)
         this->m_font_fps->ChangeText(time_text.str());
 }
