@@ -12,7 +12,7 @@ LTexture::LTexture(std::string path, int clip_rows, int clip_cols, SDL_Color bac
 }
 catch(std::exception &e)
 {
-    printf(e.what());
+    printf("%s\n", e.what());
     throw;
 }
 

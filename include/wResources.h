@@ -30,6 +30,7 @@ public:
     static PTexture texture_player;
     static PTexture texture_tiles;
     static PTexture texture_explosion;
+    static PTexture texture_doge;
 
     static bool Load();
 };

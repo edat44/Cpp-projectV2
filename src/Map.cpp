@@ -4,7 +4,7 @@ Map::Map(std::string file_path)
 {
     this->m_path_map = file_path;
     this->m_camera = {0, 0, wSDL::SCREEN_WIDTH, wSDL::SCREEN_HEIGHT};
-    this->m_player = std::make_shared<Player>();
+    this->m_player = std::make_shared<Player>(this);
 
     this->m_texture_tiles = wResources::texture_tiles;
     this->m_tile_size = m_texture_tiles->GetSize();

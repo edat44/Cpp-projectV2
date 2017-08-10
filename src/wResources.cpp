@@ -15,6 +15,7 @@ PTexture wResources::texture_bullet;
 PTexture wResources::texture_player;
 PTexture wResources::texture_tiles;
 PTexture wResources::texture_explosion;
+PTexture wResources::texture_doge;
 
 bool wResources::Load()
 {
@@ -30,6 +31,7 @@ bool wResources::Load()
         wResources::texture_player = std::make_shared<LTexture>("resources/dot_with_arrow.png");
         wResources::texture_tiles = std::make_shared<LTexture>("resources/tiles_mini.png", 3, 4);
         wResources::texture_explosion = std::make_shared<LTexture>("resources/explosion_sprite.png", 1, 10);
+        wResources::texture_doge = std::make_shared<LTexture>("resources/doge.png");
     }
     catch (std::exception &e)
     {
