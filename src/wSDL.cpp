@@ -64,7 +64,7 @@ bool wSDL::Init()
     catch (std::exception &e)
     {
         success = false;
-        printf("Failed to initialize SDL!\n");
+        printf("Failed to initialize SDL! Error: %s\n", e.what());
     }
 
     return success;

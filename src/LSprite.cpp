@@ -83,7 +83,7 @@ bool LSprite::Update()
                 }
                 else
                 {
-                    return false;
+                    return true;
                 }
             }
             else //Repeat Mode
@@ -106,6 +106,6 @@ bool LSprite::Update()
         }
         m_frame_timer->Start();
     }
-    return true;
+    return false;
 }
 

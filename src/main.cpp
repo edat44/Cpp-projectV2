@@ -25,7 +25,7 @@ int main(int argc, char* args[])
             SDL_Event e;
 
             int frames = 0;
-            int fps_frames = 3;
+            int fps_frames = 20;
             std::deque<uint32_t> ticks (fps_frames, 0);
 
             std::shared_ptr<Map> board = std::make_shared<Map>("resources/jewonoh.map");
@@ -44,7 +44,7 @@ int main(int argc, char* args[])
 
                 ticks.push_back(SDL_GetTicks());
 
-                board->Update((ticks.at(1) - ticks.at(0)) / 1000.f);
+                board->Update((ticks.back() - ticks.at(ticks.size()-2)) / 1000.f);
 
 
 

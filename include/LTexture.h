@@ -11,7 +11,6 @@ class LTexture
 {
     public:
         LTexture(std::string path, int clip_rows = 1, int clip_cols = 1, SDL_Color background_mask = SDL_Color{0xFF, 0xFF, 0xFF, 0xFF});
-        LTexture(const LTexture &texture);
         virtual ~LTexture();
 
         void SetPosition(const Point &pos);
@@ -35,7 +34,7 @@ class LTexture
         PSprite MakeSprite(int start_frame, int frame_time, SPRITE_MODE mode);
 
     protected:
-        LTexture(PTexture texture);
+        LTexture(const LTexture &texture);
 
         std::string m_path;
         std::shared_ptr<SDL_Texture> m_texture;

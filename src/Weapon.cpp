@@ -53,7 +53,7 @@ void Weapon::Update(double time_step, std::vector<std::shared_ptr<Tile>> tiles, 
 
     for (unsigned int i = 0; i < m_explosions.size(); ++i)
     {
-        if (!m_explosions.at(i)->Update())
+        if (m_explosions.at(i)->Update())
         {
             m_explosions.erase(m_explosions.begin() + i);
         }

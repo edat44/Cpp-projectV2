@@ -62,7 +62,8 @@ bool Map::SetTiles()
 	//Success flag
 	bool tiles_loaded = true;
 
-	//int tile_digit_length = 2;
+	m_tile_grid.x = 0;
+	m_tile_grid.y = 0;
 
     //The tile offsets
     int x = 0, y = 0;
@@ -118,7 +119,7 @@ bool Map::SetTiles()
                     break;
                 }
                 x += m_tile_size.x;
-                if (y == m_tile_size.y)
+                if (y == 0)
                     m_tile_grid.x++;
 
             }
