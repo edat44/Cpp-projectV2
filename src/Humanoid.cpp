@@ -1,4 +1,5 @@
 #include "Humanoid.h"
+#include "Map.h"
 
 Humanoid::Humanoid(std::string type, Map *map, PTexture texture)
     : Entity("Humanoid: " + type, texture)
@@ -38,4 +39,9 @@ Tile* Humanoid::Move(double time_step, std::vector<std::shared_ptr<Tile>> tiles,
 Map* Humanoid::GetMap()
 {
     return m_map;
+}
+
+void Humanoid::Render(SDL_Rect &camera)
+{
+    this->Entity::Render(camera);
 }

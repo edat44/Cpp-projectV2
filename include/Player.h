@@ -15,7 +15,7 @@ class Map;
 class Player : public Humanoid
 {
     public:
-        Player(Map* map);
+        Player(Map *map);
         virtual ~Player();
 
         static const int S_MAX_VEL = 250;

@@ -17,6 +17,8 @@ class Humanoid : public Entity
 
         Map* GetMap();
 
+        virtual void Render(SDL_Rect &camera);
+
     protected:
         Map *m_map;
     private:

@@ -11,7 +11,7 @@ LTexture::LTexture(std::string path, int clip_rows, int clip_cols, SDL_Color bac
 }
 catch(std::exception &e)
 {
-    printf(e.what());
+    printf("%s\n", e.what());
     throw;
 }
 
@@ -39,8 +39,11 @@ void LTexture::Load()
     }
     else
     {
-        SDL_Color c = m_background_mask;
-        SDL_SetColorKey(loaded_surface, SDL_TRUE, SDL_MapRGB(loaded_surface->format, c.r, c.g, c.b));
+        if (m_background_mask.a != 0)
+        {
+            SDL_Color c = m_background_mask;
+            SDL_SetColorKey(loaded_surface, SDL_TRUE, SDL_MapRGB(loaded_surface->format, c.r, c.g, c.b));
+        }
 
         m_texture = sdl_shared(SDL_CreateTextureFromSurface(wSDL::s_renderer.get(), loaded_surface));
         if (!m_texture)

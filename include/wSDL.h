@@ -49,6 +49,9 @@ public:
 
     static constexpr double PI =3.14159265f;
 
+    //static constexpr SDL_Color COLOR_WHITE = SDL_Color{0xFF, 0xFF, 0xFF, 0xFF};
+    //static constexpr SDL_Color COLOR_BLACK = SDL_Color{0x00, 0x00, 0x00, 0x00};
+
     static bool Init();
     static bool LoadMedia();
     static void Close();

@@ -11,6 +11,7 @@
 #include "ItemFrame.h"
 #include "LTexture.h"
 #include "LFont.h"
+#include "Monster.h"
 
 class Map
 {
@@ -78,6 +79,8 @@ class Map
 
         void AddBorder();
         void AddItemFrames();
+
+        std::vector<std::shared_ptr<Humanoid>> m_humanoids;
 };
 
 #endif // MAP_H

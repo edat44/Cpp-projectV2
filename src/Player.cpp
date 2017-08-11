@@ -3,7 +3,7 @@
 #include <cmath>
 
 Player::Player(Map *map)
-    : Humanoid("Humanoid", map, wResources::texture_player)
+    : Humanoid("Player", map, wResources::texture_player)
 {
     this->m_vel.x = 0.f;
     this->m_vel.y = 0.f;
@@ -58,7 +58,7 @@ void Player::HandleEvent(SDL_Event &e, SDL_Rect &camera)
 
 void Player::Render(SDL_Rect &camera)
 {
-    this->Entity::Render(camera);
+    this->Humanoid::Render(camera);
     m_weapon->Render(camera);
 }
 
