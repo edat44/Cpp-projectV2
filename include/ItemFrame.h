@@ -3,8 +3,9 @@
 
 #include "wSDL.h"
 #include "LRect.h"
+#include "Box.h"
 
-class ItemFrame
+class ItemFrame : public LRect
 {
     public:
         ItemFrame(int x, int y, int size);
@@ -13,9 +14,6 @@ class ItemFrame
         void Render();
 
     private:
-        std::unique_ptr<LRect> m_rect;
-        Point m_pos;
-
         static const uint8_t GRAY = 0x55;
         static const uint8_t ALPHA = 0xAA;
 

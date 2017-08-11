@@ -8,7 +8,7 @@
 #include "LTimer.h"
 #include <vector>
 
-class Player;
+class Player; class Map;
 
 class Weapon
 {
@@ -16,16 +16,19 @@ class Weapon
         Weapon(Player* player, double fire_rate = 0);
         virtual ~Weapon();
 
-        void Fire(Point target);
+        void Fire(Point<int> target);
 
         void Render(SDL_Rect &camera);
 
-        void Update(double time_step, std::vector<std::shared_ptr<Tile>> tiles, Point level_size);
+        void Update(double time_step, std::vector<std::shared_ptr<Tile>> tiles, Point<int> level_size);
 
-        void DeleteProjectile(unsigned int index);
-        void DeleteExplosion(Explosion *e);
+        void DeleteProjectile(Projectile *proj);
+        void DeleteExplosion(Explosion *exp);
+
+        Map* GetMap();
 
     protected:
+
     private:
         std::vector<std::unique_ptr<Projectile>> m_projectiles;
         std::vector<std::unique_ptr<Explosion>> m_explosions;

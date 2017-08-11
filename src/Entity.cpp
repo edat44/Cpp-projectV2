@@ -6,11 +6,8 @@ Entity::Entity(std::string type, PTexture texture)
     this->m_type = type;
     this->m_texture = texture;
 
-    this->m_box.w = m_texture->GetWidth();
-    this->m_box.h = m_texture->GetHeight();
-
-    this->m_box.x = 0.f;
-    this->m_box.y = 0.f;
+    Point<int> tex_size = m_texture->GetSize();
+    SetSize(tex_size.x, tex_size.y);
 
     this->m_vel.x = 0.f;
     this->m_vel.y = 0.f;
@@ -21,16 +18,9 @@ Entity::Entity(std::string type, PTexture texture)
 Entity::~Entity()
 {
 }
-
-void Entity::SetPosition(DPoint pos, Point tile_size)
-{
-    this->m_box.x = (((pos.x + 0.5f) * tile_size.x) - (m_box.w / 2));
-    this->m_box.y = (((pos.y + 0.5f) * tile_size.y) - (m_box.h / 2));
-}
-
 void Entity::Render(SDL_Rect &camera)
 {
-    if (wSDL::CheckCollision(this->m_box, camera))
+    if (wSDL::CheckCollision(this->m_box, wSDL::SDL_RectToIntRect(camera)))
     {
         this->m_texture->Render(camera, (int)m_box.x, (int)m_box.y, nullptr, m_angle);
 
@@ -55,19 +45,4 @@ Tile* Entity::TouchesWall(std::vector<std::shared_ptr<Tile>> tiles)
         }
     }
     return nullptr;
-}
-
-DRect Entity::GetBox()
-{
-    return m_box;
-}
-
-DPoint Entity::GetPosition()
-{
-    return DPoint{m_box.x, m_box.y};
-}
-
-DPoint Entity::GetMiddle()
-{
-    return DPoint{m_box.x + (m_box.w / 2), m_box.y + (m_box.h / 2)};
 }

@@ -10,10 +10,12 @@
 #include <string>
 #include "Weapon.h"
 
+class Map;
+
 class Player : public Humanoid
 {
     public:
-        Player();
+        Player(Map* map);
         virtual ~Player();
 
         static const int S_MAX_VEL = 250;
@@ -23,9 +25,9 @@ class Player : public Humanoid
         virtual void Render(SDL_Rect &camera);
 
         //time_step is measured in seconds
-        virtual Tile* Move(double time_step, std::vector<std::shared_ptr<Tile>> tiles, Point level_size);
+        virtual Tile* Move(double time_step, std::vector<std::shared_ptr<Tile>> tiles, Point<int> level_size);
 
-        void SetCamera(SDL_Rect &camera, Point level_size);
+        void SetCamera(SDL_Rect &camera, Point<int> level_size);
 
     private:
 
@@ -34,7 +36,7 @@ class Player : public Humanoid
         static const SDL_Keycode LEFT = SDLK_a;
         static const SDL_Keycode RIGHT = SDLK_d;
 
-        Point m_face_direction;
+        Point<int> m_face_direction;
 
         std::shared_ptr<Weapon> m_weapon;
 };

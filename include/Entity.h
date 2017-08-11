@@ -7,27 +7,21 @@
 #include <vector>
 #include <string>
 #include <memory>
+#include "Box.h"
 
-class Entity
+class Entity : public Box<double>
 {
     public:
         Entity(std::string type, PTexture texture);
         virtual ~Entity();
 
-        void SetPosition(DPoint pos, Point tile_size);
-
-        virtual Tile* Move(double time_step, std::vector<std::shared_ptr<Tile>> tiles, Point level_size) = 0;
+        virtual Tile* Move(double time_step, std::vector<std::shared_ptr<Tile>> tiles, Point<int> level_size) = 0;
 
         virtual void Render(SDL_Rect &camera);
 
-        DRect GetBox();
-        DPoint GetPosition();
-        DPoint GetMiddle();
-
     protected:
-        DRect m_box;
 
-        DPoint m_vel;
+        Point<double> m_vel;
 
         double m_angle;
 

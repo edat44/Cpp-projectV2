@@ -5,16 +5,20 @@
 #include <string>
 #include <memory>
 
+class Map;
+
 class Humanoid : public Entity
 {
     public:
-        Humanoid(std::string type, PTexture texture);
+        Humanoid(std::string type, Map* map, PTexture texture);
         virtual ~Humanoid();
 
-        virtual Tile* Move(double time_step, std::vector<std::shared_ptr<Tile>> tiles, Point level_size) = 0;
+        virtual Tile* Move(double time_step, std::vector<std::shared_ptr<Tile>> tiles, Point<int> level_size) = 0;
+
+        Map* GetMap();
 
     protected:
-
+        Map *m_map;
     private:
 };
 

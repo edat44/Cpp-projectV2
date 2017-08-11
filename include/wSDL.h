@@ -15,36 +15,9 @@
 #include <stdio.h>
 #include <memory>
 #include <string>
+#include <cmath>
 #include "wResources.h"
-
-using Point = SDL_Point;
-
-struct DPoint
-{
-    double x = 0.f;
-    double y = 0.f;
-    DPoint() {};
-    DPoint(double x, double y) : x(x), y(y) {};
-
-    double dist()
-    {
-        return SDL_sqrt(SDL_pow(x, 2) + SDL_pow(y, 2));
-    }
-};
-
-struct DRect
-{
-    double x = 0;
-    double y = 0;
-    double w = 0;
-    double h = 0;
-    DRect() : x(0), y(0), w(0), h(0) {};
-    DRect(double x, double y, double w, double h) : x(x), y(y), w(w), h(h) {};
-};
-
-Point operator*(const Point &p1, const Point &p2);
-Point operator*(const Point &p1, double d);
-Point operator-(const Point &p1, const Point &p2);
+#include "Box.h"
 
 
 struct SDL_DelTexture {void operator()(SDL_Texture *t) const {SDL_DestroyTexture(t);}};
@@ -80,19 +53,25 @@ public:
     static bool LoadMedia();
     static void Close();
 
-    static bool CheckCollision(const DRect &a, const DRect &b);
-    static bool CheckCollision(const DRect &a, const SDL_Rect &b);
-    static bool CheckCollision(const SDL_Rect &a, const SDL_Rect &b);
+    static bool CheckCollision(const Rect<double> &a, const Rect<double> &b);
 
-    static DPoint Distance(const DRect &a, const DRect &b);
-    static DPoint Distance(const DRect &a, const SDL_Rect &b);
+    template <typename T1, typename T2>
+    static bool CheckCollision(const Rect<T1> &a, const Rect<T2> &b);
 
-    static DRect SDL_RectToDRect(const SDL_Rect &r);
-    static DPoint SDL_PointToDPoint(const SDL_Point &p);
+    template <typename T>
+    static bool CheckCollision(const Rect<T> &a, const SDL_Rect &b);
 
+    static Rect<int> SDL_RectToIntRect(const SDL_Rect &r);
 
-    static double GetAngle(const DPoint &a, const DPoint &b);
-    static double GetAngle(const DPoint &a, const SDL_Point &b);
+    template <typename T>
+    static Point<T> Distance(const Rect<T> &a, const Rect<T> &b);
+
+    static Point<double> Distance(const Rect<double> &a, const Rect<int> &b);
+
+    static double GetAngle(const Point<double> &a, const Point<double> &b);
+
+    template <typename T1, typename T2>
+    static double GetAngle(const Point<T1> &a, const Point<T2> &b);
 
     static double Constrain(double val, double min_val, double max_val);
 
@@ -111,6 +90,48 @@ template <typename T>
 std::shared_ptr<T> sdl_shared(T *t)
 {
     return std::shared_ptr<T>(t, [](T *t) {wSDL::SDL_DelRes(t);});
+}
+
+template <typename T1, typename T2>
+bool wSDL::CheckCollision(const Rect<T1> &a, const Rect<T2> &b)
+{
+    return wSDL::CheckCollision(a.ToDouble(), b.ToDouble());
+}
+
+template <typename T>
+bool wSDL::CheckCollision(const Rect<T> &a, const SDL_Rect &b)
+{
+    Rect<int> b_int = wSDL::SDL_RectToIntRect(b);
+    return wSDL::CheckCollision(a, b_int);
+}
+
+
+template <typename T>
+Point<T> wSDL::Distance(const Rect<T> &a, const Rect<T> &b)
+{
+    double left_a = a.x, left_b = b.x;
+    double right_a = a.x + a.w, right_b = b.x + b.w;
+    double top_a = a.y, top_b = b.y;
+    double bot_a = a.y + a.h, bot_b = b.y + b.h;
+
+    Point<double> d;
+
+    if (bot_a <= top_b)
+        d.y = top_b - bot_a;
+    if (top_a >= bot_b)
+        d.y = bot_b - top_a;
+    if (right_a <= left_b)
+        d.x = left_b - right_a;
+    if (left_a >= right_b)
+        d.x = right_b - left_a;
+
+    return d;
+}
+
+template <typename T1, typename T2>
+double wSDL::GetAngle(const Point<T1> &a, const Point<T2> &b)
+{
+    return wSDL::GetAngle(a.ToDouble(), b.ToDouble());
 }
 
 

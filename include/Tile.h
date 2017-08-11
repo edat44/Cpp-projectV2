@@ -7,8 +7,9 @@
 #include <vector>
 #include <memory>
 #include <string>
+#include "LSprite.h"
 
-class Tile
+class Tile : public LSprite
 {
     public:
         Tile(int x, int y, int tile_type, PTexture texture, std::string meta_data_key = "");
@@ -17,14 +18,9 @@ class Tile
 
         int GetType();
 
-        SDL_Rect GetBox();
-
         void Shift(int x, int y);
 
     private:
-        PSprite m_sprite;
-
-        SDL_Rect m_box;
 
         int m_type;
 

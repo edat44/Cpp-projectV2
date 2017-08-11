@@ -1,14 +1,16 @@
 #include "Humanoid.h"
 
-Humanoid::Humanoid(std::string type, PTexture texture)
+Humanoid::Humanoid(std::string type, Map *map, PTexture texture)
     : Entity("Humanoid: " + type, texture)
-{}
+{
+    m_map = map;
+}
 
 Humanoid::~Humanoid()
 {
 }
 
-Tile* Humanoid::Move(double time_step, std::vector<std::shared_ptr<Tile>> tiles, Point level_size)
+Tile* Humanoid::Move(double time_step, std::vector<std::shared_ptr<Tile>> tiles, Point<int> level_size)
 {
     double dx = (m_vel.x * time_step);
     m_box.x = wSDL::Constrain(m_box.x + dx, 0, level_size.x - m_box.w);
@@ -16,7 +18,7 @@ Tile* Humanoid::Move(double time_step, std::vector<std::shared_ptr<Tile>> tiles,
     if (wall_x != nullptr)
     {
         m_box.x -= dx;
-        DPoint dist = wSDL::Distance(this->m_box, wall_x->GetBox());
+        Point<double> dist = wSDL::Distance(this->m_box, wall_x->GetBox());
         m_box.x += dist.x;
     }
 
@@ -26,9 +28,14 @@ Tile* Humanoid::Move(double time_step, std::vector<std::shared_ptr<Tile>> tiles,
     if (wall_y != nullptr)
     {
         m_box.y -= dy;
-        DPoint dist = wSDL::Distance(this->m_box, wall_y->GetBox());
+        Point<double> dist = wSDL::Distance(this->m_box, wall_y->GetBox());
         m_box.y += dist.y;
     }
 
     return wall_x;
+}
+
+Map* Humanoid::GetMap()
+{
+    return m_map;
 }

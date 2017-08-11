@@ -49,7 +49,7 @@ void LSprite::SetClips()
     {
         for (int x = 0; x < m_clip_cols; ++x)
         {
-            this->m_clips.push_back({x * m_size.x, y * m_size.y, m_size.x, m_size.y});
+            this->m_clips.push_back({x * m_box.w, y * m_box.h, m_box.w, m_box.h});
         }
     }
 }
@@ -62,8 +62,7 @@ void LSprite::Render(SDL_Rect &camera, SDL_Rect* clip, double angle, SDL_Point* 
 
 void LSprite::Render(SDL_Rect &camera, int x, int y, SDL_Rect* clip, double angle, SDL_Point* center, SDL_RendererFlip flip)
 {
-    m_pos.x = x;
-    m_pos.y = y;
+    SetPosition(x, y, false);
     this->Render(camera, clip, angle, center, flip);
 }
 
