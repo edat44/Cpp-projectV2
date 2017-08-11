@@ -1,7 +1,9 @@
 #include "LRect.h"
 
-LRect::LRect()
+LRect::LRect(int x, int y, int w, int h)
 {
+    this->SetPosition(x, y, false);
+    this->SetSize(w, h);
     this->m_red = 0x00;
     this->m_blue = 0x00;
     this->m_green = 0x00;
@@ -12,12 +14,6 @@ LRect::LRect()
 LRect::~LRect()
 {
 
-}
-
-void LRect::SetSize(int w, int h)
-{
-    this->m_width = w;
-    this->m_height = h;
 }
 
 void LRect::SetColor(uint8_t red, uint8_t green, uint8_t blue)
@@ -43,20 +39,16 @@ void LRect::SetAlpha(uint8_t alpha)
     this->m_alpha = alpha;
 }
 
-void LRect::Render(int x, int y)
+void LRect::Render()
 {
-    SDL_Rect rect = {x, y, this->m_width, this->m_height};
+    SDL_Rect rect = m_box.ToSDL();
     SDL_SetRenderDrawColor(wSDL::s_renderer.get(), this->m_red, this->m_green, this->m_blue, this->m_alpha);
     SDL_SetRenderDrawBlendMode(wSDL::s_renderer.get(), this->m_blend);
     SDL_RenderFillRect(wSDL::s_renderer.get(), &rect);
 }
 
-int LRect::GetWidth()
+void LRect::Render(int x, int y)
 {
-    return this->m_width;
-}
-
-int LRect::GetHeight()
-{
-    return this->m_height;
+    SetPosition(x, y, false);
+    this->Render();
 }

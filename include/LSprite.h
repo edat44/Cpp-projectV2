@@ -28,6 +28,8 @@ class LSprite : public LTexture
         static const SPRITE_MODE SPRITE_DELETE =            0b00100000;
         static const SPRITE_MODE SPRITE_REPEAT =            0b01000000;
 
+    protected:
+
     private:
         void SetClips();
 

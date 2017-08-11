@@ -139,16 +139,11 @@ bool Map::SetTiles()
             if (tiles_loaded == false)
                 break;
 
-            this->m_width = x;
 			y += m_tile_size.y;
 			m_tile_grid.y++;
 		}
-		this->m_height = y;
 
-		DPoint p;
-		p.x = 1.f;
-		p.y = 1.f;
-		this->m_player->SetPosition(p, m_tile_size);
+		this->m_player->SetPosition(1, 1, m_tile_size, true);
 		this->AddBorder();
 	}
 
@@ -159,20 +154,17 @@ bool Map::SetTiles()
     return tiles_loaded;
 }
 
-Point Map::GetMapSizePixels()
+Point<int> Map::GetMapSizePixels()
 {
-    Point p;
-    p.x = m_tile_grid.x * m_tile_size.x;
-    p.y = m_tile_grid.y * m_tile_size.y;
-    return p;
+    return Point<int>{m_tile_grid.x * m_tile_size.x, m_tile_grid.y * m_tile_size.y};
 }
 
-Point Map::GetMapSizeTiles()
+Point<int> Map::GetMapSizeTiles()
 {
     return m_tile_grid;
 }
 
-Point Map::GetTileSize()
+Point<int> Map::GetTileSize()
 {
     return m_tile_size;
 }
@@ -193,16 +185,15 @@ void Map::AddBorder()
         tile->Shift(1, 1);
     }
 
-    Point s = m_tile_grid;
-    int border_tiles = (s.y * 2) + (s.x * 2) + 4;
+    int border_tiles = (m_tile_grid.y * 2) + (m_tile_grid.x * 2) + 4;
     int x = 0, y = 0;
 
     int x_add = 1, y_add = 0;
 
     int top_left = 0,
-    top_right = s.x + 1,
-    bottom_right = top_right + s.y + 1,
-    bottom_left = bottom_right + s.x + 1;
+    top_right = m_tile_grid.x + 1,
+    bottom_right = top_right + m_tile_grid.y + 1,
+    bottom_left = bottom_right + m_tile_grid.x + 1;
 
     //Start at top left and work way clockwise
     for (int i = 0; i < border_tiles; ++i)

@@ -29,8 +29,9 @@ class Map
 
         bool SetTiles();
 
-        Point GetMapSizePixels();
-        Point GetMapSizeTiles();
+        Point<int> GetMapSizePixels();
+        Point<int> GetMapSizeTiles();
+        Point<int> GetTileSize();
 
         void UpdateFPS(double fps);
 
@@ -54,8 +55,6 @@ class Map
         static const int TILE_SPRITE_COLS = 4;
         static const int TILE_TOTAL_SPRITES = TILE_SPRITE_ROWS * TILE_SPRITE_COLS;
 
-        Point GetTileSize();
-    
     private:
         std::string m_path_map;
         std::vector<std::shared_ptr<Tile>> m_tiles;
@@ -63,8 +62,8 @@ class Map
         std::shared_ptr<Player> m_player;
         SDL_Rect m_camera;
 
-        Point m_tile_size;
-        Point m_tile_grid;
+        Point<int> m_tile_size;
+        Point<int> m_tile_grid;
 
         std::vector<std::shared_ptr<ItemFrame>> m_frames;
 
@@ -74,15 +73,13 @@ class Map
 
         PTexture m_texture_tiles;
 
-        int m_width, m_height;
-
         std::shared_ptr<LFont> m_font_fps;
         static const int FPS_X = 10;
         static const int FPS_Y = 10;
 
         void AddBorder();
         void AddItemFrames();
-    
+
         std::vector<std::shared_ptr<Humanoid>> m_humanoids;
 };
 

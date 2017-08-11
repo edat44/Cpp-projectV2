@@ -7,7 +7,6 @@ LTexture::LTexture(std::string path, int clip_rows, int clip_cols, SDL_Color bac
     this->m_background_mask = background_mask;
     this->m_clip_rows = clip_rows;
     this->m_clip_cols = clip_cols;
-    this->m_pos = Point{0, 0};
     this->Load();
 }
 catch(std::exception &e)
@@ -23,8 +22,7 @@ LTexture::LTexture(const LTexture &texture)
     this->m_texture = texture.m_texture;
     this->m_clip_rows = texture.m_clip_rows;
     this->m_clip_cols = texture.m_clip_cols;
-    this->m_size = texture.m_size;
-    this->m_pos = texture.m_pos;
+    this->m_box = texture.m_box;
 }
 
 LTexture::~LTexture()
@@ -41,8 +39,11 @@ void LTexture::Load()
     }
     else
     {
-        SDL_Color c = m_background_mask;
-        SDL_SetColorKey(loaded_surface, SDL_TRUE, SDL_MapRGB(loaded_surface->format, c.r, c.g, c.b));
+        if (m_background_mask.a != 0)
+        {
+            SDL_Color c = m_background_mask;
+            SDL_SetColorKey(loaded_surface, SDL_TRUE, SDL_MapRGB(loaded_surface->format, c.r, c.g, c.b));
+        }
 
         m_texture = sdl_shared(SDL_CreateTextureFromSurface(wSDL::s_renderer.get(), loaded_surface));
         if (!m_texture)
@@ -51,23 +52,11 @@ void LTexture::Load()
         }
         else
         {
-            this->m_size.x = loaded_surface->w / m_clip_cols;
-            this->m_size.y = loaded_surface->h / m_clip_rows;
+            SetSize(loaded_surface->w / m_clip_cols, loaded_surface->h / m_clip_rows);
         }
         SDL_FreeSurface(loaded_surface);
     }
 
-}
-
-void LTexture::SetPosition(const Point &pos)
-{
-    SetPosition(pos.x, pos.y);
-}
-
-void LTexture::SetPosition(int x, int y)
-{
-    m_pos.x = x - (m_size.x / 2);
-    m_pos.y = y - (m_size.y / 2);
 }
 
 
@@ -94,43 +83,22 @@ void LTexture::SetAlpha(uint8_t alpha)
 
 void LTexture::Render(SDL_Rect &camera, int x, int y, SDL_Rect* clip, double angle, SDL_Point* center, SDL_RendererFlip flip)
 {
-    m_pos.x = x;
-    m_pos.y = y;
+    SetPosition(x, y, false);
     this->Render(camera, clip, angle, center, flip);
 }
 
 void LTexture::Render(SDL_Rect &camera, SDL_Rect* clip, double angle, SDL_Point* center, SDL_RendererFlip flip)
 {
-    SDL_Rect render_quad = {m_pos.x - camera.x, m_pos.y - camera.y, m_size.x, m_size.y};
+    SDL_Rect render_quad = {m_box.x - camera.x, m_box.y - camera.y, m_box.w, m_box.h};
 
     if (clip != nullptr)
     {
         render_quad.w = clip->w;
         render_quad.h = clip->h;
     }
-
-    if (wSDL::CheckCollision(SDL_Rect{m_pos.x, m_pos.y, render_quad.w, render_quad.h}, camera))
+    Rect<int> collision_rect = {m_box.x, m_box.y, render_quad.w, render_quad.h};
+    if (wSDL::CheckCollision(collision_rect, camera))
         SDL_RenderCopyEx(wSDL::s_renderer.get(), this->m_texture.get(), clip, &render_quad, angle, center, flip);
-}
-
-Point LTexture::GetPosition()
-{
-    return m_pos;
-}
-
-int LTexture::GetWidth()
-{
-    return this->m_size.x;
-}
-
-int LTexture::GetHeight()
-{
-    return this->m_size.y;
-}
-
-Point LTexture::GetSize()
-{
-    return m_size;
 }
 
 

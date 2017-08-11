@@ -8,12 +8,14 @@ class Weapon;
 class Explosion : public LSprite
 {
     public:
-        Explosion(int frame_time, int x, int y);
+        Explosion(Weapon *weapon, int frame_time, int x, int y);
         virtual ~Explosion();
 
-    protected:
+        bool Update();
 
+    protected:
     private:
+        Weapon *m_weapon;
 };
 
 #endif // EXPLOSION_H

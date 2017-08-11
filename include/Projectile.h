@@ -14,27 +14,27 @@ class Weapon;
 class Projectile: public Entity
 {
     public:
-        Projectile(DPoint start, Point target);
-        Projectile(DRect start, Point target);
+        Projectile(Weapon *weapon, double speed, Point<double> start, Point<int> target);
+        Projectile(Weapon *weapon, double speed, Rect<double> start, Point<int> target);
         virtual ~Projectile();
 
         static const int WIDTH = 6;
         static const int HEIGHT = 6;
 
-        static const int MAX_VEL = 200.f;
-
-        Tile* Move(double time_step, std::vector<std::shared_ptr<Tile>> tiles, Point level_size);
+        Tile* Move(double time_step, std::vector<std::shared_ptr<Tile>> tiles, Point<int> level_size);
 
         bool operator==(const Projectile &p);
 
-        bool Done();
-
     protected:
-        Point m_target;
+        Point<int> m_target;
 
         PSound m_sound_spawn;
 
-        bool m_done;
+        uint32_t m_spawn_time;
+
+        Weapon *m_weapon;
+
+        double m_speed;
 
         void LoadSounds();
 

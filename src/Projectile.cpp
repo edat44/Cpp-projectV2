@@ -1,28 +1,32 @@
 #include "Projectile.h"
 #include <cmath>
 #include "Weapon.h"
+#include "Map.h"
 
-Projectile::Projectile(DPoint start, Point target)
+Projectile::Projectile(Weapon* weapon, double speed, Point<double> start, Point<int> target)
     : Entity("Projectile", wResources::texture_bullet)
 {
-    this->m_box.x = start.x;
-    this->m_box.y = start.y;
+    SetPosition(start, true);
+
+    this->m_weapon = weapon;
+
+    this->m_speed = speed;
 
     this->m_target = target;
 
     this->m_angle = wSDL::GetAngle(start, target);
 
-    this->m_vel.x = MAX_VEL * cos(m_angle * wSDL::PI / 180);
-    this->m_vel.y = MAX_VEL * sin(m_angle * wSDL::PI / 180);
+    this->m_vel.x = m_speed * cos(m_angle * wSDL::PI / 180);
+    this->m_vel.y = m_speed * sin(m_angle * wSDL::PI / 180);
+
+    this->m_spawn_time = SDL_GetTicks();
 
     this->LoadSounds();
     this->m_sound_spawn->Play();
-
-    this->m_done = false;
 }
 
-Projectile::Projectile(DRect start, Point target)
-    : Projectile(DPoint {start.x + (start.w / 2) - (Projectile::WIDTH / 2), start.y + (start.h / 2) - (Projectile::HEIGHT / 2)}, target)
+Projectile::Projectile(Weapon *weapon, double speed, Rect<double> start, Point<int> target)
+     : Projectile(weapon, speed, start.GetMiddle(), target)
 {}
 
 Projectile::~Projectile()
@@ -36,10 +40,10 @@ void Projectile::LoadSounds()
 
 bool Projectile::operator==(const Projectile &p)
 {
-    return this->m_box.x == p.m_box.x && this->m_box.y == p.m_box.y && this->m_angle == p.m_angle;
+    return (this->m_box == p.m_box) && (this->m_target == p.m_target) && (this->m_spawn_time == p.m_spawn_time);
 }
 
-Tile* Projectile::Move(double time_step, std::vector<std::shared_ptr<Tile>> tiles, Point level_size)
+Tile* Projectile::Move(double time_step, std::vector<std::shared_ptr<Tile>> tiles, Point<int> level_size)
 {
     double dx = (m_vel.x * time_step);
     double dy = (m_vel.y * time_step);
@@ -47,20 +51,21 @@ Tile* Projectile::Move(double time_step, std::vector<std::shared_ptr<Tile>> tile
     m_box.y += dy;
     Tile *wall = this->TouchesWall(tiles);
 
-    if (m_box.x < 0 || m_box.y < 0 || (m_box.x > wSDL::SCREEN_WIDTH - m_box.w) || (m_box.y > wSDL::SCREEN_HEIGHT - m_box.h))
-        m_done = true;
+    bool done = false;
+
+    Point<int> map_size = m_weapon->GetMap()->GetMapSizePixels();
+    if (m_box.x < 0 || m_box.y < 0 || (m_box.x > map_size.x - m_box.w) || (m_box.y > map_size.y - m_box.h))
+        done = true;
 
     if (wall != nullptr)
     {
-        m_done = true;
+        done = true;
         m_box.x -= (m_box.w / 2);
         m_box.y -= (m_box.h / 2);
     }
 
-    return wall;
-}
+    if (done)
+        m_weapon->DeleteProjectile(this);
 
-bool Projectile::Done()
-{
-    return m_done;
+    return wall;
 }

@@ -10,16 +10,17 @@ class Map;
 class Humanoid : public Entity
 {
     public:
-        Humanoid(std::string type, PTexture texture, Map *map);
+        Humanoid(std::string type, Map* map, PTexture texture);
         virtual ~Humanoid();
 
-        virtual Tile* Move(double time_step, std::vector<std::shared_ptr<Tile>> tiles, Point level_size) = 0;
-    
+        virtual Tile* Move(double time_step, std::vector<std::shared_ptr<Tile>> tiles, Point<int> level_size) = 0;
+
+        Map* GetMap();
+
         virtual void Render(SDL_Rect &camera);
 
     protected:
         Map *m_map;
-
     private:
 };
 

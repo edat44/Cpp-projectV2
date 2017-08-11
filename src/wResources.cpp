@@ -31,7 +31,7 @@ bool wResources::Load()
         wResources::texture_player = std::make_shared<LTexture>("resources/dot_with_arrow.png");
         wResources::texture_tiles = std::make_shared<LTexture>("resources/tiles_mini.png", 3, 4);
         wResources::texture_explosion = std::make_shared<LTexture>("resources/explosion_sprite.png", 1, 10);
-        wResources::texture_doge = std::make_shared<LTexture>("resources/doge.png");
+        wResources::texture_doge = std::make_shared<LTexture>("resources/doge.png", 1, 1, SDL_Color{0x00, 0x00, 0x00, 0x00});
     }
     catch (std::exception &e)
     {

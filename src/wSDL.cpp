@@ -1,5 +1,4 @@
 #include "wSDL.h"
-#include <cmath>
 
 bool wSDL::debug = true;
 int wSDL::SCREEN_WIDTH = 900;
@@ -14,12 +13,6 @@ std::shared_ptr<SDL_Surface> wSDL::s_screen_surface;
 sdl_unique_texture make_unique_texture(SDL_Texture *t) {return sdl_unique_texture(t);}
 sdl_unique_mix_chunk make_unique_mix_chunk(Mix_Chunk *c) {return sdl_unique_mix_chunk(c);}
 sdl_unique_font make_unique_font(TTF_Font *f) {return sdl_unique_font(f);}
-
-
-Point operator*(const Point &p1, const Point &p2) {return Point{p1.x * p2.x, p1.y * p2.y};}
-Point operator*(const Point &p1, double d) {return Point{(int)(p1.x * d), (int)(p1.y * d)};}
-Point operator-(const Point &p1, const Point &p2) {return Point{p1.x - p2.x, p1.y - p2.y};}
-
 
 
 bool wSDL::Init()
@@ -87,7 +80,7 @@ void wSDL::Close()
     TTF_Quit();
 }
 
-bool wSDL::CheckCollision(const DRect &a, const DRect &b)
+bool wSDL::CheckCollision(const Rect<double> &a, const Rect<double> &b)
 {
     double left_a = a.x, left_b = b.x;
     double right_a = a.x + a.w, right_b = b.x + b.w;
@@ -106,54 +99,12 @@ bool wSDL::CheckCollision(const DRect &a, const DRect &b)
     return true;
 }
 
-bool wSDL::CheckCollision(const DRect &a, const SDL_Rect &b)
+Point<double> wSDL::Distance(const Rect<double> &a, const Rect<int> &b)
 {
-    return wSDL::CheckCollision(a, wSDL::SDL_RectToDRect(b));
+    return wSDL::Distance(a, b.ToDouble()).ToDouble();
 }
 
-bool wSDL::CheckCollision(const SDL_Rect &a, const SDL_Rect &b)
-{
-    return wSDL::CheckCollision(SDL_RectToDRect(a), SDL_RectToDRect(b));
-}
-
-DRect wSDL::SDL_RectToDRect(const SDL_Rect &r)
-{
-    return DRect{(double)r.x, (double)r.y, (double)r.w, (double)r.h};
-}
-
-DPoint wSDL::SDL_PointToDPoint(const SDL_Point &p)
-{
-    return DPoint{(double)p.x, (double)p.y};
-}
-
-
-DPoint wSDL::Distance(const DRect &a, const DRect &b)
-{
-    double left_a = a.x, left_b = b.x;
-    double right_a = a.x + a.w, right_b = b.x + b.w;
-    double top_a = a.y, top_b = b.y;
-    double bot_a = a.y + a.h, bot_b = b.y + b.h;
-
-    DPoint d;
-
-    if (bot_a <= top_b)
-        d.y = top_b - bot_a;
-    if (top_a >= bot_b)
-        d.y = bot_b - top_a;
-    if (right_a <= left_b)
-        d.x = left_b - right_a;
-    if (left_a >= right_b)
-        d.x = right_b - left_a;
-
-    return d;
-}
-
-DPoint wSDL::Distance(const DRect &a, const SDL_Rect &b)
-{
-    return Distance(a, wSDL::SDL_RectToDRect(b));
-}
-
-double wSDL::GetAngle(const DPoint &a, const DPoint &b)
+double wSDL::GetAngle(const Point<double> &a, const Point<double> &b)
 {
     double angle = 0.0;
     double dx = b.x - a.x;
@@ -174,9 +125,10 @@ double wSDL::GetAngle(const DPoint &a, const DPoint &b)
     return angle;
 }
 
-double wSDL::GetAngle(const DPoint &a, const SDL_Point &b)
+Rect<int> wSDL::SDL_RectToIntRect(const SDL_Rect &r)
 {
-    return wSDL::GetAngle(a, wSDL::SDL_PointToDPoint(b));
+    Rect<int> new_r = {r.x, r.y, r.w, r.h};
+    return new_r;
 }
 
 double wSDL::Constrain(double val, double min_val, double max_val)

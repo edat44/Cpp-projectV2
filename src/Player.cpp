@@ -3,9 +3,8 @@
 #include <cmath>
 
 Player::Player(Map *map)
-    : Humanoid("Player", wResources::texture_player, map)
+    : Humanoid("Player", map, wResources::texture_player)
 {
-
     this->m_vel.x = 0.f;
     this->m_vel.y = 0.f;
 
@@ -23,7 +22,7 @@ Player::~Player()
 void Player::HandleEvent(SDL_Event &e, SDL_Rect &camera)
 {
     SDL_GetMouseState(&m_face_direction.x, &m_face_direction.y);
-    this->m_angle = wSDL::GetAngle(DPoint{m_box.x + (m_box.w/2) - camera.x, m_box.y + (m_box.h / 2) - camera.y}, m_face_direction);
+    this->m_angle = wSDL::GetAngle(Point<double>{m_box.x + (m_box.w/2) - camera.x, m_box.y + (m_box.h / 2) - camera.y}, m_face_direction);
     if ((e.type == SDL_KEYDOWN || e.type == SDL_KEYUP) && e.key.repeat == 0)
     {
         int inverted = e.type == SDL_KEYDOWN ? 1 : -1;
@@ -52,7 +51,7 @@ void Player::HandleEvent(SDL_Event &e, SDL_Rect &camera)
     {
         if (e.type == SDL_MOUSEBUTTONDOWN)
         {
-            m_weapon->Fire(Point{camera.x + m_face_direction.x, camera.y + m_face_direction.y});
+            m_weapon->Fire(Point<int>{camera.x + m_face_direction.x, camera.y + m_face_direction.y});
         }
     }
 }
@@ -63,14 +62,14 @@ void Player::Render(SDL_Rect &camera)
     m_weapon->Render(camera);
 }
 
-Tile* Player::Move(double time_step, std::vector<std::shared_ptr<Tile>> tiles, Point level_size)
+Tile* Player::Move(double time_step, std::vector<std::shared_ptr<Tile>> tiles, Point<int> level_size)
 {
     Tile* tile = this->Humanoid::Move(time_step, tiles, level_size);
     m_weapon->Update(time_step, tiles, level_size);
     return tile;
 }
 
-void Player::SetCamera(SDL_Rect &camera, Point level_size)
+void Player::SetCamera(SDL_Rect &camera, Point<int> level_size)
 {
     //Center the camera over the player
     camera.x = (int)(m_box.x + (m_box.w / 2)) - (wSDL::SCREEN_WIDTH / 2);
