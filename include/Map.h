@@ -11,6 +11,7 @@
 #include "ItemFrame.h"
 #include "LTexture.h"
 #include "LFont.h"
+#include "Monster.h"
 
 class Map
 {
@@ -54,7 +55,7 @@ class Map
         static const int TILE_TOTAL_SPRITES = TILE_SPRITE_ROWS * TILE_SPRITE_COLS;
 
         Point GetTileSize();
-
+    
     private:
         std::string m_path_map;
         std::vector<std::shared_ptr<Tile>> m_tiles;
@@ -81,6 +82,8 @@ class Map
 
         void AddBorder();
         void AddItemFrames();
+    
+        std::vector<std::shared_ptr<Humanoid>> m_humanoids;
 };
 
 #endif // MAP_H
