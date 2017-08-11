@@ -25,7 +25,7 @@ class Player : public Humanoid
         virtual void Render(SDL_Rect &camera);
 
         //time_step is measured in seconds
-        virtual Tile* Move(double time_step, std::vector<std::shared_ptr<Tile>> tiles, Point<int> level_size);
+        virtual Tile* Move(double time_step, std::vector<std::shared_ptr<Tile>> tiles, Point<int> level_size, std::vector<std::shared_ptr<Humanoid>> humanoids);
 
         void SetCamera(SDL_Rect &camera, Point<int> level_size);
 

@@ -17,8 +17,8 @@ void Monster::Render(SDL_Rect &camera)
     this->Humanoid::Render(camera);
 }
 
-Tile* Monster::Move(double time_step, std::vector<std::shared_ptr<Tile>> tiles, Point<int> level_size)
+Tile* Monster::Move(double time_step, std::vector<std::shared_ptr<Tile>> tiles, Point<int> level_size, std::vector<std::shared_ptr<Humanoid>> humanoids)
 {
-    Tile* tile = this->Humanoid::Move(time_step, tiles, level_size);
+    Tile* tile = this->Humanoid::Move(time_step, tiles, level_size, humanoids);
     return tile;
 }

@@ -1,9 +1,9 @@
 #include "Weapon.h"
 #include "Player.h"
 
-Weapon::Weapon(Player *player, double fire_rate)
+Weapon::Weapon(Humanoid *humanoid, double fire_rate)
 {
-    m_player = player;
+    m_humanoid = humanoid;
     m_fire_rate = fire_rate;
     if (fire_rate > 0)
     {
@@ -23,7 +23,7 @@ void Weapon::Fire(Point<int> target)
     {
         if (m_fire_timer)
             m_fire_timer->Start();
-        Projectile* p = new Projectile(this, 600.f, m_player->GetBox(), target);
+        Projectile* p = new Projectile(this, 600.f, m_humanoid->GetBox(), target);
         m_projectiles.push_back(std::unique_ptr<Projectile>(p));
     }
 }
@@ -41,11 +41,11 @@ void Weapon::Render(SDL_Rect &camera)
     }
 }
 
-void Weapon::Update(double time_step, std::vector<std::shared_ptr<Tile>> tiles, Point<int> level_size)
+void Weapon::Update(double time_step, std::vector<std::shared_ptr<Tile>> tiles, Point<int> level_size, std::vector<std::shared_ptr<Humanoid>> humanoids)
 {
     for (unsigned int i = 0; i < m_projectiles.size(); ++i)
     {
-        m_projectiles.at(i).get()->Move(time_step, tiles, level_size);
+        m_projectiles.at(i).get()->Move(time_step, tiles, level_size, humanoids);
     }
 
     for (unsigned int i = 0; i < m_explosions.size(); ++i)
@@ -81,5 +81,11 @@ void Weapon::DeleteProjectile(Projectile *proj)
 
 Map* Weapon::GetMap()
 {
-    return m_player->GetMap();
+    return m_humanoid->GetMap();
 }
+
+Humanoid* Weapon::GetHumanoid()
+{
+    return m_humanoid;
+}
+

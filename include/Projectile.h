@@ -21,7 +21,7 @@ class Projectile: public Entity
         static const int WIDTH = 6;
         static const int HEIGHT = 6;
 
-        Tile* Move(double time_step, std::vector<std::shared_ptr<Tile>> tiles, Point<int> level_size);
+        Tile* Move(double time_step, std::vector<std::shared_ptr<Tile>> tiles, Point<int> level_size, std::vector<std::shared_ptr<Humanoid>> humanoids);
 
         bool operator==(const Projectile &p);
 

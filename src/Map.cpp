@@ -40,7 +40,7 @@ void Map::Update(double time_step)
 {
     for (auto& humanoid : m_humanoids)
     {
-        humanoid->Move(time_step, this->m_tiles, this->GetMapSizePixels());
+        humanoid->Move(time_step, this->m_tiles, this->GetMapSizePixels(), m_humanoids);
     }
 }
 

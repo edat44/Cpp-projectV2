@@ -9,13 +9,15 @@
 #include <memory>
 #include "Box.h"
 
+class Humanoid;
+
 class Entity : public Box<double>
 {
     public:
         Entity(std::string type, PTexture texture);
         virtual ~Entity();
 
-        virtual Tile* Move(double time_step, std::vector<std::shared_ptr<Tile>> tiles, Point<int> level_size) = 0;
+        virtual Tile* Move(double time_step, std::vector<std::shared_ptr<Tile>> tiles, Point<int> level_size, std::vector<std::shared_ptr<Humanoid>> humanoids) = 0;
 
         virtual void Render(SDL_Rect &camera);
 

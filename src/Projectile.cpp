@@ -43,7 +43,7 @@ bool Projectile::operator==(const Projectile &p)
     return (this->m_box == p.m_box) && (this->m_target == p.m_target) && (this->m_spawn_time == p.m_spawn_time);
 }
 
-Tile* Projectile::Move(double time_step, std::vector<std::shared_ptr<Tile>> tiles, Point<int> level_size)
+Tile* Projectile::Move(double time_step, std::vector<std::shared_ptr<Tile>> tiles, Point<int> level_size, std::vector<std::shared_ptr<Humanoid>> humanoids)
 {
     double dx = (m_vel.x * time_step);
     double dy = (m_vel.y * time_step);
@@ -62,6 +62,16 @@ Tile* Projectile::Move(double time_step, std::vector<std::shared_ptr<Tile>> tile
         done = true;
         m_box.x -= (m_box.w / 2);
         m_box.y -= (m_box.h / 2);
+    }
+    
+    for (auto& humanoid : humanoids)
+    {
+        if (!(humanoid->GetBox() == m_weapon->GetHumanoid()->GetBox()))
+        {
+            if (wSDL::CheckCollision(m_box, humanoid->GetBox()))
+                done = true;
+        }
+            
     }
 
     if (done)

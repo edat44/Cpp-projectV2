@@ -11,7 +11,7 @@ Humanoid::~Humanoid()
 {
 }
 
-Tile* Humanoid::Move(double time_step, std::vector<std::shared_ptr<Tile>> tiles, Point<int> level_size)
+Tile* Humanoid::Move(double time_step, std::vector<std::shared_ptr<Tile>> tiles, Point<int> level_size, std::vector<std::shared_ptr<Humanoid>> humanoids)
 {
     double dx = (m_vel.x * time_step);
     m_box.x = wSDL::Constrain(m_box.x + dx, 0, level_size.x - m_box.w);

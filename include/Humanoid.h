@@ -13,7 +13,7 @@ class Humanoid : public Entity
         Humanoid(std::string type, Map* map, PTexture texture);
         virtual ~Humanoid();
 
-        virtual Tile* Move(double time_step, std::vector<std::shared_ptr<Tile>> tiles, Point<int> level_size) = 0;
+        virtual Tile* Move(double time_step, std::vector<std::shared_ptr<Tile>> tiles, Point<int> level_size, std::vector<std::shared_ptr<Humanoid>> humanoids) = 0;
 
         Map* GetMap();
 

@@ -8,24 +8,26 @@
 #include "LTimer.h"
 #include <vector>
 
-class Player; class Map;
+class Map; class Humanoid;
 
 class Weapon
 {
     public:
-        Weapon(Player* player, double fire_rate = 0);
+        Weapon(Humanoid* humanoid, double fire_rate = 0);
         virtual ~Weapon();
 
         void Fire(Point<int> target);
 
         void Render(SDL_Rect &camera);
 
-        void Update(double time_step, std::vector<std::shared_ptr<Tile>> tiles, Point<int> level_size);
+        void Update(double time_step, std::vector<std::shared_ptr<Tile>> tiles, Point<int> level_size, std::vector<std::shared_ptr<Humanoid>> humanoids);
 
         void DeleteProjectile(Projectile *proj);
         void DeleteExplosion(Explosion *exp);
 
         Map* GetMap();
+    
+        Humanoid* GetHumanoid();
 
     protected:
 
@@ -35,7 +37,7 @@ class Weapon
 
         double m_fire_rate; //Bullets per second
         std::unique_ptr<LTimer> m_fire_timer;
-        Player* m_player;
+        Humanoid* m_humanoid;
 };
 
 #endif // WEAPON_H

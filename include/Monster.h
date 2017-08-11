@@ -19,7 +19,7 @@ class Monster : public Humanoid
 
         virtual void Render(SDL_Rect &camera);
 
-        virtual Tile* Move(double time_step, std::vector<std::shared_ptr<Tile>> tiles, Point<int> level_size);
+        virtual Tile* Move(double time_step, std::vector<std::shared_ptr<Tile>> tiles, Point<int> level_size, std::vector<std::shared_ptr<Humanoid>> humanoids);
 
     private:
 };

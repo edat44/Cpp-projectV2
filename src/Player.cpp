@@ -62,10 +62,10 @@ void Player::Render(SDL_Rect &camera)
     m_weapon->Render(camera);
 }
 
-Tile* Player::Move(double time_step, std::vector<std::shared_ptr<Tile>> tiles, Point<int> level_size)
+Tile* Player::Move(double time_step, std::vector<std::shared_ptr<Tile>> tiles, Point<int> level_size, std::vector<std::shared_ptr<Humanoid>> humanoids)
 {
-    Tile* tile = this->Humanoid::Move(time_step, tiles, level_size);
-    m_weapon->Update(time_step, tiles, level_size);
+    Tile* tile = this->Humanoid::Move(time_step, tiles, level_size, humanoids);
+    m_weapon->Update(time_step, tiles, level_size, humanoids);
     return tile;
 }
 
