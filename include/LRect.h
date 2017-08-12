@@ -8,6 +8,7 @@ class LRect : public LTexture
 {
     public:
         LRect(int x, int y, int w, int h);
+        LRect(int w, int h);
         virtual ~LRect();
 
         virtual void SetColor(uint8_t red, uint8_t green, uint8_t blue);

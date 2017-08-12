@@ -1,9 +1,16 @@
 #include "LRect.h"
 
 LRect::LRect(int x, int y, int w, int h)
-    : LTexture()
+    : LRect(w, h)
 {
     this->SetPosition(x, y, false);
+
+}
+
+LRect::LRect(int w, int h)
+    : LTexture()
+{
+    this->SetSize(w, h);
     this->m_red = 0x00;
     this->m_blue = 0x00;
     this->m_green = 0x00;
@@ -41,26 +48,28 @@ void LRect::SetAlpha(uint8_t alpha)
 
 void LRect::Render(SDL_Rect &camera, SDL_Rect* clip, double angle, SDL_Point* center, SDL_RendererFlip flip)
 {
-    this->Render();
+    SDL_Rect rect = SDL_Rect{m_box.x - camera.x, m_box.y - camera.y, m_box.w, m_box.h};
+    SDL_SetRenderDrawColor(wSDL::s_renderer.get(), this->m_red, this->m_green, this->m_blue, this->m_alpha);
+    SDL_SetRenderDrawBlendMode(wSDL::s_renderer.get(), this->m_blend);
+    SDL_RenderFillRect(wSDL::s_renderer.get(), &rect);
 }
 
 
 void LRect::Render(SDL_Rect &camera, int x, int y, SDL_Rect* clip, double angle, SDL_Point* center, SDL_RendererFlip flip)
 {
     SetPosition(x, y, false);
-    this->Render();
+    this->Render(camera);
 }
 
 void LRect::Render()
 {
-    SDL_Rect rect = m_box.ToSDL();
-    SDL_SetRenderDrawColor(wSDL::s_renderer.get(), this->m_red, this->m_green, this->m_blue, this->m_alpha);
-    SDL_SetRenderDrawBlendMode(wSDL::s_renderer.get(), this->m_blend);
-    SDL_RenderFillRect(wSDL::s_renderer.get(), &rect);
+    SDL_Rect zeros;
+    this->Render(zeros);
 }
 
 void LRect::Render(int x, int y)
 {
     SetPosition(x, y, false);
-    this->Render();
+    SDL_Rect zeros;
+    this->Render(zeros);
 }
