@@ -2,6 +2,7 @@
 #define HUMANOID_H
 
 #include "Entity.h"
+#include "ProgressBar.h"
 #include <string>
 #include <memory>
 
@@ -19,8 +20,15 @@ class Humanoid : public Entity
 
         virtual void Render(SDL_Rect &camera);
 
+        void Damage(double damage);
+
     protected:
         Map *m_map;
+
+        double m_max_health;
+        double m_health;
+
+        std::unique_ptr<ProgressBar> m_health_bar;
     private:
 };
 

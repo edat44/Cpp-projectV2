@@ -63,13 +63,13 @@ void LRect::Render(SDL_Rect &camera, int x, int y, SDL_Rect* clip, double angle,
 
 void LRect::Render()
 {
-    SDL_Rect zeros;
+    SDL_Rect zeros{0, 0, 0, 0};
     this->Render(zeros);
 }
 
 void LRect::Render(int x, int y)
 {
     SetPosition(x, y, false);
-    SDL_Rect zeros;
+    SDL_Rect zeros{0, 0, 0, 0};
     this->Render(zeros);
 }

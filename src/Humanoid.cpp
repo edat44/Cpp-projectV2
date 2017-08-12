@@ -5,6 +5,9 @@ Humanoid::Humanoid(std::string type, Map *map, PTexture texture)
     : Entity("Humanoid: " + type, texture)
 {
     m_map = map;
+    m_max_health = 100.f;
+    m_health = m_max_health;
+    m_health_bar = std::unique_ptr<ProgressBar>(new ProgressBar(static_cast<int>(m_box.w), 5, m_max_health));
 }
 
 Humanoid::~Humanoid()
@@ -33,6 +36,8 @@ Tile* Humanoid::Move(double time_step, std::vector<std::shared_ptr<Tile>> tiles,
         m_box.y += dist.y;
     }
 
+    m_health_bar->Update(m_health);
+
     return wall_x;
 }
 
@@ -44,4 +49,10 @@ Map* Humanoid::GetMap()
 void Humanoid::Render(SDL_Rect &camera)
 {
     this->Entity::Render(camera);
+    this->m_health_bar->Render(camera, m_box.x, m_box.y);
+}
+
+void Humanoid::Damage(double damage)
+{
+    m_health = wSDL::Constrain(m_health - damage, 0, m_max_health);
 }

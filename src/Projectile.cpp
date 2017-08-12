@@ -12,6 +12,8 @@ Projectile::Projectile(Weapon* weapon, double speed, Point<double> start, Point<
 
     this->m_speed = speed;
 
+    this->m_damage = 10.0;
+
     this->m_target = target;
 
     this->m_angle = wSDL::GetAngle(start, target);
@@ -67,7 +69,10 @@ Tile* Projectile::Move(double time_step, std::vector<std::shared_ptr<Tile>> tile
         if (!(humanoid->GetBox() == m_weapon->GetHumanoid()->GetBox()))
         {
             if (wSDL::CheckCollision(m_box, humanoid->GetBox()))
+            {
                 done = true;
+                humanoid->Damage(m_damage);
+            }
         }
 
     }

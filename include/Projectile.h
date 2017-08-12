@@ -36,6 +36,8 @@ class Projectile: public Entity
 
         double m_speed;
 
+        double m_damage;
+
         void LoadSounds();
 
 };
