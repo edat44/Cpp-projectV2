@@ -1,9 +1,9 @@
 #include "LRect.h"
 
 LRect::LRect(int x, int y, int w, int h)
+    : LTexture()
 {
     this->SetPosition(x, y, false);
-    this->SetSize(w, h);
     this->m_red = 0x00;
     this->m_blue = 0x00;
     this->m_green = 0x00;
@@ -37,6 +37,18 @@ void LRect::SetBlendMode(SDL_BlendMode blending)
 void LRect::SetAlpha(uint8_t alpha)
 {
     this->m_alpha = alpha;
+}
+
+void LRect::Render(SDL_Rect &camera, SDL_Rect* clip, double angle, SDL_Point* center, SDL_RendererFlip flip)
+{
+    this->Render();
+}
+
+
+void LRect::Render(SDL_Rect &camera, int x, int y, SDL_Rect* clip, double angle, SDL_Point* center, SDL_RendererFlip flip)
+{
+    SetPosition(x, y, false);
+    this->Render();
 }
 
 void LRect::Render()

@@ -25,6 +25,15 @@ LTexture::LTexture(const LTexture &texture)
     this->m_box = texture.m_box;
 }
 
+LTexture::LTexture()
+{
+    this->m_path = "";
+    this->m_background_mask = SDL_Color{0, 0, 0, 0};
+    this->m_texture = nullptr;
+    this->m_clip_rows = 1;
+    this->m_clip_cols = 1;
+}
+
 LTexture::~LTexture()
 {
 }
@@ -89,16 +98,19 @@ void LTexture::Render(SDL_Rect &camera, int x, int y, SDL_Rect* clip, double ang
 
 void LTexture::Render(SDL_Rect &camera, SDL_Rect* clip, double angle, SDL_Point* center, SDL_RendererFlip flip)
 {
-    SDL_Rect render_quad = {m_box.x - camera.x, m_box.y - camera.y, m_box.w, m_box.h};
-
-    if (clip != nullptr)
+    if (m_texture.get())
     {
-        render_quad.w = clip->w;
-        render_quad.h = clip->h;
+        SDL_Rect render_quad = {m_box.x - camera.x, m_box.y - camera.y, m_box.w, m_box.h};
+
+        if (clip != nullptr)
+        {
+            render_quad.w = clip->w;
+            render_quad.h = clip->h;
+        }
+        Rect<int> collision_rect = {m_box.x, m_box.y, render_quad.w, render_quad.h};
+        if (wSDL::CheckCollision(collision_rect, camera))
+            SDL_RenderCopyEx(wSDL::s_renderer.get(), this->m_texture.get(), clip, &render_quad, angle, center, flip);
     }
-    Rect<int> collision_rect = {m_box.x, m_box.y, render_quad.w, render_quad.h};
-    if (wSDL::CheckCollision(collision_rect, camera))
-        SDL_RenderCopyEx(wSDL::s_renderer.get(), this->m_texture.get(), clip, &render_quad, angle, center, flip);
 }
 
 

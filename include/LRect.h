@@ -2,9 +2,9 @@
 #define LRECT_H
 
 #include "wSDL.h"
-#include "Box.h"
+#include "LTexture.h"
 
-class LRect : public Box<int>
+class LRect : public LTexture
 {
     public:
         LRect(int x, int y, int w, int h);
@@ -17,8 +17,10 @@ class LRect : public Box<int>
 
         virtual void SetAlpha(uint8_t alpha);
 
-        virtual void Render(int x, int y);
-        virtual void Render();
+        virtual void Render(SDL_Rect &camera, int x, int y, SDL_Rect* clip = nullptr, double angle = 0.0, SDL_Point* center = nullptr, SDL_RendererFlip flip = SDL_FLIP_NONE);
+        virtual void Render(SDL_Rect &camera, SDL_Rect* clip = nullptr, double angle = 0.0, SDL_Point* center = nullptr, SDL_RendererFlip flip = SDL_FLIP_NONE);
+        void Render();
+        void Render(int x, int y);
 
     private:
         uint8_t m_red, m_blue, m_green, m_alpha;

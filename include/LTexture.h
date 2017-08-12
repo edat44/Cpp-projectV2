@@ -14,12 +14,12 @@ class LTexture : public Box<int>
         LTexture(std::string path, int clip_rows = 1, int clip_cols = 1, SDL_Color background_mask = SDL_Color{0xFF, 0xFF, 0xFF, 0xFF});
         virtual ~LTexture();
 
-        void SetColor(uint8_t red, uint8_t green, uint8_t blue);
-        void SetColor(uint8_t red, uint8_t green, uint8_t blue, uint8_t alpha);
+        virtual void SetColor(uint8_t red, uint8_t green, uint8_t blue);
+        virtual void SetColor(uint8_t red, uint8_t green, uint8_t blue, uint8_t alpha);
 
-        void SetBlendMode(SDL_BlendMode blending);
+        virtual void SetBlendMode(SDL_BlendMode blending);
 
-        void SetAlpha(uint8_t alpha);
+        virtual void SetAlpha(uint8_t alpha);
 
         virtual void Render(SDL_Rect &camera, int x, int y, SDL_Rect* clip = nullptr, double angle = 0.0, SDL_Point* center = nullptr, SDL_RendererFlip flip = SDL_FLIP_NONE);
         virtual void Render(SDL_Rect &camera, SDL_Rect* clip = nullptr, double angle = 0.0, SDL_Point* center = nullptr, SDL_RendererFlip flip = SDL_FLIP_NONE);
@@ -28,6 +28,7 @@ class LTexture : public Box<int>
 
     protected:
         LTexture(const LTexture &texture);
+        LTexture();
 
         std::string m_path;
         std::shared_ptr<SDL_Texture> m_texture;
