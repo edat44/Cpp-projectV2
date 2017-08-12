@@ -60,10 +60,8 @@ Tile* Projectile::Move(double time_step, std::vector<std::shared_ptr<Tile>> tile
     if (wall != nullptr)
     {
         done = true;
-        m_box.x -= (m_box.w / 2);
-        m_box.y -= (m_box.h / 2);
     }
-    
+
     for (auto& humanoid : humanoids)
     {
         if (!(humanoid->GetBox() == m_weapon->GetHumanoid()->GetBox()))
@@ -71,11 +69,15 @@ Tile* Projectile::Move(double time_step, std::vector<std::shared_ptr<Tile>> tile
             if (wSDL::CheckCollision(m_box, humanoid->GetBox()))
                 done = true;
         }
-            
+
     }
 
     if (done)
+    {
+        m_box.x -= (m_box.w / 2);
+        m_box.y -= (m_box.h / 2);
         m_weapon->DeleteProjectile(this);
+    }
 
     return wall;
 }

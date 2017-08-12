@@ -37,7 +37,7 @@ bool wSDL::Init()
         if (!s_window)
             throw std::runtime_error("Window could not be created! SDL Error: " + std::string(SDL_GetError()) + "\n");
 
-        s_renderer = sdl_shared(SDL_CreateRenderer(s_window.get(), -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC));
+        s_renderer = sdl_shared(SDL_CreateRenderer(s_window.get(), -1, SDL_RENDERER_ACCELERATED));
         if (s_renderer == nullptr)
             throw std::runtime_error("Renderer could not be created! SDL Error: " + std::string(SDL_GetError()) + "\n");
 
